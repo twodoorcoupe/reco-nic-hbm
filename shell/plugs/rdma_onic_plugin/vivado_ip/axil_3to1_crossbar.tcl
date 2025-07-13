@@ -5,7 +5,7 @@
 #==============================================================================
 set axil_3to1_crossbar_inst axil_3to1_crossbar
 
-create_ip -name axi_crossbar -vendor xilinx.com -library ip -version 2.1 -module_name $axil_3to1_crossbar_inst -dir ${ip_build_dir}
+create_ip -name axi_crossbar -vendor xilinx.com -library ip -module_name $axil_3to1_crossbar_inst -dir ${ip_build_dir}
 
 set_property -dict {
     CONFIG.NUM_SI {3} 

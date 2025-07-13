@@ -13,7 +13,7 @@ if {[info exists p4_dir]} {
 }
 
 puts "p4file = ${p4file}"
-create_ip -name vitis_net_p4 -vendor xilinx.com -library ip -version 1.0 -module_name packet_parser -dir ${ip_build_dir}
+create_ip -name vitis_net_p4 -vendor xilinx.com -library ip -module_name packet_parser -dir ${ip_build_dir}
 
 set_property CONFIG.P4_FILE "${p4file}" [get_ips packet_parser]
 

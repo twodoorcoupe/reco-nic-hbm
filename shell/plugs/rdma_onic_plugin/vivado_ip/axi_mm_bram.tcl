@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 #
 #==============================================================================
-create_ip -name axi_bram_ctrl -vendor xilinx.com -library ip -version 4.1 -module_name $ip -dir ${ip_build_dir}
+create_ip -name axi_bram_ctrl -vendor xilinx.com -library ip -module_name $ip -dir ${ip_build_dir}
 
 set_property -dict {
     CONFIG.DATA_WIDTH {512}

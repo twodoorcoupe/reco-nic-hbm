@@ -80,7 +80,7 @@ index 0000000..6cc3a9b
 +# *************************************************************************
 +set ddr4_controller dev_mem_ddr4_controller
 +
-+create_ip -name ddr4 -vendor xilinx.com -library ip -version 2.2 -module_name $ddr4_controller -dir ${ip_build_dir}
++create_ip -name ddr4 -vendor xilinx.com -library ip -module_name $ddr4_controller -dir ${ip_build_dir}
 +
 +set_property -dict {
 +    CONFIG.C0.ControllerType {DDR4_SDRAM}
@@ -3419,7 +3419,7 @@ index 0000000..1fa4940
 +#
 +# *************************************************************************
 +set axi_mm_mem axi_mm_bram
-+create_ip -name axi_bram_ctrl -vendor xilinx.com -library ip -version 4.1 -module_name $axi_mm_mem -dir ${ip_build_dir}
++create_ip -name axi_bram_ctrl -vendor xilinx.com -library ip -module_name $axi_mm_mem -dir ${ip_build_dir}
 +set_property -dict {
 +    CONFIG.DATA_WIDTH {512}
 +    CONFIG.SUPPORTS_NARROW_BURST {1}
@@ -5006,7 +5006,7 @@ index 0000000..64d5145
 +#
 +# *************************************************************************
 +set rdma rdma_core
-+create_ip -name ernic -vendor xilinx.com -library ip -version 3.1 -module_name $rdma -dir ${ip_build_dir}
++create_ip -name ernic -vendor xilinx.com -library ip -module_name $rdma -dir ${ip_build_dir}
 +
 +set_property -dict {
 +    CONFIG.C_NUM_QP {32}
@@ -7778,7 +7778,7 @@ index 0000000..8b7c230
 +# *************************************************************************
 +set device_memory_axi_crossbar dev_mem_3to1_axi_crossbar
 +
-+create_ip -name axi_crossbar -vendor xilinx.com -library ip -version 2.1 -module_name $device_memory_axi_crossbar -dir ${ip_build_dir}
++create_ip -name axi_crossbar -vendor xilinx.com -library ip -module_name $device_memory_axi_crossbar -dir ${ip_build_dir}
 +
 +set_property -dict {
 +    CONFIG.ADDR_RANGES {1}
@@ -7827,7 +7827,7 @@ index 0000000..1b7f72e
 +# *************************************************************************
 +set device_memory_axi_crossbar dev_mem_axi_crossbar
 +
-+create_ip -name axi_crossbar -vendor xilinx.com -library ip -version 2.1 -module_name $device_memory_axi_crossbar -dir ${ip_build_dir}
++create_ip -name axi_crossbar -vendor xilinx.com -library ip -module_name $device_memory_axi_crossbar -dir ${ip_build_dir}
 +
 +set_property -dict {
 +    CONFIG.ADDR_RANGES {1}
@@ -7876,7 +7876,7 @@ index 0000000..289b977
 +# *************************************************************************
 +set system_memory_axi_crossbar sys_mem_5to2_axi_crossbar
 +
-+create_ip -name axi_crossbar -vendor xilinx.com -library ip -version 2.1 -module_name $system_memory_axi_crossbar -dir ${ip_build_dir}
++create_ip -name axi_crossbar -vendor xilinx.com -library ip -module_name $system_memory_axi_crossbar -dir ${ip_build_dir}
 +
 +set_property -dict {
 +    CONFIG.ADDR_RANGES {1}
@@ -7932,7 +7932,7 @@ index 0000000..c306d8f
 +# *************************************************************************
 +set system_memory_axi_crossbar sys_mem_axi_crossbar
 +
-+create_ip -name axi_crossbar -vendor xilinx.com -library ip -version 2.1 -module_name $system_memory_axi_crossbar -dir ${ip_build_dir}
++create_ip -name axi_crossbar -vendor xilinx.com -library ip -module_name $system_memory_axi_crossbar -dir ${ip_build_dir}
 +
 +set_property -dict {
 +    CONFIG.ADDR_RANGES {1}

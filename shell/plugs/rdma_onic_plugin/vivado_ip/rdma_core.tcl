@@ -4,7 +4,7 @@
 #
 #==============================================================================
 set rdma rdma_core
-create_ip -name ernic -vendor xilinx.com -library ip -version 3.1 -module_name $rdma -dir ${ip_build_dir}
+create_ip -name ernic -vendor xilinx.com -library ip -module_name $rdma -dir ${ip_build_dir}
 
 set_property -dict {
     CONFIG.C_NUM_QP {32} 

@@ -5,7 +5,7 @@
 #==============================================================================
 set device_memory_axi_crossbar dev_mem_axi_crossbar
 
-create_ip -name axi_crossbar -vendor xilinx.com -library ip -version 2.1 -module_name $device_memory_axi_crossbar -dir ${ip_build_dir}
+create_ip -name axi_crossbar -vendor xilinx.com -library ip -module_name $device_memory_axi_crossbar -dir ${ip_build_dir}
 
 set_property -dict {
     CONFIG.ADDR_RANGES {1} 
