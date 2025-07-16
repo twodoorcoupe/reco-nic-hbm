@@ -1,0 +1,9 @@
+build/
+
+XilinxBoardStore/
+
+shell/compute/lookside/cl_box
+shell/compute/lookside/interface
+shell/compute/lookside/kernel
+shell/compute/lookside/mmult
+shell/compute/lookside/vitis_hls.log
