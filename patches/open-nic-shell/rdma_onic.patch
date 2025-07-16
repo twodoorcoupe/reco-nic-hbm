@@ -1,3 +1,18 @@
+diff --git a/.gitignore b/.gitignore
+index 02dbb2b..92ded38 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -11,3 +11,9 @@ vivado*.str
+ 
+ # Ignore build directory
+ build
++
++src/box_250mhz/reconic
++src/box_250mhz/vivado_ip
++src/box_250mhz/build.tcl
++src/box_250mhz/rdma_onic_plugin.sv
++src/box_250mhz/reconic_address_map.sv
+\ No newline at end of file
 diff --git a/board_files/Xilinx/au55c/LICENSE b/board_files/Xilinx/au55c/LICENSE
 new file mode 100644
 index 0000000..9c30aad
@@ -21,10 +36,10 @@ index 0000000..9c30aad
 +#########################################################################
 diff --git a/board_files/Xilinx/au55c/board.xml b/board_files/Xilinx/au55c/board.xml
 new file mode 100644
-index 0000000..310333d
+index 0000000..7295ee1
 --- /dev/null
 +++ b/board_files/Xilinx/au55c/board.xml
-@@ -0,0 +1,1267 @@
+@@ -0,0 +1,1266 @@
 +<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 +<board schema_version="2.2" vendor="xilinx.com" name="au55c" display_name="Alveo U55C Data Center Accelerator Card" url="http://www.xilinx.com/U55C" supports_ced="false" preset_file = "preset.xml">
 +  <images>
@@ -1291,21 +1306,18 @@ index 0000000..310333d
 +  </ip_associated_rules>
 +
 +</board>
-+
 diff --git a/board_files/Xilinx/au55c/changelog.txt b/board_files/Xilinx/au55c/changelog.txt
 new file mode 100644
-index 0000000..62da2c9
+index 0000000..d34cf58
 --- /dev/null
 +++ b/board_files/Xilinx/au55c/changelog.txt
-@@ -0,0 +1,5 @@
+@@ -0,0 +1,3 @@
 +######### AU55C change log ##############
 +1.0
 +AU55C Initial board support
-+
-+
 diff --git a/board_files/Xilinx/au55c/part0_pins.xml b/board_files/Xilinx/au55c/part0_pins.xml
 new file mode 100644
-index 0000000..b0a485b
+index 0000000..5d2fc5c
 --- /dev/null
 +++ b/board_files/Xilinx/au55c/part0_pins.xml
 @@ -0,0 +1,202 @@
@@ -1513,7 +1525,7 @@ index 0000000..b0a485b
 +</part_info>
 diff --git a/board_files/Xilinx/au55c/preset.xml b/board_files/Xilinx/au55c/preset.xml
 new file mode 100644
-index 0000000..b93e2c2
+index 0000000..1ea3fbf
 --- /dev/null
 +++ b/board_files/Xilinx/au55c/preset.xml
 @@ -0,0 +1,396 @@
@@ -1915,7 +1927,7 @@ index 0000000..b93e2c2
 +</ip_presets>
 diff --git a/board_files/Xilinx/au55c/xitem.json b/board_files/Xilinx/au55c/xitem.json
 new file mode 100644
-index 0000000..dfa2bde
+index 0000000..44048a5
 --- /dev/null
 +++ b/board_files/Xilinx/au55c/xitem.json
 @@ -0,0 +1,34 @@
@@ -2025,10 +2037,10 @@ index 0000000..102f812
 +connect_debug_port dbg_hub/clk [get_nets ref_clk_100mhz]
 diff --git a/constr/au55c/pins.xdc b/constr/au55c/pins.xdc
 new file mode 100644
-index 0000000..da94acd
+index 0000000..9887317
 --- /dev/null
 +++ b/constr/au55c/pins.xdc
-@@ -0,0 +1,59 @@
+@@ -0,0 +1,52 @@
 +# *************************************************************************
 +#
 +# Copyright 2021 Xilinx, Inc.
@@ -2081,16 +2093,9 @@ index 0000000..da94acd
 +# Fix the CATTRIP issue for custom flow
 +# Read AR72926 for details.
 +set_property -dict {PACKAGE_PIN BE45 IOSTANDARD LVCMOS18 PULLDOWN TRUE} [get_ports hbm_cattrip]
-+
-+set_property -dict {PACKAGE_PIN BH42 IOSTANDARD LVCMOS18} [get_ports satellite_uart_0_txd]
-+set_property -dict {PACKAGE_PIN BJ42 IOSTANDARD LVCMOS18} [get_ports satellite_uart_0_rxd]
-+set_property -dict {PACKAGE_PIN BE46 IOSTANDARD LVCMOS18} [get_ports satellite_gpio[0]]
-+set_property -dict {PACKAGE_PIN BH46 IOSTANDARD LVCMOS18} [get_ports satellite_gpio[1]]
-+set_property -dict {PACKAGE_PIN BF45 IOSTANDARD LVCMOS18} [get_ports satellite_gpio[2]]
-+set_property -dict {PACKAGE_PIN BF46 IOSTANDARD LVCMOS18} [get_ports satellite_gpio[3]]
 diff --git a/constr/au55c/timing.xdc b/constr/au55c/timing.xdc
 new file mode 100644
-index 0000000..1018e05
+index 0000000..1916aac
 --- /dev/null
 +++ b/constr/au55c/timing.xdc
 @@ -0,0 +1,39 @@
@@ -2131,12 +2136,12 @@ index 0000000..1018e05
 +resize_pblock [get_pblocks pblock_packet_adapter_rx] -add {CLOCKREGION_X2Y4:CLOCKREGION_X3Y5}
 +
 +create_pblock pblock_qdma_subsystem
-+add_cells_to_pblock [get_pblocks pblock_qdma_subsystem] [get_cells -quiet {qdma_if*.qdma_subsystem_inst}]
++add_cells_to_pblock [get_pblocks pblock_qdma_subsystem] [get_cells -quiet {qdma_subsystem_inst}]
 +resize_pblock [get_pblocks pblock_qdma_subsystem] -add {SLR0}
 \ No newline at end of file
 diff --git a/script/board_settings/au55c.tcl b/script/board_settings/au55c.tcl
 new file mode 100644
-index 0000000..d14836c
+index 0000000..0bcec1f
 --- /dev/null
 +++ b/script/board_settings/au55c.tcl
 @@ -0,0 +1,22 @@
@@ -2185,12 +2190,12 @@ index c689eb6..c0258b2 100644
 +    }
 +
      set ip_tcl_dir ${module_dir}/vivado_ip
-
+ 
      # Check the existence of "$ip_tcl_dir" and "${ip_tcl_dir}/vivado_ip.tcl"
 @@ -366,6 +371,11 @@ read_verilog -quiet [glob -nocomplain -directory $src_dir "*.{v,vh}"]
  read_verilog -quiet -sv [glob -nocomplain -directory $src_dir "*.sv"]
  read_vhdl -quiet [glob -nocomplain -directory $src_dir "*.vhd"]
-
+ 
 +# Read the HBM block diagram
 +source ${src_dir}/mem_ctrl/hbm_bd.tcl
 +make_wrapper -files [get_files ${top_build_dir}/open_nic_shell.srcs/sources_1/bd/hbm_bd/hbm_bd.bd] -top
@@ -2207,14 +2212,322 @@ index c689eb6..c0258b2 100644
 +    #_do_impl $jobs {"Vivado Implementation Defaults"}
 +    _do_impl $jobs {"Performance_Retiming"}
  }
-
+ 
  if {$post_impl} {
+diff --git a/src/box_250mhz/box_250mhz.sv b/src/box_250mhz/box_250mhz.sv
+old mode 100644
+new mode 100755
+index 913e86c..dcc0570
+--- a/src/box_250mhz/box_250mhz.sv
++++ b/src/box_250mhz/box_250mhz.sv
+@@ -1,21 +1,11 @@
+-// *************************************************************************
++//==============================================================================
++// Copyright (C) 2023, Advanced Micro Devices, Inc. All rights reserved.
++// Copyright (C) 2022, Xilinx, Inc. All rights reserved.
++// SPDX-License-Identifier: MIT
+ //
+-// Copyright 2020 Xilinx, Inc.
+-//
+-// Licensed under the Apache License, Version 2.0 (the "License");
+-// you may not use this file except in compliance with the License.
+-// You may obtain a copy of the License at
+-//
+-//     http://www.apache.org/licenses/LICENSE-2.0
+-//
+-// Unless required by applicable law or agreed to in writing, software
+-// distributed under the License is distributed on an "AS IS" BASIS,
+-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-// See the License for the specific language governing permissions and
+-// limitations under the License.
+-//
+-// *************************************************************************
++//==============================================================================
+ `timescale 1ns/1ps
++
+ module box_250mhz #(
+   parameter int MIN_PKT_LEN   = 64,
+   parameter int MAX_PKT_LEN   = 1518,
+@@ -76,6 +66,87 @@ module box_250mhz #(
+   input   [16*NUM_CMAC_PORT-1:0] s_axis_adap_rx_250mhz_tuser_dst,
+   output     [NUM_CMAC_PORT-1:0] s_axis_adap_rx_250mhz_tready,
+ 
++  output                         m_axis_user2rdma_roce_from_cmac_rx_tvalid,
++  output                 [511:0] m_axis_user2rdma_roce_from_cmac_rx_tdata,
++  output                  [63:0] m_axis_user2rdma_roce_from_cmac_rx_tkeep,
++  output                         m_axis_user2rdma_roce_from_cmac_rx_tlast,
++  input                          m_axis_user2rdma_roce_from_cmac_rx_tready,
++
++  input                          s_axis_rdma2user_to_cmac_tx_tvalid,
++  input                  [511:0] s_axis_rdma2user_to_cmac_tx_tdata,
++  input                   [63:0] s_axis_rdma2user_to_cmac_tx_tkeep,
++  input                          s_axis_rdma2user_to_cmac_tx_tlast,
++  output                         s_axis_rdma2user_to_cmac_tx_tready,
++
++  output                         m_axis_user2rdma_from_qdma_tx_tvalid,
++  output                 [511:0] m_axis_user2rdma_from_qdma_tx_tdata,
++  output                  [63:0] m_axis_user2rdma_from_qdma_tx_tkeep,
++  output                         m_axis_user2rdma_from_qdma_tx_tlast,
++  input                          m_axis_user2rdma_from_qdma_tx_tready,
++
++  input                   [63:0] s_axis_rdma2user_ieth_immdt_tdata,
++  input                          s_axis_rdma2user_ieth_immdt_tlast,
++  input                          s_axis_rdma2user_ieth_immdt_tvalid,
++  output                         s_axis_rdma2user_ieth_immdt_trdy,
++
++  input                          s_resp_hndler_i_send_cq_db_cnt_valid,
++  input                   [9 :0] s_resp_hndler_i_send_cq_db_addr,
++  input                   [31:0] s_resp_hndler_i_send_cq_db_cnt,
++  output                         s_resp_hndler_o_send_cq_db_rdy,
++
++  output                  [15:0] m_o_qp_sq_pidb_hndshk,
++  output                  [31:0] m_o_qp_sq_pidb_wr_addr_hndshk,
++  output                         m_o_qp_sq_pidb_wr_valid_hndshk,
++  input                          m_i_qp_sq_pidb_wr_rdy,
++
++  output                  [15:0] m_o_qp_rq_cidb_hndshk,
++  output                  [31:0] m_o_qp_rq_cidb_wr_addr_hndshk,
++  output                         m_o_qp_rq_cidb_wr_valid_hndshk,
++  input                          m_i_qp_rq_cidb_wr_rdy,
++
++  input                          s_rx_pkt_hndler_i_rq_db_data_valid,
++  input                   [9 :0] s_rx_pkt_hndler_i_rq_db_addr,
++  input                   [31:0] s_rx_pkt_hndler_i_rq_db_data,
++  output                         s_rx_pkt_hndler_o_rq_db_rdy,
++
++  output                         m_axi_compute_logic_awid,
++  output                [63 : 0] m_axi_compute_logic_awaddr,
++  output                 [3 : 0] m_axi_compute_logic_awqos,
++  output                 [7 : 0] m_axi_compute_logic_awlen,
++  output                 [2 : 0] m_axi_compute_logic_awsize,
++  output                 [1 : 0] m_axi_compute_logic_awburst,
++  output                 [3 : 0] m_axi_compute_logic_awcache,
++  output                 [2 : 0] m_axi_compute_logic_awprot,
++  output                         m_axi_compute_logic_awvalid,
++  input                          m_axi_compute_logic_awready,
++  output               [511 : 0] m_axi_compute_logic_wdata,
++  output                [63 : 0] m_axi_compute_logic_wstrb,
++  output                         m_axi_compute_logic_wlast,
++  output                         m_axi_compute_logic_wvalid,
++  input                          m_axi_compute_logic_wready,
++  output                         m_axi_compute_logic_awlock,
++  input                          m_axi_compute_logic_bid,
++  input                  [1 : 0] m_axi_compute_logic_bresp,
++  input                          m_axi_compute_logic_bvalid,
++  output                         m_axi_compute_logic_bready,
++  output                         m_axi_compute_logic_arid,
++  output                [63 : 0] m_axi_compute_logic_araddr,
++  output                 [7 : 0] m_axi_compute_logic_arlen,
++  output                 [2 : 0] m_axi_compute_logic_arsize,
++  output                 [1 : 0] m_axi_compute_logic_arburst,
++  output                 [3 : 0] m_axi_compute_logic_arcache,
++  output                 [2 : 0] m_axi_compute_logic_arprot,
++  output                         m_axi_compute_logic_arvalid,
++  input                          m_axi_compute_logic_arready,
++  input                          m_axi_compute_logic_rid,
++  input                [511 : 0] m_axi_compute_logic_rdata,
++  input                  [1 : 0] m_axi_compute_logic_rresp,
++  input                          m_axi_compute_logic_rlast,
++  input                          m_axi_compute_logic_rvalid,
++  output                         m_axi_compute_logic_rready,
++  output                         m_axi_compute_logic_arlock,
++  output                  [3:0]  m_axi_compute_logic_arqos,
++
+   input                   [15:0] mod_rstn,
+   output                  [15:0] mod_rst_done,
+ 
+@@ -86,34 +157,156 @@ module box_250mhz #(
+   input                          axis_aclk
+ );
+ 
+-  wire internal_box_rstn;
+-
+-  generic_reset #(
+-    .NUM_INPUT_CLK  (1),
+-    .RESET_DURATION (100)
+-  ) reset_inst (
+-    .mod_rstn     (box_rstn),
+-    .mod_rst_done (box_rst_done),
+-    .clk          (axil_aclk),
+-    .rstn         (internal_box_rstn)
+-  );
+-
+-  `include "box_250mhz_address_map_inst.vh"
+-
+-  generate if (USE_PHYS_FUNC == 0) begin
+-    // Terminate H2C and C2H interfaces of the box
+-    assign s_axis_qdma_h2c_tready     = {NUM_PHYS_FUNC{1'b1}};
+-
+-    assign m_axis_qdma_c2h_tvalid     = 0;
+-    assign m_axis_qdma_c2h_tdata      = 0;
+-    assign m_axis_qdma_c2h_tkeep      = 0;
+-    assign m_axis_qdma_c2h_tlast      = 0;
+-    assign m_axis_qdma_c2h_tuser_size = 0;
+-    assign m_axis_qdma_c2h_tuser_src  = 0;
+-    assign m_axis_qdma_c2h_tuser_dst  = 0;
+-  end
+-  endgenerate
+-
+-  `include "user_plugin_250mhz_inst.vh"
++localparam C_NUM_USER_BLOCK = 1;
++
++logic axil_rstn;
++logic axis_rstn;
++
++generic_reset #(
++  .NUM_INPUT_CLK  (2),
++  .RESET_DURATION (100)
++) reset_inst (
++  .mod_rstn     (box_rstn),
++  .mod_rst_done (box_rst_done),
++  .clk          ({axis_aclk, axil_aclk}),
++  .rstn         ({axis_rstn, axil_rstn})
++);
++
++// Make sure for all the unused reset pair, corresponding bits in
++// "mod_rst_done" are tied to 0
++assign mod_rst_done[15:C_NUM_USER_BLOCK] = {(16-C_NUM_USER_BLOCK){1'b1}};
++assign mod_rst_done[0]                   = box_rst_done;
++
++rdma_onic_plugin rdma_onic_plugin_inst (
++  .s_axil_awvalid            (s_axil_awvalid),
++  .s_axil_awaddr             (s_axil_awaddr),
++  .s_axil_awready            (s_axil_awready),
++  .s_axil_wvalid             (s_axil_wvalid),
++  .s_axil_wdata              (s_axil_wdata),
++  .s_axil_wready             (s_axil_wready),
++  .s_axil_bvalid             (s_axil_bvalid),
++  .s_axil_bresp              (s_axil_bresp),
++  .s_axil_bready             (s_axil_bready),
++  .s_axil_arvalid            (s_axil_arvalid),
++  .s_axil_araddr             (s_axil_araddr),
++  .s_axil_arready            (s_axil_arready),
++  .s_axil_rvalid             (s_axil_rvalid),
++  .s_axil_rdata              (s_axil_rdata),
++  .s_axil_rresp              (s_axil_rresp),
++  .s_axil_rready             (s_axil_rready),
++
++  // Receive packets from CMAC RX path
++  .s_axis_cmac_rx_tvalid     (s_axis_adap_rx_250mhz_tvalid),
++  .s_axis_cmac_rx_tdata      (s_axis_adap_rx_250mhz_tdata),
++  .s_axis_cmac_rx_tkeep      (s_axis_adap_rx_250mhz_tkeep),
++  .s_axis_cmac_rx_tlast      (s_axis_adap_rx_250mhz_tlast),
++  .s_axis_cmac_rx_tuser_size (s_axis_adap_rx_250mhz_tuser_size),
++  .s_axis_cmac_rx_tready     (s_axis_adap_rx_250mhz_tready),
++
++  .m_axis_user2rdma_roce_from_cmac_rx_tvalid (m_axis_user2rdma_roce_from_cmac_rx_tvalid),
++  .m_axis_user2rdma_roce_from_cmac_rx_tdata  (m_axis_user2rdma_roce_from_cmac_rx_tdata),
++  .m_axis_user2rdma_roce_from_cmac_rx_tkeep  (m_axis_user2rdma_roce_from_cmac_rx_tkeep),
++  .m_axis_user2rdma_roce_from_cmac_rx_tlast  (m_axis_user2rdma_roce_from_cmac_rx_tlast),
++  .m_axis_user2rdma_roce_from_cmac_rx_tready (m_axis_user2rdma_roce_from_cmac_rx_tready),
++
++  // Send packets to QDMA RX path
++  .m_axis_qdma_c2h_tvalid                    (m_axis_qdma_c2h_tvalid),
++  .m_axis_qdma_c2h_tdata                     (m_axis_qdma_c2h_tdata),
++  .m_axis_qdma_c2h_tkeep                     (m_axis_qdma_c2h_tkeep),
++  .m_axis_qdma_c2h_tlast                     (m_axis_qdma_c2h_tlast),
++  .m_axis_qdma_c2h_tuser_size                (m_axis_qdma_c2h_tuser_size),
++  .m_axis_qdma_c2h_tready                    (m_axis_qdma_c2h_tready),
++
++  // Get packets from QDMA TX path
++  .s_axis_qdma_h2c_tvalid                    (s_axis_qdma_h2c_tvalid),
++  .s_axis_qdma_h2c_tdata                     (s_axis_qdma_h2c_tdata),
++  .s_axis_qdma_h2c_tkeep                     (s_axis_qdma_h2c_tkeep),
++  .s_axis_qdma_h2c_tlast                     (s_axis_qdma_h2c_tlast),
++  .s_axis_qdma_h2c_tuser_size                (s_axis_qdma_h2c_tuser_size),
++  .s_axis_qdma_h2c_tready                    (s_axis_qdma_h2c_tready),
++
++  .m_axis_user2rdma_from_qdma_tx_tvalid      (m_axis_user2rdma_from_qdma_tx_tvalid),
++  .m_axis_user2rdma_from_qdma_tx_tdata       (m_axis_user2rdma_from_qdma_tx_tdata),
++  .m_axis_user2rdma_from_qdma_tx_tkeep       (m_axis_user2rdma_from_qdma_tx_tkeep),
++  .m_axis_user2rdma_from_qdma_tx_tlast       (m_axis_user2rdma_from_qdma_tx_tlast),
++  .m_axis_user2rdma_from_qdma_tx_tready      (m_axis_user2rdma_from_qdma_tx_tready),
++
++  // Send packets to CMAC TX path
++  .m_axis_cmac_tx_tvalid                     (m_axis_adap_tx_250mhz_tvalid),
++  .m_axis_cmac_tx_tdata                      (m_axis_adap_tx_250mhz_tdata),
++  .m_axis_cmac_tx_tkeep                      (m_axis_adap_tx_250mhz_tkeep),
++  .m_axis_cmac_tx_tlast                      (m_axis_adap_tx_250mhz_tlast),
++  .m_axis_cmac_tx_tuser_size                 (m_axis_adap_tx_250mhz_tuser_size),
++  .m_axis_cmac_tx_tready                     (m_axis_adap_tx_250mhz_tready),
++
++  .s_axis_rdma2user_to_cmac_tx_tvalid        (s_axis_rdma2user_to_cmac_tx_tvalid),
++  .s_axis_rdma2user_to_cmac_tx_tdata         (s_axis_rdma2user_to_cmac_tx_tdata),
++  .s_axis_rdma2user_to_cmac_tx_tkeep         (s_axis_rdma2user_to_cmac_tx_tkeep),
++  .s_axis_rdma2user_to_cmac_tx_tlast         (s_axis_rdma2user_to_cmac_tx_tlast),
++  .s_axis_rdma2user_to_cmac_tx_tready        (s_axis_rdma2user_to_cmac_tx_tready),
++
++  .m_axi_compute_logic_awid                  (m_axi_compute_logic_awid),
++  .m_axi_compute_logic_awaddr                (m_axi_compute_logic_awaddr),
++  .m_axi_compute_logic_awqos                 (m_axi_compute_logic_awqos),
++  .m_axi_compute_logic_awlen                 (m_axi_compute_logic_awlen),
++  .m_axi_compute_logic_awsize                (m_axi_compute_logic_awsize),
++  .m_axi_compute_logic_awburst               (m_axi_compute_logic_awburst),
++  .m_axi_compute_logic_awcache               (m_axi_compute_logic_awcache),
++  .m_axi_compute_logic_awprot                (m_axi_compute_logic_awprot),
++  .m_axi_compute_logic_awvalid               (m_axi_compute_logic_awvalid),
++  .m_axi_compute_logic_awready               (m_axi_compute_logic_awready),
++  .m_axi_compute_logic_wdata                 (m_axi_compute_logic_wdata),
++  .m_axi_compute_logic_wstrb                 (m_axi_compute_logic_wstrb),
++  .m_axi_compute_logic_wlast                 (m_axi_compute_logic_wlast),
++  .m_axi_compute_logic_wvalid                (m_axi_compute_logic_wvalid),
++  .m_axi_compute_logic_wready                (m_axi_compute_logic_wready),
++  .m_axi_compute_logic_awlock                (m_axi_compute_logic_awlock),
++  .m_axi_compute_logic_bid                   (m_axi_compute_logic_bid),
++  .m_axi_compute_logic_bresp                 (m_axi_compute_logic_bresp),
++  .m_axi_compute_logic_bvalid                (m_axi_compute_logic_bvalid),
++  .m_axi_compute_logic_bready                (m_axi_compute_logic_bready),
++  .m_axi_compute_logic_arid                  (m_axi_compute_logic_arid),
++  .m_axi_compute_logic_araddr                (m_axi_compute_logic_araddr),
++  .m_axi_compute_logic_arlen                 (m_axi_compute_logic_arlen),
++  .m_axi_compute_logic_arsize                (m_axi_compute_logic_arsize),
++  .m_axi_compute_logic_arburst               (m_axi_compute_logic_arburst),
++  .m_axi_compute_logic_arcache               (m_axi_compute_logic_arcache),
++  .m_axi_compute_logic_arprot                (m_axi_compute_logic_arprot),
++  .m_axi_compute_logic_arvalid               (m_axi_compute_logic_arvalid),
++  .m_axi_compute_logic_arready               (m_axi_compute_logic_arready),
++  .m_axi_compute_logic_rid                   (m_axi_compute_logic_rid),
++  .m_axi_compute_logic_rdata                 (m_axi_compute_logic_rdata),
++  .m_axi_compute_logic_rresp                 (m_axi_compute_logic_rresp),
++  .m_axi_compute_logic_rlast                 (m_axi_compute_logic_rlast),
++  .m_axi_compute_logic_rvalid                (m_axi_compute_logic_rvalid),
++  .m_axi_compute_logic_rready                (m_axi_compute_logic_rready),
++  .m_axi_compute_logic_arlock                (m_axi_compute_logic_arlock),
++  .m_axi_compute_logic_arqos                 (m_axi_compute_logic_arqos),
++
++  .axil_aclk  (axil_aclk),
++  .axil_rstn  (axil_rstn),
++  .axis_aclk  (axis_aclk),
++  .axis_rstn  (axis_rstn)
++);
++
++assign m_axis_qdma_c2h_tuser_src = 16'd0;
++assign m_axis_qdma_c2h_tuser_dst = 16'h1 << 0;
++assign m_axis_adap_tx_250mhz_tuser_src = 16'd0;
++assign m_axis_adap_tx_250mhz_tuser_dst = 16'h1 << 6;
++
++// TODO: Disable hardware handshaking for doorbell ringing in the current implementation
++assign s_resp_hndler_o_send_cq_db_rdy = 1'b0;
++assign s_rx_pkt_hndler_o_rq_db_rdy    = 1'b0;
++
++assign m_o_qp_sq_pidb_hndshk          = 0;
++assign m_o_qp_sq_pidb_wr_addr_hndshk  = 0;
++assign m_o_qp_sq_pidb_wr_valid_hndshk = 0;
++
++assign m_o_qp_rq_cidb_hndshk          = 0;
++assign m_o_qp_rq_cidb_wr_addr_hndshk  = 0;
++assign m_o_qp_rq_cidb_wr_valid_hndshk = 0;
++
++// TODO: Disable ieth and immdt data
++assign s_axis_rdma2user_ieth_immdt_trdy = 1'b1;
+ 
+ endmodule: box_250mhz
 diff --git a/src/cmac_subsystem/vivado_ip/cmac_usplus_0_au55c.tcl b/src/cmac_subsystem/vivado_ip/cmac_usplus_0_au55c.tcl
 new file mode 100644
-index 0000000..3378e49
+index 0000000..425b800
 --- /dev/null
 +++ b/src/cmac_subsystem/vivado_ip/cmac_usplus_0_au55c.tcl
-@@ -0,0 +1,49 @@
+@@ -0,0 +1,47 @@
 +# *************************************************************************
 +#
 +# Copyright 2020 Xilinx, Inc.
@@ -2236,7 +2549,7 @@ index 0000000..3378e49
 +create_ip -name cmac_usplus -vendor xilinx.com -library ip -module_name $cmac_usplus -dir ${ip_build_dir}
 +set_property -dict {
 +    CONFIG.CMAC_CAUI4_MODE {1}
-+    CONFIG.NUM_LANES {10x10}
++    CONFIG.NUM_LANES {4x25}
 +    CONFIG.GT_REF_CLK_FREQ {161.1328125}
 +    CONFIG.USER_INTERFACE {AXIS}
 +    CONFIG.GT_DRP_CLK {125.00}
@@ -2258,15 +2571,13 @@ index 0000000..3378e49
 +    CONFIG.GT_RX_BUFFER_BYPASS {0}
 +    CONFIG.INS_LOSS_NYQ {20}
 +    CONFIG.INCLUDE_RS_FEC {1}
-+    CONFIG.ETHERNET_BOARD_INTERFACE {qsfp0_4x}
-+    CONFIG.DIFFCLK_BOARD_INTERFACE {qsfp0_refclk0}
 +    CONFIG.ENABLE_PIPELINE_REG {1}
 +} [get_ips $cmac_usplus]
 +set_property CONFIG.RX_MIN_PACKET_LEN $min_pkt_len [get_ips $cmac_usplus]
 +set_property CONFIG.RX_MAX_PACKET_LEN $max_pkt_len [get_ips $cmac_usplus]
 diff --git a/src/cmac_subsystem/vivado_ip/cmac_usplus_1_au55c.tcl b/src/cmac_subsystem/vivado_ip/cmac_usplus_1_au55c.tcl
 new file mode 100644
-index 0000000..f8d5069
+index 0000000..a45c1f7
 --- /dev/null
 +++ b/src/cmac_subsystem/vivado_ip/cmac_usplus_1_au55c.tcl
 @@ -0,0 +1,49 @@
@@ -2525,10 +2836,10 @@ index 0000000..f47097d
 \ No newline at end of file
 diff --git a/src/mem_ctrl/hbm_bd.tcl b/src/mem_ctrl/hbm_bd.tcl
 new file mode 100644
-index 0000000..a94e29e
+index 0000000..90b2218
 --- /dev/null
 +++ b/src/mem_ctrl/hbm_bd.tcl
-@@ -0,0 +1,426 @@
+@@ -0,0 +1,425 @@
 +
 +################################################################
 +# This is a generated script based on design: hbm_bd
@@ -2954,7 +3265,6 @@ index 0000000..a94e29e
 +
 +
 +common::send_gid_msg -ssname BD::TCL -id 2053 -severity "WARNING" "This Tcl script was generated from a block design that has not been validated. It is possible that design <$design_name> may result in errors during validation."
-+
 diff --git a/src/open_nic_shell.sv b/src/open_nic_shell.sv
 index e2f6c3f..6b6cc10 100644
 --- a/src/open_nic_shell.sv
@@ -2974,11 +3284,11 @@ index e2f6c3f..6b6cc10 100644
 +`elsif __au55c__
 +  output                         hbm_cattrip,
  `endif
-
+ 
    input                   [15:0] pcie_rxp,
 @@ -147,27 +149,27 @@ module open_nic_shell #(
    end
-
+ 
  `ifdef __synthesis__
 -  wire         powerup_rstn;
 -  wire         pcie_user_lnk_up;
@@ -2986,7 +3296,7 @@ index e2f6c3f..6b6cc10 100644
 +  logic         powerup_rstn;
 +  logic         pcie_user_lnk_up;
 +  logic         pcie_phy_ready;
-
+ 
    // BAR2-mapped master AXI-Lite feeding into system configuration block
 -  wire         axil_pcie_awvalid;
 -  wire  [31:0] axil_pcie_awaddr;
@@ -3020,9 +3330,9 @@ index e2f6c3f..6b6cc10 100644
 +  logic  [31:0] axil_pcie_rdata;
 +  logic   [1:0] axil_pcie_rresp;
 +  logic         axil_pcie_rready;
-
+ 
    IBUF pcie_rstn_ibuf_inst (.I(pcie_rstn), .O(pcie_rstn_int));
-
+ 
 @@ -180,6 +182,9 @@ module open_nic_shell #(
  `elsif __au50__
    // Same for AU50
@@ -3031,12 +3341,12 @@ index e2f6c3f..6b6cc10 100644
 +  // Same for AU55C
 +  OBUF hbm_cattrip_obuf_inst (.I(1'b0), .O(hbm_cattrip));
  `endif
-
+ 
  `ifdef __zynq_family__
 @@ -187,187 +192,730 @@ module open_nic_shell #(
  `endif
  `endif
-
+ 
 -  wire                         axil_qdma_awvalid;
 -  wire                  [31:0] axil_qdma_awaddr;
 -  wire                         axil_qdma_awready;
@@ -3281,7 +3591,7 @@ index e2f6c3f..6b6cc10 100644
 +  logic                  [31:0] axil_box1_rdata;
 +  logic                   [1:0] axil_box1_rresp;
 +  logic                         axil_box1_rready;
-
+ 
    // QDMA subsystem interfaces to the box running at 250MHz
 -  wire     [NUM_PHYS_FUNC-1:0] axis_qdma_h2c_tvalid;
 -  wire [512*NUM_PHYS_FUNC-1:0] axis_qdma_h2c_tdata;
@@ -3316,7 +3626,7 @@ index e2f6c3f..6b6cc10 100644
 +  logic  [16*NUM_PHYS_FUNC-1:0] axis_qdma_c2h_tuser_src;
 +  logic  [16*NUM_PHYS_FUNC-1:0] axis_qdma_c2h_tuser_dst;
 +  logic     [NUM_PHYS_FUNC-1:0] axis_qdma_c2h_tready;
-
+ 
    // Packet adapter interfaces to the box running at 250MHz
 -  wire     [NUM_CMAC_PORT-1:0] axis_adap_tx_250mhz_tvalid;
 -  wire [512*NUM_CMAC_PORT-1:0] axis_adap_tx_250mhz_tdata;
@@ -3352,7 +3662,7 @@ index e2f6c3f..6b6cc10 100644
 +  logic  [16*NUM_CMAC_PORT-1:0] axis_adap_rx_250mhz_tuser_src;
 +  logic  [16*NUM_CMAC_PORT-1:0] axis_adap_rx_250mhz_tuser_dst;
 +  logic     [NUM_CMAC_PORT-1:0] axis_adap_rx_250mhz_tready;
-
+ 
    // Packet adapter interfaces to the box running at 322MHz
 -  wire     [NUM_CMAC_PORT-1:0] axis_adap_tx_322mhz_tvalid;
 -  wire [512*NUM_CMAC_PORT-1:0] axis_adap_tx_322mhz_tdata;
@@ -3378,7 +3688,7 @@ index e2f6c3f..6b6cc10 100644
 +  logic  [64*NUM_CMAC_PORT-1:0] axis_adap_rx_322mhz_tkeep;
 +  logic     [NUM_CMAC_PORT-1:0] axis_adap_rx_322mhz_tlast;
 +  logic     [NUM_CMAC_PORT-1:0] axis_adap_rx_322mhz_tuser_err;
-
+ 
    // CMAC subsystem interfaces to the box running at 322MHz
 -  wire     [NUM_CMAC_PORT-1:0] axis_cmac_tx_tvalid;
 -  wire [512*NUM_CMAC_PORT-1:0] axis_cmac_tx_tdata;
@@ -3916,9 +4226,9 @@ index e2f6c3f..6b6cc10 100644
 +  logic                         axil_aclk;
 +  logic                         axis_aclk;
 +  logic     [NUM_CMAC_PORT-1:0] cmac_clk;
-
+ 
    // Unused reset pairs must have their "reset_done" tied to 1
-
+ 
    // First 4-bit for QDMA subsystem
    assign qdma_rstn           = shell_rstn[0];
    assign shell_rst_done[0]   = qdma_rst_done;
@@ -3928,13 +4238,13 @@ index e2f6c3f..6b6cc10 100644
 +  assign shell_rst_done[2]   = qdma_csr_prog_done;
 +  assign shell_rst_done[3]   = 1'b1;
 +  //assign shell_rst_done[3:2] = 2'b11;
-
+ 
    // For each CMAC port, use the subsequent 4-bit: bit 0 for CMAC subsystem and
    // bit 1 for the corresponding adapter
 @@ -459,6 +1007,24 @@ module open_nic_shell #(
      .m_axil_qdma_rresp   (axil_qdma_rresp),
      .m_axil_qdma_rready  (axil_qdma_rready),
-
+ 
 +    .m_axil_qdma_csr_awaddr (axil_qdma_csr_awaddr),
 +    .m_axil_qdma_csr_awvalid(axil_qdma_csr_awvalid),
 +    // Only allowed to program axil csr interface when qdma_csr_prog_done is 1'b1
@@ -3959,7 +4269,7 @@ index e2f6c3f..6b6cc10 100644
 @@ -493,6 +1059,23 @@ module open_nic_shell #(
      .m_axil_cmac_rresp   (axil_cmac_rresp),
      .m_axil_cmac_rready  (axil_cmac_rready),
-
+ 
 +    .m_axil_rdma_awvalid (axil_rdma_awvalid),
 +    .m_axil_rdma_awaddr  (axil_rdma_awaddr),
 +    .m_axil_rdma_awready (axil_rdma_awready),
@@ -3983,7 +4293,7 @@ index e2f6c3f..6b6cc10 100644
 @@ -578,6 +1161,46 @@ module open_nic_shell #(
      .s_axis_c2h_tuser_dst                 (axis_qdma_c2h_tuser_dst),
      .s_axis_c2h_tready                    (axis_qdma_c2h_tready),
-
+ 
 +    // QDMA DMA Engine - AXI MM interface
 +    .m_axi_awready                        (axi_qdma_mm_awready),
 +    .m_axi_wready                         (axi_qdma_mm_wready),
@@ -4030,7 +4340,7 @@ index e2f6c3f..6b6cc10 100644
 @@ -649,9 +1272,67 @@ module open_nic_shell #(
      .m_axis_qdma_cpl_tready               (m_axis_qdma_cpl_sim_tready),
  `endif
-
+ 
 +    .s_csr_prog_done                      (qdma_csr_prog_done),
 +    .s_axil_csr_awaddr                    (axil_qdma_csr_awaddr),
 +    .s_axil_csr_awprot                    (3'd0),
@@ -4090,7 +4400,7 @@ index e2f6c3f..6b6cc10 100644
 +
      .mod_rstn                             (qdma_rstn),
      .mod_rst_done                         (qdma_rst_done),
-
+ 
 +    .ref_clk_100mhz                       (hbm_ref_clk),
      .axil_aclk                            (axil_aclk),
      .axis_aclk                            (axis_aclk)
@@ -4098,7 +4408,7 @@ index e2f6c3f..6b6cc10 100644
 @@ -786,6 +1467,809 @@ module open_nic_shell #(
    end: cmac_port
    endgenerate
-
+ 
 +  // RDMA subsystem
 +  // TODO: retry buffer and hardware handshaking are not supported at the moment
 +  rdma_subsystem_wrapper rdma_subsystem_inst (
@@ -4908,7 +5218,7 @@ index e2f6c3f..6b6cc10 100644
 @@ -846,14 +2330,104 @@ module open_nic_shell #(
      .s_axis_adap_rx_250mhz_tuser_dst  (axis_adap_rx_250mhz_tuser_dst),
      .s_axis_adap_rx_250mhz_tready     (axis_adap_rx_250mhz_tready),
-
+ 
 -    .mod_rstn                         (user_250mhz_rstn),
 -    .mod_rst_done                     (user_250mhz_rst_done),
 -
@@ -5016,12 +5326,12 @@ index e2f6c3f..6b6cc10 100644
 +    .axil_aclk    (axil_aclk),
 +    .axis_aclk    (axis_aclk)
    );
-
+ 
    box_322mhz #(
 @@ -914,4 +2488,25 @@ module open_nic_shell #(
      .cmac_clk                        (cmac_clk)
    );
-
+ 
 -endmodule: open_nic_shell
 +  assign axi_rdma_send_write_payload_awqos = 16'd0;
 +  assign axi_rdma_send_write_payload_arqos = 16'd0;
@@ -5069,13 +5379,13 @@ index 7ce55e9..2543c1a 100644
      .s_axil_rvalid  (s_axil_rvalid),
      .s_axil_rdata   (s_axil_rdata),
 diff --git a/src/qdma_subsystem/qdma_subsystem.sv b/src/qdma_subsystem/qdma_subsystem.sv
-index e46dcb9..207ed0a 100644
+index e46dcb9..0bf27b5 100644
 --- a/src/qdma_subsystem/qdma_subsystem.sv
 +++ b/src/qdma_subsystem/qdma_subsystem.sv
 @@ -59,6 +59,46 @@ module qdma_subsystem #(
    input   [16*NUM_PHYS_FUNC-1:0] s_axis_c2h_tuser_dst,
    output     [NUM_PHYS_FUNC-1:0] s_axis_c2h_tready,
-
+ 
 +  // QDMA DMA Engine - AXI MM interface
 +  input                          m_axi_awready,
 +  input                          m_axi_wready,
@@ -5122,7 +5432,7 @@ index e46dcb9..207ed0a 100644
 @@ -135,9 +175,78 @@ module qdma_subsystem #(
    input                          m_axis_qdma_cpl_tready,
  `endif
-
+ 
 +  // QDMA control/status register interface
 +  output                         s_csr_prog_done,
 +  input                   [31:0] s_axil_csr_awaddr,
@@ -5184,7 +5494,7 @@ index e46dcb9..207ed0a 100644
 +
    input                          mod_rstn,
    output                         mod_rst_done,
-
+ 
 +`ifdef __au55n__
 +  output                        ref_clk_100mhz,
 +`elsif __au55c__
@@ -5201,7 +5511,7 @@ index e46dcb9..207ed0a 100644
 @@ -172,6 +281,47 @@ module qdma_subsystem #(
    wire   [5:0] axis_qdma_c2h_mty;
    wire         axis_qdma_c2h_tready;
-
+ 
 +  /*
 +  wire         axi_qdma_mm_awready;
 +  wire         axi_qdma_mm_wready;
@@ -5249,7 +5559,7 @@ index e46dcb9..207ed0a 100644
 @@ -214,6 +364,20 @@ module qdma_subsystem #(
    wire         h2c_byp_in_st_no_dma;
    wire         h2c_byp_in_st_rdy;
-
+ 
 +  wire  [63:0] h2c_byp_in_mm_radr;
 +  wire  [63:0] h2c_byp_in_mm_wadr;
 +  wire  [15:0] h2c_byp_in_mm_len;
@@ -5270,7 +5580,7 @@ index e46dcb9..207ed0a 100644
 @@ -236,6 +400,20 @@ module qdma_subsystem #(
    wire   [6:0] c2h_byp_in_st_csh_pfch_tag;
    wire         c2h_byp_in_st_csh_rdy;
-
+ 
 +  wire  [63:0] c2h_byp_in_mm_radr;
 +  wire  [63:0] c2h_byp_in_mm_wadr;
 +  wire  [15:0] c2h_byp_in_mm_len;
@@ -5286,12 +5596,12 @@ index e46dcb9..207ed0a 100644
 +  wire         c2h_byp_in_mm_rdy;
 +
    wire         axil_aresetn;
-
+ 
    // Reset is clocked by the 125MHz AXI-Lite clock
 @@ -276,6 +454,19 @@ module qdma_subsystem #(
    assign h2c_byp_in_st_cidx         = 0;
    assign h2c_byp_in_st_no_dma       = 1'b0;
-
+ 
 +  assign h2c_byp_in_mm_radr         = 0;
 +  assign h2c_byp_in_mm_wadr         = 0;
 +  assign h2c_byp_in_mm_len          = 0;
@@ -5311,7 +5621,7 @@ index e46dcb9..207ed0a 100644
 @@ -285,6 +476,19 @@ module qdma_subsystem #(
    assign c2h_byp_in_st_csh_func     = 0;
    assign c2h_byp_in_st_csh_pfch_tag = 0;
-
+ 
 +  assign c2h_byp_in_mm_radr         = 0;
 +  assign c2h_byp_in_mm_wadr         = 0;
 +  assign c2h_byp_in_mm_len          = 0;
@@ -5331,7 +5641,7 @@ index e46dcb9..207ed0a 100644
 @@ -308,6 +512,45 @@ module qdma_subsystem #(
      .m_axil_rresp                    (m_axil_pcie_rresp),
      .m_axil_rready                   (m_axil_pcie_rready),
-
+ 
 +    .m_axi_awready                   (m_axi_awready),
 +    .m_axi_wready                    (m_axi_wready),
 +    .m_axi_bid                       (m_axi_bid),
@@ -5377,7 +5687,7 @@ index e46dcb9..207ed0a 100644
 @@ -375,6 +618,20 @@ module qdma_subsystem #(
      .h2c_byp_in_st_no_dma            (h2c_byp_in_st_no_dma),
      .h2c_byp_in_st_rdy               (h2c_byp_in_st_rdy),
-
+ 
 +    .h2c_byp_in_mm_radr              (h2c_byp_in_mm_radr),
 +    .h2c_byp_in_mm_wadr              (h2c_byp_in_mm_wadr),
 +    .h2c_byp_in_mm_len               (h2c_byp_in_mm_len),
@@ -5398,7 +5708,7 @@ index e46dcb9..207ed0a 100644
 @@ -397,6 +654,77 @@ module qdma_subsystem #(
      .c2h_byp_in_st_csh_pfch_tag      (c2h_byp_in_st_csh_pfch_tag),
      .c2h_byp_in_st_csh_rdy           (c2h_byp_in_st_csh_rdy),
-
+ 
 +    .c2h_byp_in_mm_radr              (c2h_byp_in_mm_radr),
 +    .c2h_byp_in_mm_wadr              (c2h_byp_in_mm_wadr),
 +    .c2h_byp_in_mm_len               (c2h_byp_in_mm_len),
@@ -5474,7 +5784,7 @@ index e46dcb9..207ed0a 100644
      .pcie_refclk_gt                  (pcie_refclk_gt),
      .pcie_rstn                       (pcie_rstn),
 @@ -407,6 +735,17 @@ module qdma_subsystem #(
-
+ 
      .axil_aclk                       (axil_aclk),
      .axis_aclk                       (axis_aclk),
 +
@@ -5517,7 +5827,7 @@ index e46dcb9..207ed0a 100644
 +    end
 +
    endgenerate
-
+ 
  endmodule: qdma_subsystem
 diff --git a/src/qdma_subsystem/qdma_subsystem_c2h.sv b/src/qdma_subsystem/qdma_subsystem_c2h.sv
 index 50e9082..b230c82 100644
@@ -5537,11 +5847,11 @@ index 50e9082..b230c82 100644
    assign m_axis_qdma_cpl_tdata[26:16]         = cpl_fifo_dout[42:32];
 -  assign m_axis_qdma_cpl_tdata[15:0]          = 0;
 +  assign m_axis_qdma_cpl_tdata[15:0]          = 0;*/
-
+ 
    assign m_axis_qdma_cpl_ctrl_no_wrb_marker   = 1'b0;
    assign m_axis_qdma_cpl_ctrl_col_idx         = 0;
 diff --git a/src/qdma_subsystem/qdma_subsystem_h2c.sv b/src/qdma_subsystem/qdma_subsystem_h2c.sv
-index 6a7ee26..38cbe65 100644
+index 6a7ee26..4b183c5 100644
 --- a/src/qdma_subsystem/qdma_subsystem_h2c.sv
 +++ b/src/qdma_subsystem/qdma_subsystem_h2c.sv
 @@ -71,7 +71,8 @@ module qdma_subsystem_h2c #(
@@ -5555,13 +5865,13 @@ index 6a7ee26..38cbe65 100644
                       s_axis_qdma_h2c_tuser_qid}),
      .s_axis_tid    (0),
 diff --git a/src/qdma_subsystem/qdma_subsystem_qdma_wrapper.v b/src/qdma_subsystem/qdma_subsystem_qdma_wrapper.v
-index cfd0dca..fab0d76 100644
+index cfd0dca..6cfbf05 100644
 --- a/src/qdma_subsystem/qdma_subsystem_qdma_wrapper.v
 +++ b/src/qdma_subsystem/qdma_subsystem_qdma_wrapper.v
 @@ -42,6 +42,45 @@ module qdma_subsystem_qdma_wrapper (
    input    [1:0] m_axil_rresp,
    output         m_axil_rready,
-
+ 
 +  input          m_axi_awready,
 +  input          m_axi_wready,
 +  input  [3:0]   m_axi_bid,
@@ -5607,7 +5917,7 @@ index cfd0dca..fab0d76 100644
 @@ -109,6 +148,20 @@ module qdma_subsystem_qdma_wrapper (
    input          h2c_byp_in_st_no_dma,
    output         h2c_byp_in_st_rdy,
-
+ 
 +  input  [63:0]  h2c_byp_in_mm_radr,
 +  input  [63:0]  h2c_byp_in_mm_wadr,
 +  input  [15:0]  h2c_byp_in_mm_len,
@@ -5628,7 +5938,7 @@ index cfd0dca..fab0d76 100644
 @@ -131,6 +184,79 @@ module qdma_subsystem_qdma_wrapper (
    input    [6:0] c2h_byp_in_st_csh_pfch_tag,
    output         c2h_byp_in_st_csh_rdy,
-
+ 
 +  input   [63:0] c2h_byp_in_mm_radr,
 +  input   [63:0] c2h_byp_in_mm_wadr,
 +  input   [15:0] c2h_byp_in_mm_len,
@@ -5706,7 +6016,7 @@ index cfd0dca..fab0d76 100644
    input          pcie_refclk_gt,
    input          pcie_rstn,
 @@ -141,6 +267,19 @@ module qdma_subsystem_qdma_wrapper (
-
+ 
    output         axis_aclk,
    output         axil_aclk,
 +
@@ -5724,11 +6034,11 @@ index cfd0dca..fab0d76 100644
 +
    output         aresetn
  );
-
+ 
 @@ -150,6 +289,27 @@ module qdma_subsystem_qdma_wrapper (
-
+ 
    reg   [1:0] aresetn_sync = 2'b11;
-
+ 
 +  (* mark_debug = "true" *) wire         qdma_csr_prog_done;
 +  (* mark_debug = "true" *) wire  [31:0] qdma_axil_csr_awaddr;
 +  (* mark_debug = "true" *) wire   [2:0] qdma_axil_csr_awprot;
@@ -5754,9 +6064,9 @@ index cfd0dca..fab0d76 100644
    wire [31:0] qdma_axil_awaddr;
    wire  [2:0] qdma_axil_awprot;
 @@ -198,11 +358,11 @@ module qdma_subsystem_qdma_wrapper (
-
+ 
    assign axis_aclk = aclk_250mhz;
-
+ 
 -  // Generate 125MHz 'axil_aclk'
 +  // Generate 125MHz 'axil_aclk' and 100MHz 'ref_clk_100mhz'.
    qdma_subsystem_clk_div clk_div_inst (
@@ -5765,12 +6075,12 @@ index cfd0dca..fab0d76 100644
 -    .locked   ()
 +    .clk_out2 (ref_clk_100mhz)
    );
-
+ 
    // Generate reset w.r.t. the 125MHz clock
 @@ -260,6 +420,66 @@ module qdma_subsystem_qdma_wrapper (
      .m_axi_aresetn (aresetn)
    );
-
+ 
 +  qdma_subsystem_axi_csr_cdc axi_csr_cdc_inst (
 +    .s_axi_awvalid (s_axil_csr_awvalid),
 +    .s_axi_awaddr  (s_axil_csr_awaddr),
@@ -5837,7 +6147,7 @@ index cfd0dca..fab0d76 100644
 @@ -335,6 +555,20 @@ module qdma_subsystem_qdma_wrapper (
      .h2c_byp_in_st_no_dma                 (h2c_byp_in_st_no_dma),
      .h2c_byp_in_st_rdy                    (h2c_byp_in_st_rdy),
-
+ 
 +    .h2c_byp_in_mm_radr                   (h2c_byp_in_mm_radr),
 +    .h2c_byp_in_mm_wadr                   (h2c_byp_in_mm_wadr),
 +    .h2c_byp_in_mm_len                    (h2c_byp_in_mm_len),
@@ -5858,7 +6168,7 @@ index cfd0dca..fab0d76 100644
 @@ -357,12 +591,31 @@ module qdma_subsystem_qdma_wrapper (
      .c2h_byp_in_st_csh_pfch_tag           (c2h_byp_in_st_csh_pfch_tag),
      .c2h_byp_in_st_csh_rdy                (c2h_byp_in_st_csh_rdy),
-
+ 
 +    .c2h_byp_in_mm_radr                   (c2h_byp_in_mm_radr),
 +    .c2h_byp_in_mm_wadr                   (c2h_byp_in_mm_wadr),
 +    .c2h_byp_in_mm_len                    (c2h_byp_in_mm_len),
@@ -5878,7 +6188,7 @@ index cfd0dca..fab0d76 100644
      .usr_irq_in_fnc                       (usr_irq_in_fnc),
      .usr_irq_out_ack                      (usr_irq_out_ack),
      .usr_irq_out_fail                     (usr_irq_out_fail),
-
+ 
 +    .st_rx_msg_rdy                        (1'b1),
 +    .st_rx_msg_valid                      (),
 +    .st_rx_msg_last                       (),
@@ -5890,7 +6200,7 @@ index cfd0dca..fab0d76 100644
 @@ -384,6 +637,86 @@ module qdma_subsystem_qdma_wrapper (
      .dsc_crdt_in_fence                    (dsc_crdt_in_fence),
      .dsc_crdt_in_rdy                      (dsc_crdt_in_rdy),
-
+ 
 +    .m_axi_awready                        (m_axi_awready),
 +    .m_axi_wready                         (m_axi_wready),
 +    .m_axi_bid                            (m_axi_bid),
@@ -5977,7 +6287,7 @@ index cfd0dca..fab0d76 100644
 @@ -424,6 +757,65 @@ module qdma_subsystem_qdma_wrapper (
      .s_axis_c2h_cmpt_ctrl_no_wrb_marker   (s_axis_cpl_ctrl_no_wrb_marker),
      .s_axis_c2h_cmpt_tready               (s_axis_cpl_tready),
-
+ 
 +    // Control status register interface
 +    .csr_prog_done                        (qdma_csr_prog_done),
 +    .s_axil_csr_awaddr                    (qdma_axil_csr_awaddr),
@@ -6085,7 +6395,7 @@ index 07b1095..2e1c63e 100644
  # *************************************************************************
  set qdma qdma_no_sriov
  create_ip -name qdma -vendor xilinx.com -library ip -module_name $qdma -dir ${ip_build_dir}
--set_property -dict {
+-set_property -dict { 
 +set_property -dict {
      CONFIG.mode_selection {Advanced}
      CONFIG.pl_link_cap_max_link_width {X16}
@@ -6098,7 +6408,7 @@ index 9a87ceb..206b760 100644
  # *************************************************************************
  set qdma qdma_no_sriov
  create_ip -name qdma -vendor xilinx.com -library ip -module_name $qdma -dir ${ip_build_dir}
--set_property -dict {
+-set_property -dict { 
 +set_property -dict {
      CONFIG.mode_selection {Advanced}
 -    CONFIG.pl_link_cap_max_link_width {X16}
@@ -6165,10 +6475,10 @@ index 5bb9b5c..4b7e1f7 100644
      CONFIG.xlnx_ref_board {AU280}
 diff --git a/src/qdma_subsystem/vivado_ip/qdma_no_sriov_au55c.tcl b/src/qdma_subsystem/vivado_ip/qdma_no_sriov_au55c.tcl
 new file mode 100644
-index 0000000..ead6edb
+index 0000000..1f5c3df
 --- /dev/null
 +++ b/src/qdma_subsystem/vivado_ip/qdma_no_sriov_au55c.tcl
-@@ -0,0 +1,41 @@
+@@ -0,0 +1,40 @@
 +# *************************************************************************
 +#
 +# Copyright 2020 Xilinx, Inc.
@@ -6209,7 +6519,6 @@ index 0000000..ead6edb
 +
 +set_property CONFIG.tl_pf_enable_reg $num_phys_func [get_ips $qdma]
 +set_property CONFIG.num_queues $num_queue [get_ips $qdma]
-+
 diff --git a/src/qdma_subsystem/vivado_ip/qdma_subsystem_axi_crossbar.tcl b/src/qdma_subsystem/vivado_ip/qdma_subsystem_axi_crossbar.tcl
 index 20082af..6a88fca 100644
 --- a/src/qdma_subsystem/vivado_ip/qdma_subsystem_axi_crossbar.tcl
@@ -6218,7 +6527,7 @@ index 20082af..6a88fca 100644
  }
  set_property "CONFIG.M0${num_phys_func}_A00_BASE_ADDR" {0x0000000000004000} [get_ips $axi_crossbar]
  set_property "CONFIG.M0${num_phys_func}_A00_ADDR_WIDTH" {12} [get_ips $axi_crossbar]
--set_property -dict {
+-set_property -dict { 
 +set_property -dict {
      CONFIG.PROTOCOL {AXI4LITE}
      CONFIG.CONNECTIVITY_MODE {SASD}
@@ -6271,13 +6580,13 @@ index 0922cba..511ceec 100644
  # *************************************************************************
  set ecc qdma_subsystem_c2h_ecc
  create_ip -name ecc -vendor xilinx.com -library ip -module_name $ecc -dir ${ip_build_dir}
--set_property -dict {
+-set_property -dict { 
 +set_property -dict {
      CONFIG.C_USE_CLK_ENABLE {true}
      CONFIG.C_REG_OUTPUT {true}
      CONFIG.C_REG_INPUT {false}
 diff --git a/src/qdma_subsystem/vivado_ip/qdma_subsystem_clk_div.tcl b/src/qdma_subsystem/vivado_ip/qdma_subsystem_clk_div.tcl
-index ee5a370..925a3b2 100644
+index ee5a370..bba9cd6 100644
 --- a/src/qdma_subsystem/vivado_ip/qdma_subsystem_clk_div.tcl
 +++ b/src/qdma_subsystem/vivado_ip/qdma_subsystem_clk_div.tcl
 @@ -18,30 +18,39 @@
@@ -6361,7 +6670,7 @@ index 1159969..3f0c1b7 100644
  }
 diff --git a/src/rdma_subsystem/rdma_subsystem.sv b/src/rdma_subsystem/rdma_subsystem.sv
 new file mode 100644
-index 0000000..82ba064
+index 0000000..e4b5e7d
 --- /dev/null
 +++ b/src/rdma_subsystem/rdma_subsystem.sv
 @@ -0,0 +1,672 @@
@@ -6860,41 +7169,41 @@ index 0000000..82ba064
 +  .cmac_m_axis_tready                (m_rdma2cmac_axis_tready),
 +
 +  // store payload of an outgoing RDMA write packet to a retry buffer
-+  .wqe_proc_wr_ddr_m_axi_awid        (m_axi_payload_to_retry_buf_awid),
-+  .wqe_proc_wr_ddr_m_axi_awaddr      (m_axi_payload_to_retry_buf_awaddr),
-+  .wqe_proc_wr_ddr_m_axi_awlen       (m_axi_payload_to_retry_buf_awlen),
-+  .wqe_proc_wr_ddr_m_axi_awsize      (m_axi_payload_to_retry_buf_awsize),
-+  .wqe_proc_wr_ddr_m_axi_awburst     (m_axi_payload_to_retry_buf_awburst),
-+  .wqe_proc_wr_ddr_m_axi_awcache     (m_axi_payload_to_retry_buf_awcache),
-+  .wqe_proc_wr_ddr_m_axi_awprot      (m_axi_payload_to_retry_buf_awprot),
-+  .wqe_proc_wr_ddr_m_axi_awvalid     (m_axi_payload_to_retry_buf_awvalid),
-+  .wqe_proc_wr_ddr_m_axi_awready     (m_axi_payload_to_retry_buf_awready),
-+  .wqe_proc_wr_ddr_m_axi_wdata       (m_axi_payload_to_retry_buf_wdata),
-+  .wqe_proc_wr_ddr_m_axi_wstrb       (m_axi_payload_to_retry_buf_wstrb),
-+  .wqe_proc_wr_ddr_m_axi_wlast       (m_axi_payload_to_retry_buf_wlast),
-+  .wqe_proc_wr_ddr_m_axi_wvalid      (m_axi_payload_to_retry_buf_wvalid),
-+  .wqe_proc_wr_ddr_m_axi_wready      (m_axi_payload_to_retry_buf_wready),
-+  .wqe_proc_wr_ddr_m_axi_awlock      (m_axi_payload_to_retry_buf_awlock),
-+  .wqe_proc_wr_ddr_m_axi_bid         (m_axi_payload_to_retry_buf_bid),
-+  .wqe_proc_wr_ddr_m_axi_bresp       (m_axi_payload_to_retry_buf_bresp),
-+  .wqe_proc_wr_ddr_m_axi_bvalid      (m_axi_payload_to_retry_buf_bvalid),
-+  .wqe_proc_wr_ddr_m_axi_bready      (m_axi_payload_to_retry_buf_bready),
-+  .wqe_proc_wr_ddr_m_axi_arid        (m_axi_payload_to_retry_buf_arid),
-+  .wqe_proc_wr_ddr_m_axi_araddr      (m_axi_payload_to_retry_buf_araddr),
-+  .wqe_proc_wr_ddr_m_axi_arlen       (m_axi_payload_to_retry_buf_arlen),
-+  .wqe_proc_wr_ddr_m_axi_arsize      (m_axi_payload_to_retry_buf_arsize),
-+  .wqe_proc_wr_ddr_m_axi_arburst     (m_axi_payload_to_retry_buf_arburst),
-+  .wqe_proc_wr_ddr_m_axi_arcache     (m_axi_payload_to_retry_buf_arcache),
-+  .wqe_proc_wr_ddr_m_axi_arprot      (m_axi_payload_to_retry_buf_arprot),
-+  .wqe_proc_wr_ddr_m_axi_arvalid     (m_axi_payload_to_retry_buf_arvalid),
-+  .wqe_proc_wr_ddr_m_axi_arready     (m_axi_payload_to_retry_buf_arready),
-+  .wqe_proc_wr_ddr_m_axi_rid         (m_axi_payload_to_retry_buf_rid),
-+  .wqe_proc_wr_ddr_m_axi_rdata       (m_axi_payload_to_retry_buf_rdata),
-+  .wqe_proc_wr_ddr_m_axi_rresp       (m_axi_payload_to_retry_buf_rresp),
-+  .wqe_proc_wr_ddr_m_axi_rlast       (m_axi_payload_to_retry_buf_rlast),
-+  .wqe_proc_wr_ddr_m_axi_rvalid      (m_axi_payload_to_retry_buf_rvalid),
-+  .wqe_proc_wr_ddr_m_axi_rready      (m_axi_payload_to_retry_buf_rready),
-+  .wqe_proc_wr_ddr_m_axi_arlock      (m_axi_payload_to_retry_buf_arlock),
++  // .wqe_proc_wr_ddr_m_axi_awid        (m_axi_payload_to_retry_buf_awid),
++  // .wqe_proc_wr_ddr_m_axi_awaddr      (m_axi_payload_to_retry_buf_awaddr),
++  // .wqe_proc_wr_ddr_m_axi_awlen       (m_axi_payload_to_retry_buf_awlen),
++  // .wqe_proc_wr_ddr_m_axi_awsize      (m_axi_payload_to_retry_buf_awsize),
++  // .wqe_proc_wr_ddr_m_axi_awburst     (m_axi_payload_to_retry_buf_awburst),
++  // .wqe_proc_wr_ddr_m_axi_awcache     (m_axi_payload_to_retry_buf_awcache),
++  // .wqe_proc_wr_ddr_m_axi_awprot      (m_axi_payload_to_retry_buf_awprot),
++  // .wqe_proc_wr_ddr_m_axi_awvalid     (m_axi_payload_to_retry_buf_awvalid),
++  // .wqe_proc_wr_ddr_m_axi_awready     (m_axi_payload_to_retry_buf_awready),
++  // .wqe_proc_wr_ddr_m_axi_wdata       (m_axi_payload_to_retry_buf_wdata),
++  // .wqe_proc_wr_ddr_m_axi_wstrb       (m_axi_payload_to_retry_buf_wstrb),
++  // .wqe_proc_wr_ddr_m_axi_wlast       (m_axi_payload_to_retry_buf_wlast),
++  // .wqe_proc_wr_ddr_m_axi_wvalid      (m_axi_payload_to_retry_buf_wvalid),
++  // .wqe_proc_wr_ddr_m_axi_wready      (m_axi_payload_to_retry_buf_wready),
++  // .wqe_proc_wr_ddr_m_axi_awlock      (m_axi_payload_to_retry_buf_awlock),
++  // .wqe_proc_wr_ddr_m_axi_bid         (m_axi_payload_to_retry_buf_bid),
++  // .wqe_proc_wr_ddr_m_axi_bresp       (m_axi_payload_to_retry_buf_bresp),
++  // .wqe_proc_wr_ddr_m_axi_bvalid      (m_axi_payload_to_retry_buf_bvalid),
++  // .wqe_proc_wr_ddr_m_axi_bready      (m_axi_payload_to_retry_buf_bready),
++  // .wqe_proc_wr_ddr_m_axi_arid        (m_axi_payload_to_retry_buf_arid),
++  // .wqe_proc_wr_ddr_m_axi_araddr      (m_axi_payload_to_retry_buf_araddr),
++  // .wqe_proc_wr_ddr_m_axi_arlen       (m_axi_payload_to_retry_buf_arlen),
++  // .wqe_proc_wr_ddr_m_axi_arsize      (m_axi_payload_to_retry_buf_arsize),
++  // .wqe_proc_wr_ddr_m_axi_arburst     (m_axi_payload_to_retry_buf_arburst),
++  // .wqe_proc_wr_ddr_m_axi_arcache     (m_axi_payload_to_retry_buf_arcache),
++  // .wqe_proc_wr_ddr_m_axi_arprot      (m_axi_payload_to_retry_buf_arprot),
++  // .wqe_proc_wr_ddr_m_axi_arvalid     (m_axi_payload_to_retry_buf_arvalid),
++  // .wqe_proc_wr_ddr_m_axi_arready     (m_axi_payload_to_retry_buf_arready),
++  // .wqe_proc_wr_ddr_m_axi_rid         (m_axi_payload_to_retry_buf_rid),
++  // .wqe_proc_wr_ddr_m_axi_rdata       (m_axi_payload_to_retry_buf_rdata),
++  // .wqe_proc_wr_ddr_m_axi_rresp       (m_axi_payload_to_retry_buf_rresp),
++  // .wqe_proc_wr_ddr_m_axi_rlast       (m_axi_payload_to_retry_buf_rlast),
++  // .wqe_proc_wr_ddr_m_axi_rvalid      (m_axi_payload_to_retry_buf_rvalid),
++  // .wqe_proc_wr_ddr_m_axi_rready      (m_axi_payload_to_retry_buf_rready),
++  // .wqe_proc_wr_ddr_m_axi_arlock      (m_axi_payload_to_retry_buf_arlock),
 +
 +  // Acquire payload data for RDMA send/write/read response packet generation
 +  .wqe_proc_top_m_axi_awid           (m_axi_pktgen_get_payload_awid),
@@ -7812,7 +8121,7 @@ index d4a14e9..da833f0 100644
 @@ -54,6 +54,23 @@ module system_config #(
    input                   [1:0] m_axil_qdma_rresp,
    output                        m_axil_qdma_rready,
-
+ 
 +  output                        m_axil_qdma_csr_awvalid,
 +  output                 [31:0] m_axil_qdma_csr_awaddr,
 +  input                         m_axil_qdma_csr_awready,
@@ -7836,7 +8145,7 @@ index d4a14e9..da833f0 100644
 @@ -88,6 +105,23 @@ module system_config #(
    input   [2*NUM_CMAC_PORT-1:0] m_axil_cmac_rresp,
    output    [NUM_CMAC_PORT-1:0] m_axil_cmac_rready,
-
+ 
 +  output                        m_axil_rdma_awvalid,
 +  output                 [31:0] m_axil_rdma_awaddr,
 +  input                         m_axil_rdma_awready,
@@ -7860,7 +8169,7 @@ index d4a14e9..da833f0 100644
 @@ -226,6 +260,23 @@ module system_config #(
      .m_axil_qdma_rresp   (m_axil_qdma_rresp),
      .m_axil_qdma_rready  (m_axil_qdma_rready),
-
+ 
 +    .m_axil_qdma_csr_awvalid (m_axil_qdma_csr_awvalid),
 +    .m_axil_qdma_csr_awaddr  (m_axil_qdma_csr_awaddr),
 +    .m_axil_qdma_csr_awready (m_axil_qdma_csr_awready),
@@ -7885,7 +8194,7 @@ index d4a14e9..da833f0 100644
      .m_axil_smon_rdata   (axil_smon_rdata),
      .m_axil_smon_rresp   (axil_smon_rresp),
      .m_axil_smon_rready  (axil_smon_rready),
--
+-			   
 +
 +    .m_axil_rdma_awvalid (m_axil_rdma_awvalid),
 +    .m_axil_rdma_awaddr  (m_axil_rdma_awaddr),
@@ -7908,28 +8217,28 @@ index d4a14e9..da833f0 100644
      .m_axil_box0_awaddr  (m_axil_box0_awaddr),
      .m_axil_box0_awready (m_axil_box0_awready),
 @@ -346,26 +414,29 @@ module system_config #(
-
+ 
     system_management_wiz
     system_management_wiz_inst (
--     .s_axi_aclk      (aclk),
--     .s_axi_aresetn   (aresetn),
--
--     .s_axi_awaddr    (axil_smon_awaddr),
--     .s_axi_awvalid   (axil_smon_awvalid),
--     .s_axi_awready   (axil_smon_awready),
--     .s_axi_wdata     (axil_smon_wdata),
--     .s_axi_wstrb     (4'hF),
--     .s_axi_wvalid    (axil_smon_wvalid),
--     .s_axi_wready    (axil_smon_wready),
--     .s_axi_bresp     (axil_smon_bresp),
--     .s_axi_bvalid    (axil_smon_bvalid),
--     .s_axi_bready    (axil_smon_bready),
--     .s_axi_araddr    (axil_smon_araddr),
--     .s_axi_arvalid   (axil_smon_arvalid),
--     .s_axi_arready   (axil_smon_arready),
--     .s_axi_rdata     (axil_smon_rdata),
--     .s_axi_rresp     (axil_smon_rresp),
--     .s_axi_rvalid    (axil_smon_rvalid),
+-     .s_axi_aclk      (aclk),                    
+-     .s_axi_aresetn   (aresetn),                    
+- 
+-     .s_axi_awaddr    (axil_smon_awaddr),                    
+-     .s_axi_awvalid   (axil_smon_awvalid),                    
+-     .s_axi_awready   (axil_smon_awready),                    
+-     .s_axi_wdata     (axil_smon_wdata),                    
+-     .s_axi_wstrb     (4'hF),                    
+-     .s_axi_wvalid    (axil_smon_wvalid),                    
+-     .s_axi_wready    (axil_smon_wready),                    
+-     .s_axi_bresp     (axil_smon_bresp),                    
+-     .s_axi_bvalid    (axil_smon_bvalid),                    
+-     .s_axi_bready    (axil_smon_bready),                    
+-     .s_axi_araddr    (axil_smon_araddr),                    
+-     .s_axi_arvalid   (axil_smon_arvalid),                    
+-     .s_axi_arready   (axil_smon_arready),                    
+-     .s_axi_rdata     (axil_smon_rdata),                    
+-     .s_axi_rresp     (axil_smon_rresp),                    
+-     .s_axi_rvalid    (axil_smon_rvalid),                    
 -     .s_axi_rready    (axil_smon_rready)
 +     .s_axi_aclk      (aclk),
 +     .s_axi_aresetn   (aresetn),
@@ -7955,7 +8264,7 @@ index d4a14e9..da833f0 100644
 +     .vp              (1'b0),
 +     .vn              (1'b0)
    );
-
+ 
  endmodule: system_config
 diff --git a/src/system_config/system_config_address_map.sv b/src/system_config/system_config_address_map.sv
 index 11ae7a5..171712d 100644
@@ -7975,7 +8284,7 @@ index 11ae7a5..171712d 100644
 @@ -95,6 +99,23 @@ module system_config_address_map #(
    input                   [1:0] m_axil_qdma_rresp,
    output                        m_axil_qdma_rready,
-
+ 
 +  output                        m_axil_qdma_csr_awvalid,
 +  output                 [31:0] m_axil_qdma_csr_awaddr,
 +  input                         m_axil_qdma_csr_awready,
@@ -7999,7 +8308,7 @@ index 11ae7a5..171712d 100644
 @@ -129,6 +150,23 @@ module system_config_address_map #(
    input   [2*NUM_CMAC_PORT-1:0] m_axil_cmac_rresp,
    output    [NUM_CMAC_PORT-1:0] m_axil_cmac_rready,
-
+ 
 +  output                        m_axil_rdma_awvalid,
 +  output                 [31:0] m_axil_rdma_awaddr,
 +  input                         m_axil_rdma_awready,
@@ -8023,10 +8332,10 @@ index 11ae7a5..171712d 100644
 @@ -184,7 +222,7 @@ module system_config_address_map #(
    input                         aresetn
  );
-
+ 
 -  localparam C_NUM_SLAVES  = 9;
 +  localparam C_NUM_SLAVES  = 11;
-
+ 
    localparam C_SCFG_INDEX  = 0;
    localparam C_QDMA_INDEX  = 1;
 @@ -193,8 +231,10 @@ module system_config_address_map #(
@@ -8039,7 +8348,7 @@ index 11ae7a5..171712d 100644
 +  localparam C_RDMA_INDEX  = 8;
 +  localparam C_BOX1_INDEX  = 9;
 +  localparam C_BOX0_INDEX  = 10;
-
+ 
    localparam C_SCFG_BASE_ADDR  = 32'h0;
    localparam C_QDMA_BASE_ADDR  = 32'h01000;
 @@ -203,6 +243,8 @@ module system_config_address_map #(
@@ -8050,7 +8359,7 @@ index 11ae7a5..171712d 100644
 +  localparam C_RDMA_BASE_ADDR  = 32'h40000;  // 18 bits
    localparam C_BOX1_BASE_ADDR  = 32'h200000; // 20 bits
    localparam C_BOX0_BASE_ADDR  = 32'h100000; // 20 bits
-
+ 
 @@ -224,6 +266,10 @@ module system_config_address_map #(
    wire                [31:0] axil_box0_araddr;
    wire                [31:0] axil_smon_awaddr;
@@ -8059,7 +8368,7 @@ index 11ae7a5..171712d 100644
 +  wire                [31:0] axil_qcsr_araddr;
 +  wire                [31:0] axil_rdma_awaddr;
 +  wire                [31:0] axil_rdma_araddr;
-
+ 
    wire  [1*C_NUM_SLAVES-1:0] axil_awvalid;
    wire [32*C_NUM_SLAVES-1:0] axil_awaddr;
 @@ -247,6 +293,8 @@ module system_config_address_map #(
@@ -8086,7 +8395,7 @@ index 11ae7a5..171712d 100644
 @@ -296,6 +346,23 @@ module system_config_address_map #(
    assign axil_rresp[`getvec(2, C_QDMA_INDEX)]  = m_axil_qdma_rresp;
    assign m_axil_qdma_rready                    = axil_rready[C_QDMA_INDEX];
-
+ 
 +  assign m_axil_qdma_csr_awvalid               = axil_awvalid[C_QCSR_INDEX];
 +  assign m_axil_qdma_csr_awaddr                = axil_qcsr_awaddr;
 +  assign axil_awready[C_QCSR_INDEX]            = m_axil_qdma_csr_awready;
@@ -8110,7 +8419,7 @@ index 11ae7a5..171712d 100644
 @@ -504,6 +571,23 @@ module system_config_address_map #(
    assign axil_rresp[`getvec(2, C_SMON_INDEX)]  = m_axil_smon_rresp;
    assign m_axil_smon_rready                    = axil_rready[C_SMON_INDEX];
-
+ 
 +  assign m_axil_rdma_awvalid                   = axil_awvalid[C_RDMA_INDEX];
 +  assign m_axil_rdma_awaddr                    = axil_rdma_awaddr;
 +  assign axil_awready[C_RDMA_INDEX]            = m_axil_rdma_awready;
@@ -8154,7 +8463,7 @@ index 36e7774..d41510f 100644
      .s_axil_rvalid  (s_axil_rvalid),
      .s_axil_rdata   (s_axil_rdata),
 @@ -201,11 +201,15 @@ module system_config_register #(
-
+ 
    // Shell reset register (write-only)
    //
 -  // 31:3  - reserved
@@ -8169,7 +8478,7 @@ index 36e7774..d41510f 100644
 +  // 3:2   - reserved
 +  // 1     - reset for the RDMA subsystem
    // 0     - reset for the QDMA subsystem
--  //
+-  // 
    // Writing 1 to a bit of this register initiates a submodule-level reset in
    // the shell logic, which lasts until the corresponding submodule is out of
    // reset.  Mapping between bits and submodules are as follows.
@@ -8181,7 +8490,7 @@ index 603d9c9..0b02c76 100644
  # *************************************************************************
  set axi_crossbar system_config_axi_crossbar
  create_ip -name axi_crossbar -vendor xilinx.com -library ip -module_name $axi_crossbar -dir ${ip_build_dir}
--set_property -dict {
+-set_property -dict { 
 +set_property -dict {
      CONFIG.ADDR_RANGES {3}
 -    CONFIG.NUM_MI {9}
@@ -8221,23 +8530,23 @@ index 8e92afe..efe4669 100644
  set_property -dict {
      CONFIG.INTERFACE_SELECTION {Enable_AXI}
      CONFIG.ENABLE_RESET {false}
--    CONFIG.OT_ALARM {false}
--    CONFIG.USER_TEMP_ALARM {false}
--    CONFIG.VCCINT_ALARM {false}
--    CONFIG.VCCAUX_ALARM {false}
--    CONFIG.ENABLE_VBRAM_ALARM {false}
--    CONFIG.CHANNEL_ENABLE_VP_VN {true}
--    CONFIG.AVERAGE_ENABLE_VBRAM {true}
--    CONFIG.AVERAGE_ENABLE_TEMPERATURE {true}
--    CONFIG.AVERAGE_ENABLE_VCCINT {true}
--    CONFIG.AVERAGE_ENABLE_VCCAUX {true}
--    CONFIG.AVERAGE_ENABLE_TEMPERATURE_SLAVE0_SSIT {true}
--    CONFIG.AVERAGE_ENABLE_TEMPERATURE_SLAVE1_SSIT {true}
--    CONFIG.CHANNEL_ENABLE_VUSER0_SLAVE0_SSIT {true}
--    CONFIG.AVERAGE_ENABLE_VUSER0_SLAVE0_SSIT {true}
--    CONFIG.CHANNEL_ENABLE_VUSER0_SLAVE1_SSIT {true}
--    CONFIG.AVERAGE_ENABLE_VUSER0_SLAVE1_SSIT {true}
--    CONFIG.Enable_Slave0 {true}
+-    CONFIG.OT_ALARM {false} 
+-    CONFIG.USER_TEMP_ALARM {false} 
+-    CONFIG.VCCINT_ALARM {false} 
+-    CONFIG.VCCAUX_ALARM {false} 
+-    CONFIG.ENABLE_VBRAM_ALARM {false} 
+-    CONFIG.CHANNEL_ENABLE_VP_VN {true} 
+-    CONFIG.AVERAGE_ENABLE_VBRAM {true} 
+-    CONFIG.AVERAGE_ENABLE_TEMPERATURE {true} 
+-    CONFIG.AVERAGE_ENABLE_VCCINT {true} 
+-    CONFIG.AVERAGE_ENABLE_VCCAUX {true} 
+-    CONFIG.AVERAGE_ENABLE_TEMPERATURE_SLAVE0_SSIT {true} 
+-    CONFIG.AVERAGE_ENABLE_TEMPERATURE_SLAVE1_SSIT {true} 
+-    CONFIG.CHANNEL_ENABLE_VUSER0_SLAVE0_SSIT {true} 
+-    CONFIG.AVERAGE_ENABLE_VUSER0_SLAVE0_SSIT {true} 
+-    CONFIG.CHANNEL_ENABLE_VUSER0_SLAVE1_SSIT {true} 
+-    CONFIG.AVERAGE_ENABLE_VUSER0_SLAVE1_SSIT {true} 
+-    CONFIG.Enable_Slave0 {true} 
 +    CONFIG.OT_ALARM {false}
 +    CONFIG.USER_TEMP_ALARM {false}
 +    CONFIG.VCCINT_ALARM {false}
@@ -10447,7 +10756,7 @@ index aa33d14..4750d0b
 --- a/src/utility/axi_stream_packet_buffer.sv
 +++ b/src/utility/axi_stream_packet_buffer.sv
 @@ -128,25 +128,13 @@ module axi_stream_packet_buffer #(
-
+ 
    // The `drop_busy` signal synchronizes with the packet stream `axis_*`.  When
    // asserted, the corresponding beat is not written into the RAM.
 -  assign drop_busy = drop || drop_in_prog;
@@ -10464,7 +10773,7 @@ index aa33d14..4750d0b
 -    end
 -  end
 +  assign drop_busy = drop || dropped;
-
+ 
    always @(posedge s_aclk) begin
      if (~s_aresetn) begin
        dropped <= 1'b0;
