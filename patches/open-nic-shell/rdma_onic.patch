@@ -1,3 +1,1958 @@
+diff --git a/board_files/Xilinx/au55c/LICENSE b/board_files/Xilinx/au55c/LICENSE
+new file mode 100644
+index 0000000..9c30aad
+--- /dev/null
++++ b/board_files/Xilinx/au55c/LICENSE
+@@ -0,0 +1,15 @@
++#########################################################################
++Copyright (C) 2021, Xilinx Inc - All rights reserved
++
++Licensed under the Apache License, Version 2.0 (the "License"). You may
++not use this file except in compliance with the License. A copy of the
++License is located at
++
++ http://www.apache.org/licenses/LICENSE-2.0
++
++Unless required by applicable law or agreed to in writing, software
++distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
++WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
++License for the specific language governing permissions and limitations
++under the License.
++#########################################################################
+diff --git a/board_files/Xilinx/au55c/board.xml b/board_files/Xilinx/au55c/board.xml
+new file mode 100644
+index 0000000..310333d
+--- /dev/null
++++ b/board_files/Xilinx/au55c/board.xml
+@@ -0,0 +1,1267 @@
++<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
++<board schema_version="2.2" vendor="xilinx.com" name="au55c" display_name="Alveo U55C Data Center Accelerator Card" url="http://www.xilinx.com/U55C" supports_ced="false" preset_file = "preset.xml">
++  <images>
++    <image name="au55c_image.png" display_name="Alveo U55C Data Center Accelerator Card" sub_type="board" resolution="high">
++      <description>Alveo U55C Data Center Accelerator Card</description>
++    </image>
++  </images>
++
++  <compatible_board_revisions>
++    <revision id="0">1.0</revision>
++  </compatible_board_revisions>
++
++  <file_version>1.0</file_version>
++
++  <description>Alveo U55C Data Center Accelerator Card </description>
++
++  <parameters>
++    <parameter name="heat_sink_type" value="medium" value_type="string"/>
++    <parameter name="heat_sink_temperature" value_type="range" value_min="20.0" value_max="30.0"/>
++  </parameters>
++
++  <jumpers>
++  </jumpers>
++
++  <power_rails>
++    <power_rail name="0V85_VCCINT" is_direct="TRUE">
++      <supply name="VCCINT"/>
++    </power_rail>
++    <power_rail name="0V85_VCCINT_IO" is_direct="TRUE">
++      <supply name="VCCINT_IO"/>
++      <supply name="VCCBRAM"/>
++    </power_rail>
++    <power_rail name="0V9_AVCC" is_direct="TRUE">
++      <supply name="MGTYAVCC"/>
++    </power_rail>
++    <power_rail name="1V2_AVTT" is_direct="TRUE">
++      <supply name="MGTYAVTT"/>
++    </power_rail>
++    <power_rail name="1V2_HBM" is_direct="TRUE">
++      <supply name="VCC_HBM"/>
++    </power_rail>
++    <power_rail name="2V5_VPP" is_direct="TRUE">
++      <supply name="VCCAUX_HBM"/>
++    </power_rail>
++    <power_rail name="1V8" is_direct="TRUE">
++      <supply name="VCCAUX"/>
++      <supply name="VCCAUX_IO"/>
++      <supply name="MGTYVCCAUX"/>
++      <supply name="VCCO18"/>
++      <supply name="VCCADC"/>
++    </power_rail>
++  </power_rails>
++
++  <data_properties>
++    <data_property_group name="OPERATING_CONDITIONS">
++
++      <data_property_group name="VOLTAGE">
++        <data_property name="0V85_VCCINT" value="0.85"/>
++        <data_property name="0V85_VCCINT_IO" value="0.85"/>
++        <data_property name="0V9_AVCC" value="0.9"/>
++        <data_property name="1V2_AVTT" value="1.2"/>
++        <data_property name="1V8" value="1.8"/>
++        <data_property name="1V2_HBM" value="1.2"/>
++        <data_property name="2V5_VPP" value="2.5"/>
++      </data_property_group>
++
++      <data_property_group name="SUPPLY_CURRENT_BUDGET">
++        <data_property name="0V85_VCCINT" value="100"/>
++        <data_property name="0V85_VCCINT_IO" value="30"/>
++        <data_property name="0V9_AVCC " value="4"/>
++        <data_property name="1V2_AVTT " value="12"/>
++        <data_property name="1V2_HBM " value="80"/>
++        <data_property name="2V5_VPP" value="0.3"/>
++        <data_property name="1V8" value="4"/>
++      </data_property_group>
++
++      <data_property name="THETAJA" value="0.75"/>
++      <data_property name="AMBIENT_TEMP" value="55"/>
++      <data_property name="DESIGN_POWER_BUDGET" value="123"/>
++
++    </data_property_group>
++  </data_properties>
++
++  <components>
++
++    <component name="part0" display_name="XCU55C FPGA" type="fpga" part_name="xcu55c-fsvh2892-2L-e" pin_map_file="part0_pins.xml" vendor="xilinx" spec_url="http://www.xilinx.com/U55C">
++      <description>XCU55C FPGA</description>
++
++
++    <interfaces>
++
++     <interface mode="slave" name="pcie_perstn" type="xilinx.com:signal:reset_rtl:1.0" of_component="pci_express">
++      <preferred_ips>
++            <preferred_ip vendor="xilinx.com" library="ip" name="xdma" order="0"/>
++            <preferred_ip vendor="xilinx.com" library="ip" name="qdma" order="1"/>
++       </preferred_ips>
++          <port_maps>
++            <port_map logical_port="RST" physical_port="pcie_perstn_rst" dir="in">
++              <pin_maps>
++                <pin_map port_index="0" component_pin="PCIE_PERST_LS_65"/>
++              </pin_maps>
++            </port_map>
++          </port_maps>
++          <parameters>
++            <parameter name="rst_polarity" value="0" />
++            <parameter name="type" value="PCIE_PERST" />
++          </parameters>
++        </interface>
++
++    <interface mode="master" name="hbm_cattrip" type="xilinx.com:interface:gpio_rtl:1.0" of_component="hbm_cattrip">
++          <preferred_ips>
++            <preferred_ip vendor="xilinx.com" library="ip" name="hbm" order="0"/>
++            <preferred_ip vendor="xilinx.com" library="ip" name="axi_gpio" order="1"/>
++          </preferred_ips>
++          <port_maps>
++            <port_map logical_port="O" physical_port="hbm_cattrip" dir="out">
++              <pin_maps>
++                <pin_map port_index="0" component_pin="HBM_CATTRIP_LS"/>
++              </pin_maps>
++            </port_map>
++          </port_maps>
++        </interface>
++
++        <!--
++    <interface mode="master" name="rs232_fpga_msp" type="xilinx.com:interface:uart_rtl:1.0" of_component="rs232_fpga_msp">
++          <preferred_ips>
++            <preferred_ip vendor="xilinx.com" library="ip" name="axi_uart16550" order="0"/>
++          </preferred_ips>
++          <port_maps>
++            <port_map logical_port="TxD" physical_port="rs232_uart_msp_txd" dir="out">
++            </port_map>
++            <port_map logical_port="RxD" physical_port="rs232_uart_msp_rxd" dir="in">
++            </port_map>
++          </port_maps>
++        </interface>
++
++    <interface mode="master" name="fpga_uart0" type="xilinx.com:interface:uart_rtl:1.0" of_component="fpga_uart0">
++          <port_maps>
++            <port_map logical_port="TxD" physical_port="rs232_uart_msp_txd" dir="out">
++            </port_map>
++            <port_map logical_port="RxD" physical_port="rs232_uart_msp_rxd" dir="in">
++            </port_map>
++          </port_maps>
++        </interface>
++      -->
++
++      <!-- Si5394 Satellite Controlelr Pins -->
++      <interface mode="master" name="reset_gpio2_si5394" type="xilinx.com:interface:gpio_rtl:1.0" of_component="reset_si5394" preset_proc="reset2_si5394_preset">
++        <preferred_ips>
++          <preferred_ip vendor="xilinx.com" library="ip" name="axi_gpio" order="0"/>
++        </preferred_ips>
++        <port_maps>
++          <port_map logical_port="TRI_O" physical_port="SI_RSTBB" dir="out">
++            <pin_maps>
++              <pin_map port_index="0" component_pin="SI_RSTBB"/>
++            </pin_maps>
++          </port_map>
++        </port_maps>
++      </interface>
++
++      <interface mode="master" name="gpio_si5394" type="xilinx.com:interface:gpio_rtl:1.0" of_component="gpio_si5394">
++        <preferred_ips>
++          <preferred_ip vendor="xilinx.com" library="ip" name="axi_gpio" order="0"/>
++        </preferred_ips>
++        <port_maps>
++          <port_map logical_port="TRI_I" physical_port="SI_INTRB_PLL_LOCK_IN_LOS" dir="in" left="2" right="0">
++            <pin_maps>
++              <pin_map port_index="0" component_pin="SI_INTRB"/>
++              <pin_map port_index="1" component_pin="SI_PLL_LOCK"/>
++              <pin_map port_index="2" component_pin="SI_IN_LOS"/>
++            </pin_maps>
++          </port_map>
++        </port_maps>
++      </interface>
++
++      <interface mode="master" name="msp_gpio" type="xilinx.com:interface:gpio_rtl:1.0" of_component="msp_gpio">
++        <preferred_ips>
++          <preferred_ip vendor="xilinx.com" library="ip" name="axi_gpio" order="0"/>
++        </preferred_ips>
++        <port_maps>
++          <port_map logical_port="TRI_I" physical_port="GPIO_MSP_i" dir="in" left="1" right="0">
++            <pin_maps>
++              <pin_map port_index="0" component_pin="MSP_GPIO0"/>
++              <pin_map port_index="1" component_pin="MSP_GPIO1"/>
++            </pin_maps>
++          </port_map>
++        </port_maps>
++      </interface>
++
++      <interface mode="master" name="iic_si5394" type="xilinx.com:interface:iic_rtl:1.0" of_component="iic_si5394">
++        <preferred_ips>
++          <preferred_ip vendor="xilinx.com" library="ip" name="axi_iic" order="0"/>
++        </preferred_ips>
++        <port_maps>
++          <port_map logical_port="SDA_I" physical_port="iic_si5394_sda_i" dir="inout">
++            <pin_maps>
++              <pin_map port_index="0" component_pin="I2C_SI5394_SDA"/>
++            </pin_maps>
++          </port_map>
++          <port_map logical_port="SDA_O" physical_port="iic_si5394_sda_o" dir="inout">
++            <pin_maps>
++              <pin_map port_index="0" component_pin="I2C_SI5394_SDA"/>
++            </pin_maps>
++          </port_map>
++          <port_map logical_port="SDA_T" physical_port="iic_si5394_sda_t" dir="inout">
++            <pin_maps>
++              <pin_map port_index="0" component_pin="I2C_SI5394_SDA"/>
++            </pin_maps>
++          </port_map>
++          <port_map logical_port="SCL_I" physical_port="iic_si5394_scl_i" dir="inout">
++            <pin_maps>
++              <pin_map port_index="0" component_pin="I2C_SI5394_SCL"/>
++            </pin_maps>
++          </port_map>
++          <port_map logical_port="SCL_O" physical_port="iic_si5394_scl_o" dir="inout">
++            <pin_maps>
++              <pin_map port_index="0" component_pin="I2C_SI5394_SCL"/>
++            </pin_maps>
++          </port_map>
++          <port_map logical_port="SCL_T" physical_port="iic_si5394_scl_t" dir="inout">
++            <pin_maps>
++              <pin_map port_index="0" component_pin="I2C_SI5394_SCL"/>
++            </pin_maps>
++          </port_map>
++        </port_maps>
++      </interface>
++
++
++      <interface mode="slave" name="qsfp0_refclk0" type="xilinx.com:interface:diff_clock_rtl:1.0" of_component="qsfp0">
++          <parameters>
++            <parameter name="frequency" value="161132812"/>
++          </parameters>
++            <preferred_ips>
++              <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++              <preferred_ip vendor="xilinx.com" library="ip" name="usxgmii" order="1"/>
++              <preferred_ip vendor="xilinx.com" library="ip" name="l_ethernet" order="2"/>
++              <preferred_ip vendor="xilinx.com" library="ip" name="cmac_usplus" order="3"/>
++            </preferred_ips>
++          <port_maps>
++            <port_map logical_port="CLK_P" physical_port="qsfp0_refclk0_clk_p" dir="in">
++              <pin_maps>
++                <pin_map port_index="0" component_pin="SYNCE_CLK0_P"/>
++              </pin_maps>
++            </port_map>
++            <port_map logical_port="CLK_N" physical_port="qsfp0_refclk0_clk_n" dir="in">
++              <pin_maps>
++                <pin_map port_index="0" component_pin="SYNCE_CLK0_N"/>
++              </pin_maps>
++            </port_map>
++          </port_maps>
++        </interface>
++
++      <interface mode="slave" name="qsfp1_refclk0" type="xilinx.com:interface:diff_clock_rtl:1.0" of_component="qsfp1">
++          <parameters>
++            <parameter name="frequency" value="161132812"/>
++          </parameters>
++          <preferred_ips>
++            <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++            <preferred_ip vendor="xilinx.com" library="ip" name="usxgmii" order="1"/>
++            <preferred_ip vendor="xilinx.com" library="ip" name="l_ethernet" order="2"/>
++            <preferred_ip vendor="xilinx.com" library="ip" name="cmac_usplus" order="3"/>
++           </preferred_ips>
++          <port_maps>
++            <port_map logical_port="CLK_P" physical_port="qsfp1_refclk0_clk_p" dir="in">
++              <pin_maps>
++                <pin_map port_index="0" component_pin="SYNCE_CLK1_P"/>
++              </pin_maps>
++            </port_map>
++            <port_map logical_port="CLK_N" physical_port="qsfp1_refclk0_clk_n" dir="in">
++              <pin_maps>
++                <pin_map port_index="0" component_pin="SYNCE_CLK1_N"/>
++              </pin_maps>
++            </port_map>
++          </port_maps>
++        </interface>
++
++  <!--
++    <interface mode="slave" name="slr0_freerun_clk" type="xilinx.com:interface:diff_clock_rtl:1.0" of_component="slr0_freerun_clk">
++     <parameters>
++            <parameter name="frequency" value="100000000"/>
++          </parameters>
++          <port_maps>
++            <port_map logical_port="CLK_P" physical_port="slr0_freerun_clk_p" dir="in">
++            </port_map>
++            <port_map logical_port="CLK_N" physical_port="slr0_freerun_clk_n" dir="in">
++            </port_map>
++          </port_maps>
++        </interface>
++
++    <interface mode="slave" name="slr1_freerun_clk" type="xilinx.com:interface:diff_clock_rtl:1.0" of_component="slr1_freerun_clk">
++     <parameters>
++            <parameter name="frequency" value="100000000"/>
++          </parameters>
++          <port_maps>
++            <port_map logical_port="CLK_P" physical_port="slr1_freerun_clk_p" dir="in">
++            </port_map>
++            <port_map logical_port="CLK_N" physical_port="slr1_freerun_clk_n" dir="in">
++            </port_map>
++          </port_maps>
++        </interface>
++      -->
++
++    <interface mode="slave" name="pcie_refclk" type="xilinx.com:interface:diff_clock_rtl:1.0" of_component="pcie_refclk" preset_proc="pcie_refclk_preset">
++      <parameters>
++        <parameter name="frequency" value="100000000"/>
++      </parameters>
++      <preferred_ips>
++        <preferred_ip vendor="xilinx.com" library="ip" name="util_ds_buf" order="0"/>
++        <preferred_ip vendor="xilinx.com" library="ip" name="clk_wiz" order="1"/>
++      </preferred_ips>
++      <port_maps>
++        <port_map logical_port="CLK_P" physical_port="pcie_mgt_clk_p" dir="in">
++          <pin_maps>
++            <pin_map port_index="0" component_pin="PCIE_REFCLK1_P"/>
++          </pin_maps>
++        </port_map>
++        <port_map logical_port="CLK_N" physical_port="pcie_mgt_clk_n" dir="in">
++          <pin_maps>
++            <pin_map port_index="0" component_pin="PCIE_REFCLK1_N"/>
++          </pin_maps>
++        </port_map>
++      </port_maps>
++    </interface>
++
++    <interface mode="master" name="pci_express_x4" type="xilinx.com:interface:pcie_7x_mgt_rtl:1.0" of_component="pci_express" preset_proc="pciex4_preset">
++          <preferred_ips>
++              <preferred_ip vendor="xilinx.com" library="ip" name="xdma" order="0"/>
++              <preferred_ip vendor="xilinx.com" library="ip" name="qdma" order="1"/>
++              <preferred_ip vendor="xilinx.com" library="ip" name="pcie4c_uscale_plus" order="2"/>
++          </preferred_ips>
++          <port_maps>
++            <port_map logical_port="txn" physical_port="pcie_tx0_nx4" dir="out" left="3" right="0">
++                <pin_maps>
++                  <pin_map port_index="0" component_pin="pcie_tx0_n"/>
++                  <pin_map port_index="1" component_pin="pcie_tx1_n"/>
++                  <pin_map port_index="2" component_pin="pcie_tx2_n"/>
++                  <pin_map port_index="3" component_pin="pcie_tx3_n"/>
++                </pin_maps>
++            </port_map>
++            <port_map logical_port="rxn" physical_port="pcie_rx0_nx4" dir="in" left="3" right="0">
++                <pin_maps>
++                  <pin_map port_index="0" component_pin="pcie_rx0_n"/>
++                  <pin_map port_index="1" component_pin="pcie_rx1_n"/>
++                  <pin_map port_index="2" component_pin="pcie_rx2_n"/>
++                  <pin_map port_index="3" component_pin="pcie_rx3_n"/>
++                </pin_maps>
++            </port_map>
++            <port_map logical_port="txp" physical_port="pcie_tx0_px4" dir="out" left="3" right="0">
++                <pin_maps>
++                  <pin_map port_index="0" component_pin="pcie_tx0_p"/>
++                  <pin_map port_index="1" component_pin="pcie_tx1_p"/>
++                  <pin_map port_index="2" component_pin="pcie_tx2_p"/>
++                  <pin_map port_index="3" component_pin="pcie_tx3_p"/>
++                </pin_maps>
++            </port_map>
++            <port_map logical_port="rxp" physical_port="pcie_rx0_px4" dir="in" left="3" right="0">
++                <pin_maps>
++                  <pin_map port_index="0" component_pin="pcie_rx0_p"/>
++                  <pin_map port_index="1" component_pin="pcie_rx1_p"/>
++                  <pin_map port_index="2" component_pin="pcie_rx2_p"/>
++                  <pin_map port_index="3" component_pin="pcie_rx3_p"/>
++                </pin_maps>
++            </port_map>
++          </port_maps>
++          <parameters>
++            <parameter name="block_location" value="PCIE4C_X1Y1" />
++          </parameters>
++        </interface>
++
++    <interface mode="master" name="pci_express_x8" type="xilinx.com:interface:pcie_7x_mgt_rtl:1.0" of_component="pci_express" preset_proc="pciex8_preset">
++          <preferred_ips>
++              <preferred_ip vendor="xilinx.com" library="ip" name="xdma" order="0"/>
++              <preferred_ip vendor="xilinx.com" library="ip" name="qdma" order="1"/>
++              <preferred_ip vendor="xilinx.com" library="ip" name="pcie4c_uscale_plus" order="2"/>
++          </preferred_ips>
++          <port_maps>
++            <port_map logical_port="txn" physical_port="pcie_tx0_nx8" dir="out" left="7" right="0">
++              <pin_maps>
++                  <pin_map port_index="0" component_pin="pcie_tx0_n"/>
++                  <pin_map port_index="1" component_pin="pcie_tx1_n"/>
++                  <pin_map port_index="2" component_pin="pcie_tx2_n"/>
++                  <pin_map port_index="3" component_pin="pcie_tx3_n"/>
++                  <pin_map port_index="4" component_pin="pcie_tx4_n"/>
++                  <pin_map port_index="5" component_pin="pcie_tx5_n"/>
++                  <pin_map port_index="6" component_pin="pcie_tx6_n"/>
++                  <pin_map port_index="7" component_pin="pcie_tx7_n"/>
++                </pin_maps>
++            </port_map>
++            <port_map logical_port="rxn" physical_port="pcie_rx0_nx8" dir="in" left="7" right="0">
++              <pin_maps>
++                  <pin_map port_index="0" component_pin="pcie_rx0_n"/>
++                  <pin_map port_index="1" component_pin="pcie_rx1_n"/>
++                  <pin_map port_index="2" component_pin="pcie_rx2_n"/>
++                  <pin_map port_index="3" component_pin="pcie_rx3_n"/>
++                  <pin_map port_index="4" component_pin="pcie_rx4_n"/>
++                  <pin_map port_index="5" component_pin="pcie_rx5_n"/>
++                  <pin_map port_index="6" component_pin="pcie_rx6_n"/>
++                  <pin_map port_index="7" component_pin="pcie_rx7_n"/>
++                </pin_maps>
++            </port_map>
++            <port_map logical_port="txp" physical_port="pcie_tx0_px8" dir="out" left="7" right="0">
++                <pin_maps>
++                    <pin_map port_index="0" component_pin="pcie_tx0_p"/>
++                    <pin_map port_index="1" component_pin="pcie_tx1_p"/>
++                    <pin_map port_index="2" component_pin="pcie_tx2_p"/>
++                    <pin_map port_index="3" component_pin="pcie_tx3_p"/>
++                    <pin_map port_index="4" component_pin="pcie_tx4_p"/>
++                    <pin_map port_index="5" component_pin="pcie_tx5_p"/>
++                    <pin_map port_index="6" component_pin="pcie_tx6_p"/>
++                    <pin_map port_index="7" component_pin="pcie_tx7_p"/>
++                  </pin_maps>
++            </port_map>
++            <port_map logical_port="rxp" physical_port="pcie_rx0_px8" dir="in" left="7" right="0">
++                <pin_maps>
++                    <pin_map port_index="0" component_pin="pcie_rx0_p"/>
++                    <pin_map port_index="1" component_pin="pcie_rx1_p"/>
++                    <pin_map port_index="2" component_pin="pcie_rx2_p"/>
++                    <pin_map port_index="3" component_pin="pcie_rx3_p"/>
++                    <pin_map port_index="4" component_pin="pcie_rx4_p"/>
++                    <pin_map port_index="5" component_pin="pcie_rx5_p"/>
++                    <pin_map port_index="6" component_pin="pcie_rx6_p"/>
++                    <pin_map port_index="7" component_pin="pcie_rx7_p"/>
++                  </pin_maps>
++            </port_map>
++          </port_maps>
++          <parameters>
++            <parameter name="block_location" value="PCIE4C_X1Y1" />
++          </parameters>
++        </interface>
++
++
++    <interface mode="master" name="pci_express_x16" type="xilinx.com:interface:pcie_7x_mgt_rtl:1.0" of_component="pci_express" preset_proc="pciex16_preset">
++          <preferred_ips>
++              <preferred_ip vendor="xilinx.com" library="ip" name="xdma" order="0"/>
++              <preferred_ip vendor="xilinx.com" library="ip" name="qdma" order="1"/>
++              <preferred_ip vendor="xilinx.com" library="ip" name="pcie4c_uscale_plus" order="2"/>
++          </preferred_ips>
++          <port_maps>
++            <port_map logical_port="txn" physical_port="pcie_tx0_nx16" dir="out" left="15" right="0">
++              <pin_maps>
++                <pin_map port_index="0"  component_pin="pcie_tx0_n"/>
++                <pin_map port_index="1"  component_pin="pcie_tx1_n"/>
++                <pin_map port_index="2"  component_pin="pcie_tx2_n"/>
++                <pin_map port_index="3"  component_pin="pcie_tx3_n"/>
++                <pin_map port_index="4"  component_pin="pcie_tx4_n"/>
++                <pin_map port_index="5"  component_pin="pcie_tx5_n"/>
++                <pin_map port_index="6"  component_pin="pcie_tx6_n"/>
++                <pin_map port_index="7"  component_pin="pcie_tx7_n"/>
++                <pin_map port_index="8"  component_pin="pcie_tx8_n"/>
++                <pin_map port_index="9"  component_pin="pcie_tx9_n"/>
++                <pin_map port_index="10" component_pin="pcie_tx10_n"/>
++                <pin_map port_index="11" component_pin="pcie_tx11_n"/>
++                <pin_map port_index="12" component_pin="pcie_tx12_n"/>
++                <pin_map port_index="13" component_pin="pcie_tx13_n"/>
++                <pin_map port_index="14" component_pin="pcie_tx14_n"/>
++                <pin_map port_index="15" component_pin="pcie_tx15_n"/>
++              </pin_maps>
++            </port_map>
++
++            <port_map logical_port="rxn" physical_port="pcie_rx0_nx16" dir="in" left="15" right="0">
++              <pin_maps>
++                <pin_map port_index="0"  component_pin="pcie_rx0_n"/>
++                <pin_map port_index="1"  component_pin="pcie_rx1_n"/>
++                <pin_map port_index="2"  component_pin="pcie_rx2_n"/>
++                <pin_map port_index="3"  component_pin="pcie_rx3_n"/>
++                <pin_map port_index="4"  component_pin="pcie_rx4_n"/>
++                <pin_map port_index="5"  component_pin="pcie_rx5_n"/>
++                <pin_map port_index="6"  component_pin="pcie_rx6_n"/>
++                <pin_map port_index="7"  component_pin="pcie_rx7_n"/>
++                <pin_map port_index="8"  component_pin="pcie_rx8_n"/>
++                <pin_map port_index="9"  component_pin="pcie_rx9_n"/>
++                <pin_map port_index="10" component_pin="pcie_rx10_n"/>
++                <pin_map port_index="11" component_pin="pcie_rx11_n"/>
++                <pin_map port_index="12" component_pin="pcie_rx12_n"/>
++                <pin_map port_index="13" component_pin="pcie_rx13_n"/>
++                <pin_map port_index="14" component_pin="pcie_rx14_n"/>
++                <pin_map port_index="15" component_pin="pcie_rx15_n"/>
++              </pin_maps>
++            </port_map>
++
++            <port_map logical_port="txp" physical_port="pcie_tx0_px16" dir="out" left="15" right="0">
++              <pin_maps>
++                <pin_map port_index="0"  component_pin="pcie_tx0_p"/>
++                <pin_map port_index="1"  component_pin="pcie_tx1_p"/>
++                <pin_map port_index="2"  component_pin="pcie_tx2_p"/>
++                <pin_map port_index="3"  component_pin="pcie_tx3_p"/>
++                <pin_map port_index="4"  component_pin="pcie_tx4_p"/>
++                <pin_map port_index="5"  component_pin="pcie_tx5_p"/>
++                <pin_map port_index="6"  component_pin="pcie_tx6_p"/>
++                <pin_map port_index="7"  component_pin="pcie_tx7_p"/>
++                <pin_map port_index="8"  component_pin="pcie_tx8_p"/>
++                <pin_map port_index="9"  component_pin="pcie_tx9_p"/>
++                <pin_map port_index="10" component_pin="pcie_tx10_p"/>
++                <pin_map port_index="11" component_pin="pcie_tx11_p"/>
++                <pin_map port_index="12" component_pin="pcie_tx12_p"/>
++                <pin_map port_index="13" component_pin="pcie_tx13_p"/>
++                <pin_map port_index="14" component_pin="pcie_tx14_p"/>
++                <pin_map port_index="15" component_pin="pcie_tx15_p"/>
++              </pin_maps>
++            </port_map>
++
++            <port_map logical_port="rxp" physical_port="pcie_rx0_px16" dir="in" left="15" right="0">
++              <pin_maps>
++                <pin_map port_index="0"  component_pin="pcie_rx0_p"/>
++                <pin_map port_index="1"  component_pin="pcie_rx1_p"/>
++                <pin_map port_index="2"  component_pin="pcie_rx2_p"/>
++                <pin_map port_index="3"  component_pin="pcie_rx3_p"/>
++                <pin_map port_index="4"  component_pin="pcie_rx4_p"/>
++                <pin_map port_index="5"  component_pin="pcie_rx5_p"/>
++                <pin_map port_index="6"  component_pin="pcie_rx6_p"/>
++                <pin_map port_index="7"  component_pin="pcie_rx7_p"/>
++                <pin_map port_index="8"  component_pin="pcie_rx8_p"/>
++                <pin_map port_index="9"  component_pin="pcie_rx9_p"/>
++                <pin_map port_index="10" component_pin="pcie_rx10_p"/>
++                <pin_map port_index="11" component_pin="pcie_rx11_p"/>
++                <pin_map port_index="12" component_pin="pcie_rx12_p"/>
++                <pin_map port_index="13" component_pin="pcie_rx13_p"/>
++                <pin_map port_index="14" component_pin="pcie_rx14_p"/>
++                <pin_map port_index="15" component_pin="pcie_rx15_p"/>
++                </pin_maps>
++            </port_map>
++          </port_maps>
++          <parameters>
++            <parameter name="block_location" value="PCIE4C_X1Y1" />
++          </parameters>
++        </interface>
++
++        <interface mode="master" name="qsfp0_1x" type="xilinx.com:interface:gt_rtl:1.0" of_component="qsfp0" preset_proc="qsfp0_1x_preset">
++          <description>1-lane GT interface over QSFP0</description>
++          <preferred_ips>
++            <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++            <preferred_ip vendor="xilinx.com" library="ip" name="usxgmii" order="1"/>
++          </preferred_ips>
++          <port_maps>
++                  <port_map logical_port="GTX_N" physical_port="qsfp0_txn1" dir="out" >
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_0_TX1_N"/>
++                    </pin_maps>
++                  </port_map>
++                  <port_map logical_port="GTX_P" physical_port="qsfp0_txp1" dir="out" >
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_0_TX1_P"/>
++                    </pin_maps>
++                  </port_map>
++                  <port_map logical_port="GRX_N" physical_port="qsfp0_rxn1" dir="in" >
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_0_RX1_N"/>
++                    </pin_maps>
++                  </port_map>
++                  <port_map logical_port="GRX_P" physical_port="qsfp0_rxp1" dir="in" >
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_0_RX1_P"/>
++                    </pin_maps>
++                  </port_map>
++                </port_maps>
++                 <parameters>
++                  <parameter name="gt_loc" value="" />
++                </parameters>
++              </interface>
++
++          <interface mode="master" name="qsfp0_2x" type="xilinx.com:interface:gt_rtl:1.0" of_component="qsfp0" preset_proc="qsfp0_2x_preset">
++            <description>2-lane GT interface over QSFP0</description>
++            <preferred_ips>
++              <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++              <preferred_ip vendor="xilinx.com" library="ip" name="usxgmii" order="1"/>
++              <preferred_ip vendor="xilinx.com" library="ip" name="l_ethernet" order="2"/>
++             </preferred_ips>
++            <port_maps>
++                    <port_map logical_port="GTX_N" physical_port="qsfp0_txn2" dir="out" left="1" right="0">
++                      <pin_maps>
++                        <pin_map port_index="0" component_pin="QSFP28_0_TX1_N"/>
++                        <pin_map port_index="1" component_pin="QSFP28_0_TX2_N"/>
++                      </pin_maps>
++                    </port_map>
++                    <port_map logical_port="GTX_P" physical_port="qsfp0_txp2" dir="out" left="1" right="0">
++                      <pin_maps>
++                        <pin_map port_index="0" component_pin="QSFP28_0_TX1_P"/>
++                        <pin_map port_index="1" component_pin="QSFP28_0_TX2_P"/>
++                     </pin_maps>
++                    </port_map>
++                    <port_map logical_port="GRX_N" physical_port="qsfp0_rxn2" dir="in" left="1" right="0">
++                      <pin_maps>
++                        <pin_map port_index="0" component_pin="QSFP28_0_RX1_N"/>
++                        <pin_map port_index="1" component_pin="QSFP28_0_RX2_N"/>
++                     </pin_maps>
++                    </port_map>
++                    <port_map logical_port="GRX_P" physical_port="qsfp0_rxp2" dir="in" left="1" right="0">
++                      <pin_maps>
++                        <pin_map port_index="0" component_pin="QSFP28_0_RX1_P"/>
++                        <pin_map port_index="1" component_pin="QSFP28_0_RX2_P"/>
++                      </pin_maps>
++                    </port_map>
++                  </port_maps>
++                    <parameters>
++                    <parameter name="gt_loc" value="" />
++                  </parameters>
++                </interface>
++
++        <interface mode="master" name="qsfp0_3x" type="xilinx.com:interface:gt_rtl:1.0" of_component="qsfp0" preset_proc="qsfp0_3x_preset">
++          <description>3-lane GT interface over QSFP0</description>
++          <preferred_ips>
++            <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++            <preferred_ip vendor="xilinx.com" library="ip" name="usxgmii" order="1"/>
++         </preferred_ips>
++          <port_maps>
++                  <port_map logical_port="GTX_N" physical_port="qsfp0_txn3" dir="out" left="2" right="0">
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_0_TX1_N"/>
++                      <pin_map port_index="1" component_pin="QSFP28_0_TX2_N"/>
++                      <pin_map port_index="2" component_pin="QSFP28_0_TX3_N"/>
++                   </pin_maps>
++                  </port_map>
++                  <port_map logical_port="GTX_P" physical_port="qsfp0_txp3" dir="out" left="2" right="0">
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_0_TX1_P"/>
++                      <pin_map port_index="1" component_pin="QSFP28_0_TX2_P"/>
++                      <pin_map port_index="2" component_pin="QSFP28_0_TX3_P"/>
++                    </pin_maps>
++                  </port_map>
++                  <port_map logical_port="GRX_N" physical_port="qsfp0_rxn3" dir="in" left="2" right="0">
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_0_RX1_N"/>
++                      <pin_map port_index="1" component_pin="QSFP28_0_RX2_N"/>
++                      <pin_map port_index="2" component_pin="QSFP28_0_RX3_N"/>
++                    </pin_maps>
++                  </port_map>
++                  <port_map logical_port="GRX_P" physical_port="qsfp0_rxp3" dir="in" left="2" right="0">
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_0_RX1_P"/>
++                      <pin_map port_index="1" component_pin="QSFP28_0_RX2_P"/>
++                      <pin_map port_index="2" component_pin="QSFP28_0_RX3_P"/>
++                    </pin_maps>
++                  </port_map>
++                </port_maps>
++                  <parameters>
++                  <parameter name="gt_loc" value="" />
++                </parameters>
++              </interface>
++
++        <interface mode="master" name="qsfp0_4x" type="xilinx.com:interface:gt_rtl:1.0" of_component="qsfp0" preset_proc="qsfp0_4x_preset">
++        <description>4-lane GT interface over QSFP0</description>
++        <preferred_ips>
++          <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++          <preferred_ip vendor="xilinx.com" library="ip" name="usxgmii" order="1"/>
++          <preferred_ip vendor="xilinx.com" library="ip" name="l_ethernet" order="2"/>
++          <preferred_ip vendor="xilinx.com" library="ip" name="cmac_usplus" order="3"/>
++        </preferred_ips>
++        <port_maps>
++                <port_map logical_port="GTX_N" physical_port="qsfp0_txn4" dir="out" left="3" right="0">
++                  <pin_maps>
++                    <pin_map port_index="0" component_pin="QSFP28_0_TX1_N"/>
++                    <pin_map port_index="1" component_pin="QSFP28_0_TX2_N"/>
++                    <pin_map port_index="2" component_pin="QSFP28_0_TX3_N"/>
++                    <pin_map port_index="3" component_pin="QSFP28_0_TX4_N"/>
++                  </pin_maps>
++                </port_map>
++                <port_map logical_port="GTX_P" physical_port="qsfp0_txp4" dir="out" left="3" right="0">
++                  <pin_maps>
++                    <pin_map port_index="0" component_pin="QSFP28_0_TX1_P"/>
++                    <pin_map port_index="1" component_pin="QSFP28_0_TX2_P"/>
++                    <pin_map port_index="2" component_pin="QSFP28_0_TX3_P"/>
++                    <pin_map port_index="3" component_pin="QSFP28_0_TX4_P"/>
++                  </pin_maps>
++                </port_map>
++                <port_map logical_port="GRX_N" physical_port="qsfp0_rxn4" dir="in" left="3" right="0">
++                  <pin_maps>
++                    <pin_map port_index="0" component_pin="QSFP28_0_RX1_N"/>
++                    <pin_map port_index="1" component_pin="QSFP28_0_RX2_N"/>
++                    <pin_map port_index="2" component_pin="QSFP28_0_RX3_N"/>
++                    <pin_map port_index="3" component_pin="QSFP28_0_RX4_N"/>
++                  </pin_maps>
++                </port_map>
++                <port_map logical_port="GRX_P" physical_port="qsfp0_rxp4" dir="in" left="3" right="0">
++                  <pin_maps>
++                    <pin_map port_index="0" component_pin="QSFP28_0_RX1_P"/>
++                    <pin_map port_index="1" component_pin="QSFP28_0_RX2_P"/>
++                    <pin_map port_index="2" component_pin="QSFP28_0_RX3_P"/>
++                    <pin_map port_index="3" component_pin="QSFP28_0_RX4_P"/>
++                  </pin_maps>
++                </port_map>
++              </port_maps>
++               <parameters>
++                <parameter name="gt_loc" value="" />
++              </parameters>
++            </interface>
++
++        <interface mode="master" name="qsfp1_1x" type="xilinx.com:interface:gt_rtl:1.0" of_component="qsfp1" preset_proc="qsfp1_1x_preset">
++          <description>1-lane GT interface over QSFP0</description>
++          <preferred_ips>
++            <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++            <preferred_ip vendor="xilinx.com" library="ip" name="usxgmii" order="1"/>
++          </preferred_ips>
++          <port_maps>
++                  <port_map logical_port="GTX_N" physical_port="qsfp1_txn1" dir="out" >
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_1_TX1_N"/>
++                    </pin_maps>
++                  </port_map>
++                  <port_map logical_port="GTX_P" physical_port="qsfp1_txp1" dir="out" >
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_1_TX1_P"/>
++                    </pin_maps>
++                  </port_map>
++                  <port_map logical_port="GRX_N" physical_port="qsfp1_rxn1" dir="in" >
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_1_RX1_N"/>
++                    </pin_maps>
++                  </port_map>
++                  <port_map logical_port="GRX_P" physical_port="qsfp1_rxp1" dir="in" >
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_1_RX1_P"/>
++                    </pin_maps>
++                  </port_map>
++                </port_maps>
++                  <parameters>
++                  <parameter name="gt_loc" value="" />
++                </parameters>
++              </interface>
++
++        <interface mode="master" name="qsfp1_2x" type="xilinx.com:interface:gt_rtl:1.0" of_component="qsfp1" preset_proc="qsfp1_2x_preset">
++          <description>2-lane GT interface over QSFP0</description>
++          <preferred_ips>
++            <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++            <preferred_ip vendor="xilinx.com" library="ip" name="usxgmii" order="1"/>
++            <preferred_ip vendor="xilinx.com" library="ip" name="l_ethernet" order="2"/>
++            </preferred_ips>
++          <port_maps>
++                  <port_map logical_port="GTX_N" physical_port="qsfp1_txn2" dir="out" left="1" right="0">
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_1_TX1_N"/>
++                      <pin_map port_index="1" component_pin="QSFP28_1_TX2_N"/>
++                    </pin_maps>
++                  </port_map>
++                  <port_map logical_port="GTX_P" physical_port="qsfp1_txp2" dir="out" left="1" right="0">
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_1_TX1_P"/>
++                      <pin_map port_index="1" component_pin="QSFP28_1_TX2_P"/>
++                    </pin_maps>
++                  </port_map>
++                  <port_map logical_port="GRX_N" physical_port="qsfp1_rxn2" dir="in" left="1" right="0">
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_1_RX1_N"/>
++                      <pin_map port_index="1" component_pin="QSFP28_1_RX2_N"/>
++                    </pin_maps>
++                  </port_map>
++                  <port_map logical_port="GRX_P" physical_port="qsfp1_rxp2" dir="in" left="1" right="0">
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_1_RX1_P"/>
++                      <pin_map port_index="1" component_pin="QSFP28_1_RX2_P"/>
++                    </pin_maps>
++                  </port_map>
++                </port_maps>
++                  <parameters>
++                  <parameter name="gt_loc" value="" />
++                </parameters>
++              </interface>
++
++        <interface mode="master" name="qsfp1_3x" type="xilinx.com:interface:gt_rtl:1.0" of_component="qsfp1" preset_proc="qsfp1_3x_preset">
++          <description>3-lane GT interface over QSFP0</description>
++          <preferred_ips>
++            <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++            <preferred_ip vendor="xilinx.com" library="ip" name="usxgmii" order="1"/>
++          </preferred_ips>
++          <port_maps>
++                  <port_map logical_port="GTX_N" physical_port="qsfp1_txn3" dir="out" left="2" right="0">
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_1_TX1_N"/>
++                      <pin_map port_index="1" component_pin="QSFP28_1_TX2_N"/>
++                      <pin_map port_index="2" component_pin="QSFP28_1_TX3_N"/>
++                    </pin_maps>
++                  </port_map>
++                  <port_map logical_port="GTX_P" physical_port="qsfp1_txp3" dir="out" left="2" right="0">
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_1_TX1_P"/>
++                      <pin_map port_index="1" component_pin="QSFP28_1_TX2_P"/>
++                      <pin_map port_index="2" component_pin="QSFP28_1_TX3_P"/>
++                    </pin_maps>
++                  </port_map>
++                  <port_map logical_port="GRX_N" physical_port="qsfp1_rxn3" dir="in" left="2" right="0">
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_1_RX1_N"/>
++                      <pin_map port_index="1" component_pin="QSFP28_1_RX2_N"/>
++                      <pin_map port_index="2" component_pin="QSFP28_1_RX3_N"/>
++                    </pin_maps>
++                  </port_map>
++                  <port_map logical_port="GRX_P" physical_port="qsfp1_rxp3" dir="in" left="2" right="0">
++                    <pin_maps>
++                      <pin_map port_index="0" component_pin="QSFP28_1_RX1_P"/>
++                      <pin_map port_index="1" component_pin="QSFP28_1_RX2_P"/>
++                      <pin_map port_index="2" component_pin="QSFP28_1_RX3_P"/>
++                    </pin_maps>
++                  </port_map>
++                </port_maps>
++                  <parameters>
++                  <parameter name="gt_loc" value="" />
++                </parameters>
++              </interface>
++
++        <interface mode="master" name="qsfp1_4x" type="xilinx.com:interface:gt_rtl:1.0" of_component="qsfp1" preset_proc="qsfp1_4x_preset">
++        <description>4-lane GT interface over QSFP0</description>
++        <preferred_ips>
++          <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++          <preferred_ip vendor="xilinx.com" library="ip" name="usxgmii" order="1"/>
++          <preferred_ip vendor="xilinx.com" library="ip" name="l_ethernet" order="2"/>
++          <preferred_ip vendor="xilinx.com" library="ip" name="cmac_usplus" order="3"/>
++        </preferred_ips>
++        <port_maps>
++                <port_map logical_port="GTX_N" physical_port="qsfp1_txn4" dir="out" left="3" right="0">
++                  <pin_maps>
++                    <pin_map port_index="0" component_pin="QSFP28_1_TX1_N"/>
++                    <pin_map port_index="1" component_pin="QSFP28_1_TX2_N"/>
++                    <pin_map port_index="2" component_pin="QSFP28_1_TX3_N"/>
++                    <pin_map port_index="3" component_pin="QSFP28_1_TX4_N"/>
++                  </pin_maps>
++                </port_map>
++                <port_map logical_port="GTX_P" physical_port="qsfp1_txp4" dir="out" left="3" right="0">
++                  <pin_maps>
++                    <pin_map port_index="0" component_pin="QSFP28_1_TX1_P"/>
++                    <pin_map port_index="1" component_pin="QSFP28_1_TX2_P"/>
++                    <pin_map port_index="2" component_pin="QSFP28_1_TX3_P"/>
++                    <pin_map port_index="3" component_pin="QSFP28_1_TX4_P"/>
++                  </pin_maps>
++                </port_map>
++                <port_map logical_port="GRX_N" physical_port="qsfp1_rxn4" dir="in" left="3" right="0">
++                  <pin_maps>
++                    <pin_map port_index="0" component_pin="QSFP28_1_RX1_N"/>
++                    <pin_map port_index="1" component_pin="QSFP28_1_RX2_N"/>
++                    <pin_map port_index="2" component_pin="QSFP28_1_RX3_N"/>
++                    <pin_map port_index="3" component_pin="QSFP28_1_RX4_N"/>
++                  </pin_maps>
++                </port_map>
++                <port_map logical_port="GRX_P" physical_port="qsfp1_rxp4" dir="in" left="3" right="0">
++                  <pin_maps>
++                    <pin_map port_index="0" component_pin="QSFP28_1_RX1_P"/>
++                    <pin_map port_index="1" component_pin="QSFP28_1_RX2_P"/>
++                    <pin_map port_index="2" component_pin="QSFP28_1_RX3_P"/>
++                    <pin_map port_index="3" component_pin="QSFP28_1_RX4_P"/>
++                  </pin_maps>
++                </port_map>
++              </port_maps>
++                <parameters>
++                  <parameter name="gt_loc" value="" />
++                </parameters>
++            </interface>
++
++    </interfaces>
++
++    </component>
++
++  <component name="hbm_cattrip" display_name="HBM CATTRIP (Mandatory)" type="chip" sub_type="led" major_group="General Purpose Input or Output">
++      <description>HBM_CATTRIP Active hgh indicator to Satellite controller to indicate the HBM has exceded its maximum allowable temperature.</description>
++      <preferred_ips>
++        <preferred_ip vendor="xilinx.com" library="ip" name="hbm" order="0"/>
++      </preferred_ips>
++    </component>
++
++    <!--
++  <component name="rs232_fpga_msp" display_name="MSP_UART" type="chip" sub_type="uart" major_group="Miscellaneous">
++      <description>SC-to-UART Bridge, which allows serial communication to SC </description>
++      <pins>
++        <pin index="0" name="rs232_fpga_uart_msp_TX" iostandard="LVCMOS18"/>
++        <pin index="1" name="rs232_fpga_uart_msp_RX" iostandard="LVCMOS18"/>
++      </pins>
++    </component>
++
++  <component name="fpga_uart0" display_name="FPGA_UART0" type="chip" sub_type="uart" major_group="Miscellaneous">
++      <description>FPGA UART0 </description>
++      <pins>
++        <pin index="0" name="fpga_uart0_TX" iostandard="LVCMOS18"/>
++        <pin index="1" name="fpga_uart0_RX" iostandard="LVCMOS18"/>
++      </pins>
++    </component>
++  -->
++
++  <component name="qsfp0_refclk0" display_name="QSFP reference differential clock input 0" type="chip" sub_type="system_clock" major_group="High Speed Tranceivers" part_name="SI5394" vendor="Silicon Labs" spec_url="www.silabs.com">
++      <description>1.2V LVDS differential 161 MHz oscillator used as a GT reference clock on the board</description>
++      <parameters>
++        <parameter name="frequency" value="161132812"/>
++      </parameters>
++      <preferred_ips>
++        <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++      </preferred_ips>
++    </component>
++
++  <component name="qsfp1_refclk0" display_name="QSFP reference differential clock input 1" type="chip" sub_type="system_clock" major_group="High Speed Tranceivers" part_name="SI5394" vendor="Silicon Labs" spec_url="www.silabs.com">
++      <description>1.2V LVDS differential 161 MHz oscillator used as a GT reference clock on the board</description>
++      <parameters>
++        <parameter name="frequency" value="161132812"/>
++      </parameters>
++      <preferred_ips>
++        <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++      </preferred_ips>
++    </component>
++
++    <!--
++  <component name="slr0_freerun_clk" display_name="100MHz differential clock input" type="chip" sub_type="system_clock" major_group="Clock Sources" part_name="SI53306-B-GM" vendor="Silicon Labs" spec_url="www.silabs.com">
++      <description>1.2V LVDS differential 100 MHz oscillator used as Freerunning differential clock on the board</description>
++      <parameters>
++        <parameter name="frequency" value="100000000"/>
++      </parameters>
++    </component>
++
++    <component name="slr1_freerun_clk" display_name="100MHz differential clock input" type="chip" sub_type="system_clock" major_group="Clock Sources" part_name="SI53306-B-GM" vendor="Silicon Labs" spec_url="www.silabs.com">
++      <description>1.2V LVDS differential 100 MHz oscillator used as Freerunning differential clock on the board</description>
++      <parameters>
++        <parameter name="frequency" value="100000000"/>
++      </parameters>
++    </component>
++  -->
++
++  <component name="reset_si5394" display_name="Reset to SI5394" type="chip" sub_type="led" major_group="General Purpose Input or Output" part_name="SI5394" vendor="Silicon Labs" spec_url="www.silabs.com">
++    <description>GPIO reset to SI5394 (SI_RSTBB) </description>
++  </component>
++
++  <component name="gpio_si5394" display_name="GPIO from SI5394" type="chip" sub_type="led" major_group="General Purpose Input or Output" part_name="SI5394" vendor="Silicon Labs" spec_url="www.silabs.com">
++    <description>GPIO from SI5394 (SI_INTRB, SI_PLL_LOCK, SI_IN_LOS)</description>
++  </component>
++
++  <component name="msp_gpio" display_name="GPIO from MSP" type="chip" sub_type="led" major_group="General Purpose Input or Output">
++    <description>GPIO signals from MSP Satellite Controller to the CMS</description>
++    <preferred_ips>
++      <preferred_ip vendor="xilinx.com" library="ip" name="cms_subsystem" order="0"/>
++    </preferred_ips>
++  </component>
++
++  <component name="iic_si5394" display_name="I2C SI5394" type="chip" sub_type="mux" major_group="Miscellaneous" part_name="SI5394" vendor="Silicon Labs" spec_url="www.silabs.com">
++    <description>I2C to SI5394</description>
++  </component>
++
++  <component name="pcie_refclk" display_name="PCIe MGT reference Clock" type="chip" sub_type="mgt_clock" major_group="High Speed Tranceivers" part_name="pcie_8lane_edge" vendor="Clock" spec_url="">
++      <description>Clock input from PCI Express edge connector</description>
++      <parameters>
++        <parameter name="frequency" value="100000000"/>
++      </parameters>
++      <preferred_ips>
++        <preferred_ip vendor="xilinx.com" library="ip" name="util_ds_buf" order="0"/>
++        <preferred_ip vendor="xilinx.com" library="ip" name="clk_wiz" order="1"/>
++      </preferred_ips>
++    </component>
++
++  <component name="pci_express" display_name="PCI Express" type="chip" sub_type="chip" major_group="High Speed Tranceivers">
++      <description>PCI Express</description>
++
++      <component_modes>
++
++    <component_mode name="pci_express_x4" display_name="pci_express x4 ">
++          <interfaces>
++            <interface name="pci_express_x4"/>
++            <interface name="pcie_perstn" optional="true"/>
++          </interfaces>
++          <preferred_ips>
++            <preferred_ip vendor="xilinx.com" library="ip" name="xdma" order="0"/>
++            <preferred_ip vendor="xilinx.com" library="ip" name="qdma" order="1"/>
++            <preferred_ip vendor="xilinx.com" library="ip" name="pcie4c_uscale_plus" order="2"/>
++          </preferred_ips>
++        </component_mode>
++
++    <component_mode name="pci_express_x8" display_name="pci_express x8 ">
++          <interfaces>
++            <interface name="pci_express_x8"/>
++            <interface name="pcie_perstn" optional="true"/>
++          </interfaces>
++          <preferred_ips>
++            <preferred_ip vendor="xilinx.com" library="ip" name="xdma" order="0"/>
++            <preferred_ip vendor="xilinx.com" library="ip" name="qdma" order="1"/>
++            <preferred_ip vendor="xilinx.com" library="ip" name="pcie4c_uscale_plus" order="2"/>
++          </preferred_ips>
++        </component_mode>
++
++
++    <component_mode name="pci_express_x16" display_name="pci_express x16 ">
++          <interfaces>
++            <interface name="pci_express_x16"/>
++            <interface name="pcie_perstn" optional="true"/>
++          </interfaces>
++          <preferred_ips>
++            <preferred_ip vendor="xilinx.com" library="ip" name="xdma" order="0"/>
++            <preferred_ip vendor="xilinx.com" library="ip" name="qdma" order="1"/>
++            <preferred_ip vendor="xilinx.com" library="ip" name="pcie4c_uscale_plus" order="2"/>
++          </preferred_ips>
++        </component_mode>
++
++      </component_modes>
++
++    </component>
++
++    <component name="qsfp0" display_name="QSFP Connector" type="chip" sub_type="sfp" major_group="High Speed Tranceivers" part_name="M88E1111_BAB1C000" vendor="Marvell" spec_url="www.marvell.com">
++          <description>QSFP Connector 0</description>
++
++        <component_modes>
++
++          <component_mode name="qsfp0_1x_161" display_name="qsfp0_1x_161">
++                <interfaces>
++                  <interface name="qsfp0_1x"/>
++                  <interface name="qsfp0_refclk0" optional="true"/>
++                </interfaces>
++                <preferred_ips>
++                  <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++                  <preferred_ip vendor="xilinx.com" library="ip" name="usxgmii" order="1"/>
++                </preferred_ips>
++              </component_mode>
++
++          <component_mode name="qsfp0_2x_161" display_name="qsfp0_2x_161">
++              <interfaces>
++                <interface name="qsfp0_2x"/>
++                <interface name="qsfp0_refclk0" optional="true"/>
++               </interfaces>
++              <preferred_ips>
++                <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++                <preferred_ip vendor="xilinx.com" library="ip" name="usxgmii" order="1"/>
++                <preferred_ip vendor="xilinx.com" library="ip" name="l_ethernet" order="1"/>
++              </preferred_ips>
++            </component_mode>
++
++          <component_mode name="qsfp0_3x_161" display_name="qsfp0_3x_161">
++              <interfaces>
++                <interface name="qsfp0_3x"/>
++                <interface name="qsfp0_refclk0" optional="true"/>
++              </interfaces>
++              <preferred_ips>
++                <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++                <preferred_ip vendor="xilinx.com" library="ip" name="usxgmii" order="1"/>
++              </preferred_ips>
++           </component_mode>
++
++        <component_mode name="qsfp0_4x_161" display_name="qsfp0_4x_161">
++              <interfaces>
++                <interface name="qsfp0_4x"/>
++                <interface name="qsfp0_refclk0" optional="true"/>
++              </interfaces>
++              <preferred_ips>
++                <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++                <preferred_ip vendor="xilinx.com" library="ip" name="usxgmii" order="1"/>
++                <preferred_ip vendor="xilinx.com" library="ip" name="l_ethernet" order="2"/>
++                <preferred_ip vendor="xilinx.com" library="ip" name="cmac_usplus" order="3"/>
++              </preferred_ips>
++            </component_mode>
++
++        </component_modes>
++      </component>
++
++    <component name="qsfp1" display_name="QSFP Connector" type="chip" sub_type="sfp" major_group="High Speed Tranceivers" part_name="M88E1111_BAB1C000" vendor="Marvell" spec_url="www.marvell.com">
++          <description>QSFP Connector 1</description>
++
++        <component_modes>
++
++          <component_mode name="qsfp1_1x_161" display_name="qsfp1_1x_161">
++            <interfaces>
++              <interface name="qsfp1_1x"/>
++              <interface name="qsfp1_refclk0" optional="true"/>
++            </interfaces>
++            <preferred_ips>
++              <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++              <preferred_ip vendor="xilinx.com" library="ip" name="usxgmii" order="1"/>
++            </preferred_ips>
++          </component_mode>
++
++        <component_mode name="qsfp1_2x_161" display_name="qsfp1_2x_161">
++            <interfaces>
++              <interface name="qsfp1_2x"/>
++              <interface name="qsfp1_refclk0" optional="true"/>
++            </interfaces>
++            <preferred_ips>
++              <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++              <preferred_ip vendor="xilinx.com" library="ip" name="usxgmii" order="1"/>
++              <preferred_ip vendor="xilinx.com" library="ip" name="l_ethernet" order="1"/>
++            </preferred_ips>
++          </component_mode>
++
++        <component_mode name="qsfp1_3x_161" display_name="qsfp1_3x_161">
++            <interfaces>
++              <interface name="qsfp1_3x"/>
++              <interface name="qsfp1_refclk0" optional="true"/>
++            </interfaces>
++            <preferred_ips>
++              <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++              <preferred_ip vendor="xilinx.com" library="ip" name="usxgmii" order="1"/>
++            </preferred_ips>
++        </component_mode>
++
++        <component_mode name="qsfp1_4x_161" display_name="qsfp1_4x_161">
++              <interfaces>
++                <interface name="qsfp1_4x"/>
++                <interface name="qsfp1_refclk0" optional="true"/>
++              </interfaces>
++              <preferred_ips>
++                <preferred_ip vendor="xilinx.com" library="ip" name="xxv_ethernet" order="0"/>
++                <preferred_ip vendor="xilinx.com" library="ip" name="usxgmii" order="1"/>
++                <preferred_ip vendor="xilinx.com" library="ip" name="l_ethernet" order="2"/>
++                <preferred_ip vendor="xilinx.com" library="ip" name="cmac_usplus" order="3"/>
++              </preferred_ips>
++            </component_mode>
++
++        </component_modes>
++      </component>
++
++ </components>
++
++
++  <jtag_chains>
++    <jtag_chain name="chain1">
++      <position name="0" component="part0"/>
++    </jtag_chain>
++  </jtag_chains>
++
++  <connections>
++
++  <connection name="part0_hbm_cattrip" component1="part0" component2="hbm_cattrip">
++      <connection_map name="part0_hbm_cattrip" typical_delay="5" c1_st_index="2" c1_end_index="2" c2_st_index="0" c2_end_index="0"/>
++    </connection>
++
++  <connection name="part0_pcie_perstn" component1="part0" component2="pcie_perstn">
++      <connection_map name="part0_pcie_perstn_1" c1_st_index="0" c1_end_index="0" c2_st_index="0" c2_end_index="0"/>
++    </connection>
++
++  <connection name="part0_qsfp28_leds" component1="part0" component2="qsfp28_leds">
++      <connection_map name="part0_qsfp28_leds" typical_delay="5" c1_st_index="3" c1_end_index="8" c2_st_index="0" c2_end_index="5"/>
++    </connection>
++
++  <connection name="part0_reset_si5394" component1="part0" component2="reset_si5394">
++     <connection_map name="part0_reset_si5394" typical_delay="5" c1_st_index="11" c1_end_index="11" c2_st_index="0" c2_end_index="0"/>
++  </connection>
++
++  <connection name="part0_gpio_si5394" component1="part0" component2="gpio_si5394">
++     <connection_map name="part0_gpio_si5394" typical_delay="5" c1_st_index="12" c1_end_index="14" c2_st_index="0" c2_end_index="2"/>
++    </connection>
++
++  <connection name="part0_msp_gpio" component1="part0" component2="msp_gpio">
++      <connection_map name="part0_msp_gpio" typical_delay="5" c1_st_index="17" c1_end_index="18" c2_st_index="0" c2_end_index="1"/>
++    </connection>
++
++  <connection name="part0_iic_si5394" component1="part0" component2="iic_si5394">
++      <connection_map name="part0_iic_si5394" typical_delay="5" c1_st_index="15" c1_end_index="16" c2_st_index="0" c2_end_index="1"/>
++    </connection>
++
++  <connection name="part0_pcie_refclk" component1="part0" component2="pcie_refclk">
++      <connection_map name="part0_pcie_refclk" typical_delay="5" c1_st_index="700" c1_end_index="701" c2_st_index="0" c2_end_index="1"/>
++    </connection>
++
++  <connection name="part0_pci_express" component1="part0" component2="pci_express">
++      <connection_map name="part0_pcie_express_1" c1_st_index="702" c1_end_index="765" c2_st_index="0" c2_end_index="63"/>
++    </connection>
++
++   <connection name="part0_qsfp0_refclk0" component1="part0" component2="qsfp0_refclk0">
++      <connection_map name="part0_qsfp0_refclk0" typical_delay="5" c1_st_index="100" c1_end_index="101" c2_st_index="0" c2_end_index="1"/>
++    </connection>
++
++   <connection name="part0_qsfp1_refclk0" component1="part0" component2="qsfp1_refclk0">
++      <connection_map name="part0_qsfp1_refclk0" typical_delay="5" c1_st_index="102" c1_end_index="103" c2_st_index="0" c2_end_index="1"/>
++    </connection>
++
++  <connection name="part0_qsfp0_gt" component1="part0" component2="qsfp0">
++      <connection_map name="part0_qsfp0_gt" typical_delay="5" c1_st_index="800" c1_end_index="815" c2_st_index="0" c2_end_index="15"/>
++    </connection>
++
++  <connection name="part0_qsfp1_gt" component1="part0" component2="qsfp1">
++      <connection_map name="part0_qsfp1_gt" typical_delay="5" c1_st_index="850" c1_end_index="865" c2_st_index="0" c2_end_index="15"/>
++    </connection>
++
++  </connections>
++
++<ip_associated_rules>
++    <ip_associated_rule name="default">
++      <ip vendor="xilinx.com" library="ip" name="xdma" version="*" ip_interface="sys_rst_n">
++        <associated_board_interfaces>
++          <associated_board_interface name="pcie_perstn" order="0"/>
++        </associated_board_interfaces>
++      </ip>
++      <ip vendor="xilinx.com" library="ip" name="pcie4_uscale_plus" version="*" ip_interface="sys_rst_n">
++        <associated_board_interfaces>
++          <associated_board_interface name="pcie_perstn" order="0"/>
++        </associated_board_interfaces>
++      </ip>
++      <ip vendor="xilinx.com" library="ip" name="qdma" version="*" ip_interface="sys_rst_n">
++        <associated_board_interfaces>
++          <associated_board_interface name="pcie_perstn" order="0"/>
++        </associated_board_interfaces>
++      </ip>
++      <ip vendor="xilinx.com" library="ip" name="hbm" version="*" ip_interface="DRAM_0_STAT_CATTRIP">
++        <associated_board_interfaces>
++          <associated_board_interface name="hbm_cattrip" order="0"/>
++        </associated_board_interfaces>
++      </ip>
++      <ip vendor="xilinx.com" library="ip" name="util_ds_buf" version="*" ip_interface="CLK_IN_D">
++        <associated_board_interfaces>
++          <associated_board_interface name="pcie_refclk" order="0"/>
++        <!--  <associated_board_interface name="cmc_clk" order="1"/>
++          <associated_board_interface name="hbm_clk" order="2"/> -->
++        </associated_board_interfaces>
++      </ip>
++      <ip vendor="xilinx.com" library="ip" name="clk_wiz" version="*" ip_interface="CLK_IN_D">
++        <associated_board_interfaces>
++        <!--  <associated_board_interface name="cmc_clk" order="0"/> -->
++          <associated_board_interface name="pcie_refclk" order="0"/>
++        <!--  <associated_board_interface name="hbm_clk" order="2"/> -->
++        </associated_board_interfaces>
++      </ip>
++
++
++      <ip vendor="xilinx.com" library="ip" name="xxv_ethernet" version="*" ip_interface="gt_serial_port">
++        <associated_board_interfaces>
++          <associated_board_interface name="qsfp0_1x" order="0"/>
++          <associated_board_interface name="qsfp0_2x" order="1"/>
++          <associated_board_interface name="qsfp0_3x" order="2"/>
++          <associated_board_interface name="qsfp0_4x" order="3"/>
++          <associated_board_interface name="qsfp1_1x" order="4"/>
++          <associated_board_interface name="qsfp1_2x" order="5"/>
++          <associated_board_interface name="qsfp1_3x" order="6"/>
++          <associated_board_interface name="qsfp1_4x" order="7"/>
++        </associated_board_interfaces>
++      </ip>
++      <ip vendor="xilinx.com" library="ip" name="usxgmii" version="*" ip_interface="gt_serial_port">
++        <associated_board_interfaces>
++          <associated_board_interface name="qsfp0_1x" order="0"/>
++          <associated_board_interface name="qsfp0_2x" order="1"/>
++          <associated_board_interface name="qsfp0_3x" order="2"/>
++          <associated_board_interface name="qsfp0_4x" order="3"/>
++          <associated_board_interface name="qsfp1_1x" order="4"/>
++          <associated_board_interface name="qsfp1_2x" order="5"/>
++          <associated_board_interface name="qsfp1_3x" order="6"/>
++          <associated_board_interface name="qsfp1_4x" order="7"/>
++        </associated_board_interfaces>
++      </ip>
++      <ip vendor="xilinx.com" library="ip" name="l_ethernet" version="*" ip_interface="gt_serial_port">
++        <associated_board_interfaces>
++          <associated_board_interface name="qsfp0_2x" order="0"/>
++          <associated_board_interface name="qsfp0_4x" order="1"/>
++          <associated_board_interface name="qsfp1_2x" order="2"/>
++          <associated_board_interface name="qsfp1_4x" order="3"/>
++        </associated_board_interfaces>
++      </ip>
++      <ip vendor="xilinx.com" library="ip" name="cmac_usplus" version="*" ip_interface="gt_serial_port">
++        <associated_board_interfaces>
++          <associated_board_interface name="qsfp0_4x" order="0"/>
++          <associated_board_interface name="qsfp1_4x" order="1"/>
++        </associated_board_interfaces>
++      </ip>
++
++      <ip vendor="xilinx.com" library="ip" name="xxv_ethernet" version="*" ip_interface="gt_ref_clk">
++        <associated_board_interfaces>
++          <associated_board_interface name="qsfp0_refclk0" order="0"/>
++          <associated_board_interface name="qsfp1_refclk0" order="1"/>
++        </associated_board_interfaces>
++      </ip>
++      <ip vendor="xilinx.com" library="ip" name="usxgmii" version="*" ip_interface="gt_ref_clk">
++        <associated_board_interfaces>
++          <associated_board_interface name="qsfp0_refclk0" order="0"/>
++          <associated_board_interface name="qsfp1_refclk0" order="1"/>
++        </associated_board_interfaces>
++      </ip>
++      <ip vendor="xilinx.com" library="ip" name="l_ethernet" version="*" ip_interface="gt_ref_clk">
++        <associated_board_interfaces>
++          <associated_board_interface name="qsfp0_refclk0" order="0"/>
++          <associated_board_interface name="qsfp1_refclk0" order="1"/>
++        </associated_board_interfaces>
++      </ip>
++      <ip vendor="xilinx.com" library="ip" name="cmac_usplus" version="*" ip_interface="gt_ref_clk">
++        <associated_board_interfaces>
++          <associated_board_interface name="qsfp0_refclk0" order="0"/>
++          <associated_board_interface name="qsfp1_refclk0" order="1"/>
++        </associated_board_interfaces>
++      </ip>
++    </ip_associated_rule>
++  </ip_associated_rules>
++
++</board>
++
+diff --git a/board_files/Xilinx/au55c/changelog.txt b/board_files/Xilinx/au55c/changelog.txt
+new file mode 100644
+index 0000000..62da2c9
+--- /dev/null
++++ b/board_files/Xilinx/au55c/changelog.txt
+@@ -0,0 +1,5 @@
++######### AU55C change log ##############
++1.0
++AU55C Initial board support
++
++
+diff --git a/board_files/Xilinx/au55c/part0_pins.xml b/board_files/Xilinx/au55c/part0_pins.xml
+new file mode 100644
+index 0000000..b0a485b
+--- /dev/null
++++ b/board_files/Xilinx/au55c/part0_pins.xml
+@@ -0,0 +1,202 @@
++<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
++<!-- Copyright (C) 2021, Xilinx Inc - All rights reserved
++ Licensed under the Apache License, Version 2.0 (the "License"). You may
++ not use this file except in compliance with the License. A copy of the
++ License is located at
++     http://www.apache.org/licenses/LICENSE-2.0
++ Unless required by applicable law or agreed to in writing, software
++ distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
++ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
++ License for the specific language governing permissions and limitations
++ under the License. -->
++
++<part_info part_name="xcu55c-fsvh2892-2L-e">
++
++  <pins>
++
++    <pin index="0" name="PCIE_PERST_LS_65"    iostandard="LVCMOS18" loc="BF41"/>
++    <pin index="1" name="PEX_PWRBRKN_FPGA_65" iostandard="LVCMOS18" loc="BG43"/>
++    <pin index="2" name="HBM_CATTRIP_LS"      iostandard="LVCMOS18" loc="BE45"/>
++
++    <!-- QSFP28 Activity LED pins -->
++    <pin index="3" name="QSFP28_0_ACTIVITY_LED"    iostandard="LVCMOS18" loc="BL13" drive="8"/>
++    <pin index="4" name="QSFP28_0_LINK_STAT_LEDG"  iostandard="LVCMOS18" loc="BK11" drive="8"/>
++    <pin index="5" name="QSFP28_0_LINK_STAT_LEDY"  iostandard="LVCMOS18" loc="BJ11" drive="8"/>
++    <pin index="6" name="QSFP28_1_ACTIVITY_LED"    iostandard="LVCMOS18" loc="BK14" drive="8"/>
++    <pin index="7" name="QSFP28_1_LINK_STAT_LEDG"  iostandard="LVCMOS18" loc="BK15" drive="8"/>
++    <pin index="8" name="QSFP28_1_LINK_STAT_LEDY"  iostandard="LVCMOS18" loc="BL12" drive="8"/>
++
++    <!-- FPGA to Sattellite Controller CMS UART Interface Pins-->
++    <pin index="9"  name="FPGA_TXD_MSP_65" iostandard="LVCMOS18" loc="BH42"/>
++    <pin index="10" name="FPGA_RXD_MSP_65" iostandard="LVCMOS18" loc="BJ42"/>
++
++    <!-- Si5394B pins-->
++    <pin index="11" name="SI_RSTBB"    iostandard="LVCMOS18" loc="BM8" />
++    <pin index="12" name="SI_INTRB"    iostandard="LVCMOS18" loc="BM9" />
++    <pin index="13" name="SI_PLL_LOCK" iostandard="LVCMOS18" loc="BN10"/>
++    <pin index="14" name="SI_IN_LOS"   iostandard="LVCMOS18" loc="BM10"/>
++    <pin index="15" name="I2C_SI5394_SCL" iostandard="LVCMOS18" loc="BM14"/>
++    <pin index="16" name="I2C_SI5394_SDA" iostandard="LVCMOS18" loc="BN14"/>
++
++    <!-- General perpose IO interconnect pins -->
++    <pin index="17" name="MSP_GPIO0" iostandard="LVCMOS18" loc="BE46"/>
++    <pin index="18" name="MSP_GPIO1" iostandard="LVCMOS18" loc="BH46"/>
++    <pin index="19" name="MSP_GPIO2" iostandard="LVCMOS18" loc="BF45"/>
++    <pin index="20" name="MSP_GPIO3" iostandard="LVCMOS18" loc="BF46"/>
++
++    <pin index="21"  name ="CPU_RESET_FPGA"    iostandard="LVCMOS18" loc="BG45"/>
++    <pin index="22"  name ="RSTN_68"           iostandard="LVCMOS18" loc="BM12"/>
++
++    <!-- Onboard Clocks -->
++    <pin index="100"  name ="SYNCE_CLK0_N" loc="AD43"/>
++    <pin index="101"  name ="SYNCE_CLK0_P" loc="AD42"/>
++    <pin index="102"  name ="SYNCE_CLK1_N" loc="AB43"/>
++    <pin index="103"  name ="SYNCE_CLK1_P" loc="AB42"/>
++
++    <pin index="104"  name ="SYSCLK2_P" iostandard="LVDS" loc="BK10"  dqs_bias="TRUE"/>
++    <pin index="105"  name ="SYSCLK2_N" iostandard="LVDS" loc="BL10"  dqs_bias="TRUE"/>
++    <pin index="106"  name ="SYSCLK3_P" iostandard="LVDS" loc="BK43"  dqs_bias="TRUE"/>
++    <pin index="107"  name ="SYSCLK3_N" iostandard="LVDS" loc="BK44"  dqs_bias="TRUE"/>
++
++    <pin index="108"  name ="PPS_IN_FPGA" iostandard="LVCMOS18" loc="BJ33"/>
++    <pin index="109"  name ="PPS_IN_FPGA" iostandard="LVCMOS18" loc="BH32"/>
++
++    <pin index="110"  name ="NS1_REFCLK0_N" loc="AL41"/>
++    <pin index="111"  name ="NS1_REFCLK0_P" loc="AL40"/>
++    <pin index="112"  name ="NS1_SYSCLK5_N" loc="AK43"/>
++    <pin index="113"  name ="NS1_SYSCLK5_P" loc="AK42"/>
++    <pin index="114"  name ="NS2_REFCLK0_N" loc="AR41"/>
++    <pin index="115"  name ="NS2_REFCLK0_P" loc="AR40"/>
++    <pin index="116"  name ="NS2_SYSCLK6_N" loc="AP43"/>
++    <pin index="117"  name ="NS2_SYSCLK6_P" loc="AP42"/>
++
++    <pin index="118"  name ="TESTCLK_OUT" iostandard="LVCMOS18" loc="BN42"/>
++
++    <!-- PCIe Clocks-->
++    <pin index="694" name ="PCIE_SYSCLK0_N" loc="AK12"/>
++    <pin index="695" name ="PCIE_SYSCLK0_P" loc="AK13"/>
++    <pin index="696" name ="PCIE_SYSCLK1_N" loc="AP12"/>
++    <pin index="697" name ="PCIE_SYSCLK1_P" loc="AP13"/>
++
++    <pin index="698" name ="PCIE_REFCLK0_N" loc="AL14"/>
++    <pin index="699" name ="PCIE_REFCLK0_P" loc="AL15"/>
++    <pin index="700" name ="PCIE_REFCLK1_N" loc="AR14"/>
++    <pin index="701" name ="PCIE_REFCLK1_P" loc="AR15"/>
++
++    <!-- PCIe Connector -->
++
++    <pin index="702" name ="pcie_rx0_n"    loc="AL1" />
++    <pin index="703" name ="pcie_rx0_p"    loc="AL2" />
++    <pin index="704" name ="pcie_rx1_n"    loc="AM3" />
++    <pin index="705" name ="pcie_rx1_p"    loc="AM4" />
++    <pin index="706" name ="pcie_rx2_n"    loc="AN5" />
++    <pin index="707" name ="pcie_rx2_p"    loc="AN6" />
++    <pin index="708" name ="pcie_rx3_n"    loc="AN1" />
++    <pin index="709" name ="pcie_rx3_p"    loc="AN2" />
++    <pin index="710" name ="pcie_rx4_n"    loc="AP3" />
++    <pin index="711" name ="pcie_rx4_p"    loc="AP4" />
++    <pin index="712" name ="pcie_rx5_n"    loc="AR1" />
++    <pin index="713" name ="pcie_rx5_p"    loc="AR2" />
++    <pin index="714" name ="pcie_rx6_n"    loc="AT3" />
++    <pin index="715" name ="pcie_rx6_p"    loc="AT4" />
++    <pin index="716" name ="pcie_rx7_n"    loc="AU1" />
++    <pin index="717" name ="pcie_rx7_p"    loc="AU2" />
++    <pin index="718" name ="pcie_rx8_n"    loc="AV3" />
++    <pin index="719" name ="pcie_rx8_p"    loc="AV4" />
++    <pin index="720" name ="pcie_rx9_n"    loc="AW5" />
++    <pin index="721" name ="pcie_rx9_p"    loc="AW6" />
++    <pin index="722" name ="pcie_rx10_n"   loc="AW1" />
++    <pin index="723" name ="pcie_rx10_p"   loc="AW2" />
++    <pin index="724" name ="pcie_rx11_n"   loc="AY3" />
++    <pin index="725" name ="pcie_rx11_p"   loc="AY4" />
++    <pin index="726" name ="pcie_rx12_n"   loc="BA5" />
++    <pin index="727" name ="pcie_rx12_p"   loc="BA6" />
++    <pin index="728" name ="pcie_rx13_n"   loc="BA1" />
++    <pin index="729" name ="pcie_rx13_p"   loc="BA2" />
++    <pin index="730" name ="pcie_rx14_n"   loc="BB3" />
++    <pin index="731" name ="pcie_rx14_p"   loc="BB4" />
++    <pin index="732" name ="pcie_rx15_n"   loc="BC1" />
++    <pin index="733" name ="pcie_rx15_p"   loc="BC2" />
++
++    <pin index="734" name ="pcie_tx0_n"    loc="AL10"/>
++    <pin index="735" name ="pcie_tx0_p"    loc="AL11"/>
++    <pin index="736" name ="pcie_tx1_n"    loc="AM8" />
++    <pin index="737" name ="pcie_tx1_p"    loc="AM9" />
++    <pin index="738" name ="pcie_tx2_n"    loc="AN10"/>
++    <pin index="739" name ="pcie_tx2_p"    loc="AN11"/>
++    <pin index="740" name ="pcie_tx3_n"    loc="AP8" />
++    <pin index="741" name ="pcie_tx3_p"    loc="AP9" />
++    <pin index="742" name ="pcie_tx4_n"    loc="AR10"/>
++    <pin index="743" name ="pcie_tx4_p"    loc="AR11"/>
++    <pin index="744" name ="pcie_tx5_n"    loc="AR6" />
++    <pin index="745" name ="pcie_tx5_p"    loc="AR7" />
++    <pin index="746" name ="pcie_tx6_n"    loc="AT8" />
++    <pin index="747" name ="pcie_tx6_p"    loc="AT9" />
++    <pin index="748" name ="pcie_tx7_n"    loc="AU10"/>
++    <pin index="749" name ="pcie_tx7_p"    loc="AU11"/>
++    <pin index="750" name ="pcie_tx8_n"    loc="AU6" />
++    <pin index="751" name ="pcie_tx8_p"    loc="AU7" />
++    <pin index="752" name ="pcie_tx9_n"    loc="AV8" />
++    <pin index="753" name ="pcie_tx9_p"    loc="AV9" />
++    <pin index="754" name ="pcie_tx10_n"   loc="AW10"/>
++    <pin index="755" name ="pcie_tx10_p"   loc="AW11"/>
++    <pin index="756" name ="pcie_tx11_n"   loc="AY8" />
++    <pin index="757" name ="pcie_tx11_p"   loc="AY9" />
++    <pin index="758" name ="pcie_tx12_n"   loc="BA10"/>
++    <pin index="759" name ="pcie_tx12_p"   loc="BA11"/>
++    <pin index="760" name ="pcie_tx13_n"   loc="BB8" />
++    <pin index="761" name ="pcie_tx13_p"   loc="BB9" />
++    <pin index="762" name ="pcie_tx14_n"   loc="BC10"/>
++    <pin index="763" name ="pcie_tx14_p"   loc="BC11"/>
++    <pin index="764" name ="pcie_tx15_n"   loc="BC6" />
++    <pin index="765" name ="pcie_tx15_p"   loc="BC7" />
++
++
++    <!-- QSFP28 Connector 0 -->
++    <!-- These pins connect to MGT site 130 X0Y24~27  -->
++    <pin index="800" name ="QSFP28_0_RX1_N" loc="AD52"/>
++    <pin index="801" name ="QSFP28_0_RX2_N" loc="AC54"/>
++    <pin index="802" name ="QSFP28_0_RX3_N" loc="AC50"/>
++    <pin index="803" name ="QSFP28_0_RX4_N" loc="AB52"/>
++
++    <pin index="804" name ="QSFP28_0_RX1_P" loc="AD51"/>
++    <pin index="805" name ="QSFP28_0_RX2_P" loc="AC53"/>
++    <pin index="806" name ="QSFP28_0_RX3_P" loc="AC49"/>
++    <pin index="807" name ="QSFP28_0_RX4_P" loc="AB51"/>
++
++    <pin index="808" name ="QSFP28_0_TX1_N" loc="AD47"/>
++    <pin index="809" name ="QSFP28_0_TX2_N" loc="AC45"/>
++    <pin index="810" name ="QSFP28_0_TX3_N" loc="AB47"/>
++    <pin index="811" name ="QSFP28_0_TX4_N" loc="AA49"/>
++
++    <pin index="812" name ="QSFP28_0_TX1_P" loc="AD46"/>
++    <pin index="813" name ="QSFP28_0_TX2_P" loc="AC44"/>
++    <pin index="814" name ="QSFP28_0_TX3_P" loc="AB46"/>
++    <pin index="815" name ="QSFP28_0_TX4_P" loc="AA48"/>
++
++    <!-- QSFP28 Connector 1 -->
++    <!-- These pins connect to MGT site 131 X0Y28~31  -->
++    <pin index="850" name ="QSFP28_1_RX1_N" loc="AA54"/>
++    <pin index="851" name ="QSFP28_1_RX2_N" loc="Y52"/>
++    <pin index="852" name ="QSFP28_1_RX3_N" loc="W54"/>
++    <pin index="853" name ="QSFP28_1_RX4_N" loc="V52"/>
++
++    <pin index="854" name ="QSFP28_1_RX1_P" loc="AA53"/>
++    <pin index="855" name ="QSFP28_1_RX2_P" loc="Y51"/>
++    <pin index="856" name ="QSFP28_1_RX3_P" loc="W53"/>
++    <pin index="857" name ="QSFP28_1_RX4_P" loc="V51"/>
++
++    <pin index="858" name ="QSFP28_1_TX1_N" loc="AA45"/>
++    <pin index="859" name ="QSFP28_1_TX2_N" loc="Y47"/>
++    <pin index="860" name ="QSFP28_1_TX3_N" loc="W49"/>
++    <pin index="861" name ="QSFP28_1_TX4_N" loc="W45"/>
++
++    <pin index="862" name ="QSFP28_1_TX1_P" loc="AA44"/>
++    <pin index="863" name ="QSFP28_1_TX2_P" loc="Y46"/>
++    <pin index="864" name ="QSFP28_1_TX3_P" loc="W48"/>
++    <pin index="865" name ="QSFP28_1_TX4_P" loc="W44"/>
++
++
++  </pins>
++
++</part_info>
+diff --git a/board_files/Xilinx/au55c/preset.xml b/board_files/Xilinx/au55c/preset.xml
+new file mode 100644
+index 0000000..b93e2c2
+--- /dev/null
++++ b/board_files/Xilinx/au55c/preset.xml
+@@ -0,0 +1,396 @@
++<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
++<!-- Copyright (C) 2021, Xilinx Inc - All rights reserved
++ Licensed under the Apache License, Version 2.0 (the "License"). You may
++ not use this file except in compliance with the License. A copy of the
++ License is located at
++     http://www.apache.org/licenses/LICENSE-2.0
++ Unless required by applicable law or agreed to in writing, software
++ distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
++ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
++ License for the specific language governing permissions and limitations
++ under the License. -->
++
++<ip_presets schema="1.0">
++
++<ip_preset preset_proc_name="reset_si5394_preset">
++  <ip vendor="xilinx.com" library="ip" name="axi_gpio">
++    <user_parameters>
++    <user_parameter name="CONFIG.C_DOUT_DEFAULT" value="0x00000001"/>
++    </user_parameters>
++  </ip>
++  </ip_preset>
++
++  <ip_preset preset_proc_name="reset2_si5394_preset">
++  <ip vendor="xilinx.com" library="ip" name="axi_gpio">
++    <user_parameters>
++    <user_parameter name="CONFIG.C_DOUT_DEFAULT_2" value="0x00000001"/>
++    </user_parameters>
++  </ip>
++  </ip_preset>
++
++<ip_preset preset_proc_name="pcie_refclk_preset">
++    <ip vendor="xilinx.com" library="ip" name="util_ds_buf">
++      <user_parameters>
++        <user_parameter name="CONFIG.C_BUF_TYPE" value="IBUFDSGTE" />
++        <user_parameter name="CONFIG.C_SIZE" value="1" />
++      </user_parameters>
++    </ip>
++  </ip_preset>
++
++<ip_preset preset_proc_name="pciex4_preset">
++  <ip vendor="xilinx.com" library="ip" name="xdma">
++    <user_parameters>
++    <user_parameter name="CONFIG.pl_link_cap_max_link_speed" value="8.0_GT/s" />
++    <user_parameter name="CONFIG.pl_link_cap_max_link_width" value="X4" />
++    <user_parameter name="CONFIG.mode_selection" value="Advanced" />
++    <user_parameter name="CONFIG.en_gt_selection" value="true" />
++    <user_parameter name="CONFIG.select_quad" value="GTY_Quad_227" />
++    </user_parameters>
++  </ip>
++
++  <ip vendor="xilinx.com" library="ip" name="qdma">
++    <user_parameters>
++    <user_parameter name="CONFIG.pl_link_cap_max_link_speed" value="8.0_GT/s" />
++    <user_parameter name="CONFIG.pl_link_cap_max_link_width" value="X4" />
++    <user_parameter name="CONFIG.mode_selection" value="Advanced" />
++    <user_parameter name="CONFIG.en_gt_selection" value="true" />
++    <user_parameter name="CONFIG.select_quad" value="GTY_Quad_227" />
++    </user_parameters>
++  </ip>
++
++
++  <ip vendor="xilinx.com" library="ip" name="pcie4c_uscale_plus">
++    <user_parameters>
++      <!-- <user_parameter name="CONFIG.pcie_blk_locn" value="X1Y1" /> -->
++      <user_parameter name="CONFIG.pl_link_cap_max_link_speed" value="8.0_GT/s" />
++      <user_parameter name="CONFIG.pl_link_cap_max_link_width" value="X4" />
++      <user_parameter name="CONFIG.mode_selection" value="Advanced" />
++      <user_parameter name="CONFIG.en_gt_selection" value="true" />
++      <user_parameter name="CONFIG.select_quad" value="GTY_Quad_227" />
++    </user_parameters>
++  </ip>
++
++
++</ip_preset>
++
++<ip_preset preset_proc_name="pciex8_preset">
++  <ip vendor="xilinx.com" library="ip" name="xdma">
++    <user_parameters>
++
++    <user_parameter name="CONFIG.pl_link_cap_max_link_speed" value="8.0_GT/s" />
++    <user_parameter name="CONFIG.pl_link_cap_max_link_width" value="X8" />
++    <user_parameter name="CONFIG.mode_selection" value="Advanced" />
++    <user_parameter name="CONFIG.en_gt_selection" value="true" />
++    <user_parameter name="CONFIG.select_quad" value="GTY_Quad_227" />
++    </user_parameters>
++    </ip>
++
++  <ip vendor="xilinx.com" library="ip" name="qdma">
++    <user_parameters>
++    <user_parameter name="CONFIG.pl_link_cap_max_link_speed" value="8.0_GT/s" />
++    <user_parameter name="CONFIG.pl_link_cap_max_link_width" value="X8" />
++    <user_parameter name="CONFIG.mode_selection" value="Advanced" />
++    <user_parameter name="CONFIG.en_gt_selection" value="true" />
++    <user_parameter name="CONFIG.select_quad" value="GTY_Quad_227" />
++    </user_parameters>
++    </ip>
++
++  <ip vendor="xilinx.com" library="ip" name="pcie4c_uscale_plus">
++    <user_parameters>
++
++      <!-- <user_parameter name="CONFIG.pcie_blk_locn" value="X1Y1" /> -->
++      <user_parameter name="CONFIG.pl_link_cap_max_link_speed" value="8.0_GT/s" />
++      <user_parameter name="CONFIG.pl_link_cap_max_link_width" value="X8" />
++      <user_parameter name="CONFIG.mode_selection" value="Advanced" />
++      <user_parameter name="CONFIG.en_gt_selection" value="true" />
++      <user_parameter name="CONFIG.select_quad" value="GTY_Quad_227" />
++    </user_parameters>
++  </ip>
++
++</ip_preset>
++
++<ip_preset preset_proc_name="pciex16_preset">
++  <ip vendor="xilinx.com" library="ip" name="xdma">
++    <user_parameters>
++    <user_parameter name="CONFIG.pl_link_cap_max_link_speed" value="8.0_GT/s" />
++    <user_parameter name="CONFIG.pl_link_cap_max_link_width" value="X16" />
++    <user_parameter name="CONFIG.mode_selection" value="Advanced" />
++    <user_parameter name="CONFIG.en_gt_selection" value="true" />
++    <user_parameter name="CONFIG.select_quad" value="GTY_Quad_227" />
++    </user_parameters>
++    </ip>
++
++  <ip vendor="xilinx.com" library="ip" name="qdma">
++    <user_parameters>
++    <user_parameter name="CONFIG.pl_link_cap_max_link_speed" value="8.0_GT/s" />
++    <user_parameter name="CONFIG.pl_link_cap_max_link_width" value="X16" />
++    <user_parameter name="CONFIG.mode_selection" value="Advanced" />
++    <user_parameter name="CONFIG.en_gt_selection" value="true" />
++    <user_parameter name="CONFIG.select_quad" value="GTY_Quad_227" />
++    </user_parameters>
++    </ip>
++
++  <ip vendor="xilinx.com" library="ip" name="pcie4c_uscale_plus">
++    <user_parameters>
++
++      <!-- <user_parameter name="CONFIG.pcie_blk_locn" value="X1Y1" />         -->
++      <user_parameter name="CONFIG.pl_link_cap_max_link_speed" value="8.0_GT/s" />
++      <user_parameter name="CONFIG.pl_link_cap_max_link_width" value="X16" />
++      <user_parameter name="CONFIG.mode_selection" value="Advanced" />
++      <user_parameter name="CONFIG.en_gt_selection" value="true" />
++      <user_parameter name="CONFIG.select_quad" value="GTY_Quad_227" />
++    </user_parameters>
++  </ip>
++
++</ip_preset>
++
++<!-- QSFP0 Connector -->
++
++<ip_preset preset_proc_name="qsfp0_1x_preset">
++
++    <ip vendor="xilinx.com" library="ip" name="xxv_ethernet">
++    <user_parameters>
++      <!-- <user_parameter name="CONFIG.GT_REF_CLK_FREQ" value="161.1328125" /> -->
++      <user_parameter name="CONFIG.NUM_OF_CORES" value="1" />
++      <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++      <user_parameter name="CONFIG.LINE_RATE" value="10" />
++      <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y3" />
++      <user_parameter name="CONFIG.BASE_R_KR" value="BASE-R" />
++    </user_parameters>
++    </ip>
++
++    <ip vendor="xilinx.com" library="ip" name="usxgmii">
++    <user_parameters>
++      <user_parameter name="CONFIG.NUM_OF_CORES" value="1" />
++      <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++      <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y3" />
++    </user_parameters>
++    </ip>
++
++
++ </ip_preset>
++
++<ip_preset preset_proc_name="qsfp0_2x_preset">
++
++  <ip vendor="xilinx.com" library="ip" name="xxv_ethernet">
++    <user_parameters>
++      <user_parameter name="CONFIG.NUM_OF_CORES" value="2" />
++      <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++      <user_parameter name="CONFIG.LINE_RATE" value="10" />
++      <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y3" />
++      <user_parameter name="CONFIG.BASE_R_KR" value="BASE-R" />
++    </user_parameters>
++    </ip>
++
++    <ip vendor="xilinx.com" library="ip" name="usxgmii">
++    <user_parameters>
++      <user_parameter name="CONFIG.NUM_OF_CORES" value="2" />
++      <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++      <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y3" />
++    </user_parameters>
++    </ip>
++
++    <ip vendor="xilinx.com" library="ip" name="l_ethernet">
++    <user_parameters>
++      <!-- <user_parameter name="CONFIG.GT_REF_CLK_FREQ" value="161.1328125" /> -->
++      <user_parameter name="CONFIG.LINE_RATE" value="40" />
++      <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++      <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y3" />
++      <user_parameter name="CONFIG.BASE_R_KR" value="BASE-R" />
++    </user_parameters>
++    </ip>
++
++
++</ip_preset>
++
++<ip_preset preset_proc_name="qsfp0_3x_preset">
++
++    <ip vendor="xilinx.com" library="ip" name="xxv_ethernet">
++    <user_parameters>
++      <user_parameter name="CONFIG.NUM_OF_CORES" value="3" />
++      <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++      <user_parameter name="CONFIG.LINE_RATE" value="10" />
++      <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y3" />
++      <user_parameter name="CONFIG.BASE_R_KR" value="BASE-R" />
++    </user_parameters>
++    </ip>
++
++    <ip vendor="xilinx.com" library="ip" name="usxgmii">
++    <user_parameters>
++      <user_parameter name="CONFIG.NUM_OF_CORES" value="3" />
++      <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++      <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y3" />
++    </user_parameters>
++    </ip>
++
++</ip_preset>
++
++
++<ip_preset preset_proc_name="qsfp0_4x_preset">
++
++     <ip vendor="xilinx.com" library="ip" name="xxv_ethernet">
++       <user_parameters>
++         <user_parameter name="CONFIG.NUM_OF_CORES" value="4" />
++         <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++         <user_parameter name="CONFIG.LINE_RATE" value="10" />
++         <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y3" />
++         <user_parameter name="CONFIG.BASE_R_KR" value="BASE-R" />
++       </user_parameters>
++     </ip>
++
++     <ip vendor="xilinx.com" library="ip" name="usxgmii">
++       <user_parameters>
++       <user_parameter name="CONFIG.NUM_OF_CORES" value="4" />
++       <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++       <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y3" />
++       </user_parameters>
++     </ip>
++
++
++     <ip vendor="xilinx.com" library="ip" name="l_ethernet">
++       <user_parameters>
++       <!-- <user_parameter name="CONFIG.GT_REF_CLK_FREQ" value="161.1328125" /> -->
++         <user_parameter name="CONFIG.LINE_RATE" value="40" />
++         <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++         <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y3" />
++         <user_parameter name="CONFIG.BASE_R_KR" value="BASE-R" />
++       </user_parameters>
++     </ip>
++
++     <ip vendor="xilinx.com" library="ip" name="cmac_usplus">
++       <user_parameters>
++       <!--<user_parameter name="CONFIG.GT_REF_CLK_FREQ" value="161.1328125" />-->
++       <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++       <user_parameter name="CONFIG.CMAC_CAUI4_MODE" value="1" />
++       <user_parameter name="CONFIG.NUM_LANES" value="4x25" />
++       <user_parameter name="CONFIG.CMAC_CORE_SELECT" value="CMACE4_X0Y3" />
++       <!--<user_parameter name="CONFIG.GT_GROUP_SELECT" value= "Quad_X0Y7" />-->
++       <user_parameter name="CONFIG.GT_GROUP_SELECT" value= "X0Y24~X0Y27" />
++       <user_parameter name="CONFIG.RS_FEC_TRANSCODE_BYPASS" value= "0" />
++       </user_parameters>
++     </ip>
++
++   </ip_preset>
++
++<!-- QSFP1 Connector -->
++
++  <ip_preset preset_proc_name="qsfp1_1x_preset">
++
++    <ip vendor="xilinx.com" library="ip" name="xxv_ethernet">
++    <user_parameters>
++      <user_parameter name="CONFIG.NUM_OF_CORES" value="1" />
++      <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++      <user_parameter name="CONFIG.LINE_RATE" value="10" />
++      <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y4" />
++      <user_parameter name="CONFIG.BASE_R_KR" value="BASE-R" />
++    </user_parameters>
++    </ip>
++
++    <ip vendor="xilinx.com" library="ip" name="usxgmii">
++    <user_parameters>
++      <user_parameter name="CONFIG.NUM_OF_CORES" value="1" />
++      <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++      <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y4" />
++    </user_parameters>
++    </ip>
++
++  </ip_preset>
++
++  <ip_preset preset_proc_name="qsfp1_2x_preset">
++
++  <ip vendor="xilinx.com" library="ip" name="xxv_ethernet">
++    <user_parameters>
++        <user_parameter name="CONFIG.NUM_OF_CORES" value="2" />
++        <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++        <user_parameter name="CONFIG.LINE_RATE" value="10" />
++        <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y4" />
++        <user_parameter name="CONFIG.BASE_R_KR" value="BASE-R" />
++    </user_parameters>
++    </ip>
++
++    <ip vendor="xilinx.com" library="ip" name="usxgmii">
++    <user_parameters>
++      <user_parameter name="CONFIG.NUM_OF_CORES" value="2" />
++      <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++      <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y4" />
++    </user_parameters>
++    </ip>
++
++    <ip vendor="xilinx.com" library="ip" name="l_ethernet">
++    <user_parameters>
++      <!-- <user_parameter name="CONFIG.GT_REF_CLK_FREQ" value="161.1328125" /> -->
++        <user_parameter name="CONFIG.LINE_RATE" value="40" />
++        <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++        <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y4" />
++        <user_parameter name="CONFIG.BASE_R_KR" value="BASE-R" />
++    </user_parameters>
++    </ip>
++
++  </ip_preset>
++
++  <ip_preset preset_proc_name="qsfp1_3x_preset">
++
++    <ip vendor="xilinx.com" library="ip" name="xxv_ethernet">
++    <user_parameters>
++        <user_parameter name="CONFIG.NUM_OF_CORES" value="3" />
++        <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++        <user_parameter name="CONFIG.LINE_RATE" value="10" />
++        <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y4" />
++        <user_parameter name="CONFIG.BASE_R_KR" value="BASE-R" />
++    </user_parameters>
++    </ip>
++
++    <ip vendor="xilinx.com" library="ip" name="usxgmii">
++    <user_parameters>
++      <user_parameter name="CONFIG.NUM_OF_CORES" value="3" />
++      <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++      <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y4" />
++    </user_parameters>
++    </ip>
++
++  </ip_preset>
++
++   <ip_preset preset_proc_name="qsfp1_4x_preset">
++    <ip vendor="xilinx.com" library="ip" name="xxv_ethernet">
++      <user_parameters>
++        <user_parameter name="CONFIG.NUM_OF_CORES" value="4" />
++        <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++        <user_parameter name="CONFIG.LINE_RATE" value="10" />
++        <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y4" />
++        <user_parameter name="CONFIG.BASE_R_KR" value="BASE-R" />
++      </user_parameters>
++    </ip>
++
++    <ip vendor="xilinx.com" library="ip" name="usxgmii">
++      <user_parameters>
++      <user_parameter name="CONFIG.NUM_OF_CORES" value="4" />
++      <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++      <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y4" />
++      </user_parameters>
++    </ip>
++
++
++    <ip vendor="xilinx.com" library="ip" name="l_ethernet">
++      <user_parameters>
++      <!-- <user_parameter name="CONFIG.GT_REF_CLK_FREQ" value="161.1328125" /> -->
++        <user_parameter name="CONFIG.LINE_RATE" value="40" />
++        <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++        <user_parameter name="CONFIG.GT_GROUP_SELECT" value="Quad_X0Y4" />
++        <user_parameter name="CONFIG.BASE_R_KR" value="BASE-R" />
++      </user_parameters>
++    </ip>
++
++
++    <ip vendor="xilinx.com" library="ip" name="cmac_usplus">
++      <user_parameters>
++      <user_parameter name="CONFIG.GT_TYPE" value="GTY" />
++      <user_parameter name="CONFIG.CMAC_CAUI4_MODE" value="1" />
++      <user_parameter name="CONFIG.NUM_LANES" value="4x25" />
++      <user_parameter name="CONFIG.CMAC_CORE_SELECT" value="CMACE4_X0Y4" />
++      <user_parameter name="CONFIG.GT_GROUP_SELECT" value= "X0Y28~X0Y31" />
++      <user_parameter name="CONFIG.RS_FEC_TRANSCODE_BYPASS" value= "0" />
++      </user_parameters>
++    </ip>
++  </ip_preset>
++
++</ip_presets>
+diff --git a/board_files/Xilinx/au55c/xitem.json b/board_files/Xilinx/au55c/xitem.json
+new file mode 100644
+index 0000000..dfa2bde
+--- /dev/null
++++ b/board_files/Xilinx/au55c/xitem.json
+@@ -0,0 +1,34 @@
++{
++  "config": {
++    "items": [
++      {
++        "infra": {
++          "name": "au55c",
++          "display": "Alveo U55C Data Center Accelerator Card",
++          "revision": "1.0",
++          "description": "Alveo U55C Data Center Accelerator Card",
++          "company": "xilinx.com",
++          "company_display": "Xilinx",
++          "author": "",
++          "contributors": [
++            {
++              "group": "Xilinx",
++              "url": "www.xilinx.com"
++            }
++          ],
++          "category": "Accelerator Cards/Alveo",
++          "logo": "",
++          "website": "https://www.xilinx.com/products/boards-and-kits/alveo/u55c.html",
++          "search-keywords": [
++            "au55c",
++            "xilinx.com",
++            "board",
++            "Accelerator Cards/Alveo"
++          ]
++        }
++      }
++    ]
++  },
++  "_major": 1,
++  "_minor": 0
++}
 diff --git a/constr/au250/general.xdc b/constr/au250/general.xdc
 index 6269b52..daeab3c 100644
 --- a/constr/au250/general.xdc
@@ -29,10 +1984,197 @@ index 6269b52..daeab3c 100644
 -set_property BITSTREAM.CONFIG.SPI_32BIT_ADDR Yes [current_design]
 +set_property BITSTREAM.CONFIG.SPI_32BIT_ADDR Yes [current_design]
 \ No newline at end of file
+diff --git a/constr/au55c/general.xdc b/constr/au55c/general.xdc
+new file mode 100644
+index 0000000..102f812
+--- /dev/null
++++ b/constr/au55c/general.xdc
+@@ -0,0 +1,33 @@
++# *************************************************************************
++#
++# Copyright 2021 Xilinx, Inc.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#
++# *************************************************************************
++set_property CONFIG_VOLTAGE 1.8 [current_design]
++set_property BITSTREAM.CONFIG.CONFIGFALLBACK Enable [current_design]
++set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
++set_property CONFIG_MODE SPIx4 [current_design]
++set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4 [current_design]
++set_property BITSTREAM.CONFIG.CONFIGRATE 63.8 [current_design]
++set_property BITSTREAM.CONFIG.EXTMASTERCCLK_EN disable [current_design]
++set_property BITSTREAM.CONFIG.SPI_FALL_EDGE YES [current_design]
++set_property BITSTREAM.CONFIG.UNUSEDPIN Pullup [current_design]
++set_property BITSTREAM.CONFIG.SPI_32BIT_ADDR Yes [current_design]
++set_operating_conditions -design_power_budget 100
++
++# Manually connecting the Debug Hub clock pin to a valid clock source (100MHz reference clock in this case).
++# Read AR72607 for details.
++set_property C_USER_SCAN_CHAIN 1 [get_debug_cores dbg_hub]
++connect_debug_port dbg_hub/clk [get_nets ref_clk_100mhz]
+diff --git a/constr/au55c/pins.xdc b/constr/au55c/pins.xdc
+new file mode 100644
+index 0000000..da94acd
+--- /dev/null
++++ b/constr/au55c/pins.xdc
+@@ -0,0 +1,59 @@
++# *************************************************************************
++#
++# Copyright 2021 Xilinx, Inc.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#
++# *************************************************************************
++
++set_property -dict {PACKAGE_PIN BF41 IOSTANDARD LVCMOS18} [get_ports pcie_rstn]
++
++set_property PACKAGE_PIN AR14 [get_ports pcie_refclk_n]
++set_property PACKAGE_PIN AR15 [get_ports pcie_refclk_p]
++
++set num_ports [llength [get_ports qsfp_refclk_p]]
++if {$num_ports >= 1} {
++#    IO pins AD42, AD43 are on IO Bank 130 for use with GTY X0Y24~27
++    set_property PACKAGE_PIN AD43 [get_ports qsfp_refclk_n[0]]
++    set_property PACKAGE_PIN AD42 [get_ports qsfp_refclk_p[0]]
++
++#    set_property PACKAGE_PIN BL13     [get_ports qsfp_activity_led[0]]
++#    set_property IOSTANDARD  LVCMOS18 [get_ports qsfp_activity_led[0]]
++#    set_property PACKAGE_PIN BK11     [get_ports qsfp_link_stat_ledg[0]]
++#    set_property IOSTANDARD  LVCMOS18 [get_ports qsfp_link_stat_ledg[0]]
++#    set_property PACKAGE_PIN BJ11     [get_ports qsfp_link_stat_ledy[0]]
++#    set_property IOSTANDARD  LVCMOS18 [get_ports qsfp_link_stat_ledy[0]]
++}
++if {$num_ports >= 2} {
++#    IO pins AB43, AB42 are on IO Bank 131 for use with GTY X0Y28~31
++    set_property PACKAGE_PIN AB43 [get_ports qsfp_refclk_n[1]]
++    set_property PACKAGE_PIN AB42 [get_ports qsfp_refclk_p[1]]
++
++#    set_property PACKAGE_PIN BK14     [get_ports qsfp_activity_led[1]]
++#    set_property IOSTANDARD  LVCMOS18 [get_ports qsfp_activity_led[1]]
++#    set_property PACKAGE_PIN BK15     [get_ports qsfp_link_stat_ledg[1]]
++#    set_property IOSTANDARD  LVCMOS18 [get_ports qsfp_link_stat_ledg[1]]
++#    set_property PACKAGE_PIN BL12     [get_ports qsfp_link_stat_ledy[1]]
++#    set_property IOSTANDARD  LVCMOS18 [get_ports qsfp_link_stat_ledy[1]]
++}
++
++# Fix the CATTRIP issue for custom flow
++# Read AR72926 for details.
++set_property -dict {PACKAGE_PIN BE45 IOSTANDARD LVCMOS18 PULLDOWN TRUE} [get_ports hbm_cattrip]
++
++set_property -dict {PACKAGE_PIN BH42 IOSTANDARD LVCMOS18} [get_ports satellite_uart_0_txd]
++set_property -dict {PACKAGE_PIN BJ42 IOSTANDARD LVCMOS18} [get_ports satellite_uart_0_rxd]
++set_property -dict {PACKAGE_PIN BE46 IOSTANDARD LVCMOS18} [get_ports satellite_gpio[0]]
++set_property -dict {PACKAGE_PIN BH46 IOSTANDARD LVCMOS18} [get_ports satellite_gpio[1]]
++set_property -dict {PACKAGE_PIN BF45 IOSTANDARD LVCMOS18} [get_ports satellite_gpio[2]]
++set_property -dict {PACKAGE_PIN BF46 IOSTANDARD LVCMOS18} [get_ports satellite_gpio[3]]
+diff --git a/constr/au55c/timing.xdc b/constr/au55c/timing.xdc
+new file mode 100644
+index 0000000..1018e05
+--- /dev/null
++++ b/constr/au55c/timing.xdc
+@@ -0,0 +1,39 @@
++# *************************************************************************
++#
++# Copyright 2020 Xilinx, Inc.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#
++# *************************************************************************
++create_clock -period 10.000 -name pcie_refclk [get_ports pcie_refclk_p]
++
++set_false_path -through [get_ports pcie_rstn]
++
++foreach axis_aclk [get_clocks -of_object [get_nets axis_aclk*]] {
++    foreach cmac_clk [get_clocks -of_object [get_nets cmac_clk*]] {
++        set_max_delay -datapath_only -from $axis_aclk -to $cmac_clk 4.000
++        set_max_delay -datapath_only -from $cmac_clk -to $axis_aclk 3.103
++    }
++}
++
++create_pblock pblock_packet_adapter_tx
++add_cells_to_pblock [get_pblocks pblock_packet_adapter_tx] [get_cells -quiet {cmac_port*.packet_adapter_inst/tx_inst}]
++resize_pblock [get_pblocks pblock_packet_adapter_tx] -add {CLOCKREGION_X0Y4:CLOCKREGION_X1Y5}
++
++create_pblock pblock_packet_adapter_rx
++add_cells_to_pblock [get_pblocks pblock_packet_adapter_rx] [get_cells -quiet {cmac_port*.packet_adapter_inst/rx_inst}]
++resize_pblock [get_pblocks pblock_packet_adapter_rx] -add {CLOCKREGION_X2Y4:CLOCKREGION_X3Y5}
++
++create_pblock pblock_qdma_subsystem
++add_cells_to_pblock [get_pblocks pblock_qdma_subsystem] [get_cells -quiet {qdma_if*.qdma_subsystem_inst}]
++resize_pblock [get_pblocks pblock_qdma_subsystem] -add {SLR0}
+\ No newline at end of file
+diff --git a/script/board_settings/au55c.tcl b/script/board_settings/au55c.tcl
+new file mode 100644
+index 0000000..d14836c
+--- /dev/null
++++ b/script/board_settings/au55c.tcl
+@@ -0,0 +1,22 @@
++
++# *************************************************************************
++#
++# Copyright 2021 Xilinx, Inc.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#
++# *************************************************************************
++
++set part xcu55c-fsvh2892-2L-e
++set board_part xilinx.com:au55c:part0:1.0
++set zynq_family 0
 diff --git a/script/build.tcl b/script/build.tcl
-index c689eb6..1d6082b 100644
+index c689eb6..c0258b2 100644
 --- a/script/build.tcl
 +++ b/script/build.tcl
+@@ -87,7 +87,7 @@ array set build_options {
+     -overwrite   0
+     -rebuild     0
+     -jobs        8
+-    -synth_ip    1
++    -synth_ip    0
+     -impl        0
+     -post_impl   0
+     -user_plugin ""
 @@ -223,6 +223,11 @@ if {![file exists ${ip_build_dir}/manage_ip/]} {
  # Run synthesis for each IP
  set ip_dict [dict create]
@@ -43,9 +2185,21 @@ index c689eb6..1d6082b 100644
 +    }
 +
      set ip_tcl_dir ${module_dir}/vivado_ip
- 
+
      # Check the existence of "$ip_tcl_dir" and "${ip_tcl_dir}/vivado_ip.tcl"
-@@ -395,7 +400,8 @@ read_xdc ${build_dir}/run_params.xdc
+@@ -366,6 +371,11 @@ read_verilog -quiet [glob -nocomplain -directory $src_dir "*.{v,vh}"]
+ read_verilog -quiet -sv [glob -nocomplain -directory $src_dir "*.sv"]
+ read_vhdl -quiet [glob -nocomplain -directory $src_dir "*.vhd"]
+
++# Read the HBM block diagram
++source ${src_dir}/mem_ctrl/hbm_bd.tcl
++make_wrapper -files [get_files ${top_build_dir}/open_nic_shell.srcs/sources_1/bd/hbm_bd/hbm_bd.bd] -top
++add_files -norecurse ${top_build_dir}/open_nic_shell.gen/sources_1/bd/hbm_bd/hdl/hbm_bd_wrapper.v
++
+ # Set vivado generic
+ set design_params(-build_timestamp) "32'h$design_params(-build_timestamp)"
+ set generic ""
+@@ -395,7 +405,8 @@ read_xdc ${build_dir}/run_params.xdc
  # Implement design
  if {$impl} {
      update_compile_order -fileset sources_1
@@ -53,11 +2207,121 @@ index c689eb6..1d6082b 100644
 +    #_do_impl $jobs {"Vivado Implementation Defaults"}
 +    _do_impl $jobs {"Performance_Retiming"}
  }
- 
+
  if {$post_impl} {
+diff --git a/src/cmac_subsystem/vivado_ip/cmac_usplus_0_au55c.tcl b/src/cmac_subsystem/vivado_ip/cmac_usplus_0_au55c.tcl
+new file mode 100644
+index 0000000..3378e49
+--- /dev/null
++++ b/src/cmac_subsystem/vivado_ip/cmac_usplus_0_au55c.tcl
+@@ -0,0 +1,49 @@
++# *************************************************************************
++#
++# Copyright 2020 Xilinx, Inc.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#
++# *************************************************************************
++set cmac_usplus cmac_usplus_0
++create_ip -name cmac_usplus -vendor xilinx.com -library ip -module_name $cmac_usplus -dir ${ip_build_dir}
++set_property -dict {
++    CONFIG.CMAC_CAUI4_MODE {1}
++    CONFIG.NUM_LANES {10x10}
++    CONFIG.GT_REF_CLK_FREQ {161.1328125}
++    CONFIG.USER_INTERFACE {AXIS}
++    CONFIG.GT_DRP_CLK {125.00}
++    CONFIG.ENABLE_AXI_INTERFACE {1}
++    CONFIG.INCLUDE_STATISTICS_COUNTERS {1}
++    CONFIG.CMAC_CORE_SELECT {CMACE4_X0Y3}
++    CONFIG.GT_GROUP_SELECT {X0Y24~X0Y27}
++    CONFIG.LANE1_GT_LOC {X0Y24}
++    CONFIG.LANE2_GT_LOC {X0Y25}
++    CONFIG.LANE3_GT_LOC {X0Y26}
++    CONFIG.LANE4_GT_LOC {X0Y27}
++    CONFIG.LANE5_GT_LOC {NA}
++    CONFIG.LANE6_GT_LOC {NA}
++    CONFIG.LANE7_GT_LOC {NA}
++    CONFIG.LANE8_GT_LOC {NA}
++    CONFIG.LANE9_GT_LOC {NA}
++    CONFIG.LANE10_GT_LOC {NA}
++    CONFIG.RX_GT_BUFFER {1}
++    CONFIG.GT_RX_BUFFER_BYPASS {0}
++    CONFIG.INS_LOSS_NYQ {20}
++    CONFIG.INCLUDE_RS_FEC {1}
++    CONFIG.ETHERNET_BOARD_INTERFACE {qsfp0_4x}
++    CONFIG.DIFFCLK_BOARD_INTERFACE {qsfp0_refclk0}
++    CONFIG.ENABLE_PIPELINE_REG {1}
++} [get_ips $cmac_usplus]
++set_property CONFIG.RX_MIN_PACKET_LEN $min_pkt_len [get_ips $cmac_usplus]
++set_property CONFIG.RX_MAX_PACKET_LEN $max_pkt_len [get_ips $cmac_usplus]
+diff --git a/src/cmac_subsystem/vivado_ip/cmac_usplus_1_au55c.tcl b/src/cmac_subsystem/vivado_ip/cmac_usplus_1_au55c.tcl
+new file mode 100644
+index 0000000..f8d5069
+--- /dev/null
++++ b/src/cmac_subsystem/vivado_ip/cmac_usplus_1_au55c.tcl
+@@ -0,0 +1,49 @@
++# *************************************************************************
++#
++# Copyright 2020 Xilinx, Inc.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#
++# *************************************************************************
++set cmac_usplus cmac_usplus_1
++create_ip -name cmac_usplus -vendor xilinx.com -library ip -module_name $cmac_usplus -dir ${ip_build_dir}
++set_property -dict {
++    CONFIG.CMAC_CAUI4_MODE {1}
++    CONFIG.NUM_LANES {4x25}
++    CONFIG.GT_REF_CLK_FREQ {161.1328125}
++    CONFIG.USER_INTERFACE {AXIS}
++    CONFIG.GT_DRP_CLK {125.00}
++    CONFIG.ENABLE_AXI_INTERFACE {1}
++    CONFIG.INCLUDE_STATISTICS_COUNTERS {1}
++    CONFIG.CMAC_CORE_SELECT {CMACE4_X0Y4}
++    CONFIG.GT_GROUP_SELECT {X0Y28~X0Y31}
++    CONFIG.LANE1_GT_LOC {X0Y28}
++    CONFIG.LANE2_GT_LOC {X0Y29}
++    CONFIG.LANE3_GT_LOC {X0Y30}
++    CONFIG.LANE4_GT_LOC {X0Y31}
++    CONFIG.LANE5_GT_LOC {NA}
++    CONFIG.LANE6_GT_LOC {NA}
++    CONFIG.LANE7_GT_LOC {NA}
++    CONFIG.LANE8_GT_LOC {NA}
++    CONFIG.LANE9_GT_LOC {NA}
++    CONFIG.LANE10_GT_LOC {NA}
++    CONFIG.RX_GT_BUFFER {1}
++    CONFIG.GT_RX_BUFFER_BYPASS {0}
++    CONFIG.INS_LOSS_NYQ {20}
++    CONFIG.INCLUDE_RS_FEC {1}
++    CONFIG.ETHERNET_BOARD_INTERFACE {qsfp1_4x}
++    CONFIG.DIFFCLK_BOARD_INTERFACE {qsfp1_refclk0}
++    CONFIG.ENABLE_PIPELINE_REG {1}
++} [get_ips $cmac_usplus]
++set_property CONFIG.RX_MIN_PACKET_LEN $min_pkt_len [get_ips $cmac_usplus]
++set_property CONFIG.RX_MAX_PACKET_LEN $max_pkt_len [get_ips $cmac_usplus]
 diff --git a/src/mem_ctrl/au250/vivado_ip/dev_mem_ddr4_controller_au250.tcl b/src/mem_ctrl/au250/vivado_ip/dev_mem_ddr4_controller_au250.tcl
 new file mode 100755
-index 0000000..6cc3a9b
+index 0000000..2cd467b
 --- /dev/null
 +++ b/src/mem_ctrl/au250/vivado_ip/dev_mem_ddr4_controller_au250.tcl
 @@ -0,0 +1,170 @@
@@ -259,8 +2523,440 @@ index 0000000..f47097d
 +    dev_mem_ddr4_controller
 +}
 \ No newline at end of file
+diff --git a/src/mem_ctrl/hbm_bd.tcl b/src/mem_ctrl/hbm_bd.tcl
+new file mode 100644
+index 0000000..a94e29e
+--- /dev/null
++++ b/src/mem_ctrl/hbm_bd.tcl
+@@ -0,0 +1,426 @@
++
++################################################################
++# This is a generated script based on design: hbm_bd
++#
++# Though there are limitations about the generated script,
++# the main purpose of this utility is to make learning
++# IP Integrator Tcl commands easier.
++################################################################
++
++namespace eval _tcl {
++proc get_script_folder {} {
++   set script_path [file normalize [info script]]
++   set script_folder [file dirname $script_path]
++   return $script_folder
++}
++}
++variable script_folder
++set script_folder [_tcl::get_script_folder]
++
++################################################################
++# Check if script is running in correct Vivado version.
++################################################################
++set scripts_vivado_version 2024.2
++set current_vivado_version [version -short]
++
++if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
++   puts ""
++   if { [string compare $scripts_vivado_version $current_vivado_version] > 0 } {
++      catch {common::send_gid_msg -ssname BD::TCL -id 2042 -severity "ERROR" " This script was generated using Vivado <$scripts_vivado_version> and is being run in <$current_vivado_version> of Vivado. Sourcing the script failed since it was created with a future version of Vivado."}
++
++   } else {
++     catch {common::send_gid_msg -ssname BD::TCL -id 2041 -severity "ERROR" "This script was generated using Vivado <$scripts_vivado_version> and is being run in <$current_vivado_version> of Vivado. Please run the script in Vivado <$scripts_vivado_version> then open the design in Vivado <$current_vivado_version>. Upgrade the design by running \"Tools => Report => Report IP Status...\", then run write_bd_tcl to create an updated script."}
++
++   }
++
++   return 1
++}
++
++################################################################
++# START
++################################################################
++
++# To test this script, run the following commands from Vivado Tcl console:
++# source hbm_bd.tcl
++
++# If there is no project opened, this script will create a
++# project, but make sure you do not have an existing project
++# <./myproj/project_1.xpr> in the current working folder.
++
++set list_projs [get_projects -quiet]
++if { $list_projs eq "" } {
++   create_project project_1 myproj -part xcu55c-fsvh2892-2L-e
++   set_property BOARD_PART xilinx.com:au55c:part0:1.0 [current_project]
++}
++
++
++# CHANGE DESIGN NAME HERE
++variable design_name
++set design_name hbm_bd
++
++# If you do not already have an existing IP Integrator design open,
++# you can create a design using the following command:
++#    create_bd_design $design_name
++
++# Creating design if needed
++set errMsg ""
++set nRet 0
++
++set cur_design [current_bd_design -quiet]
++set list_cells [get_bd_cells -quiet]
++
++if { ${design_name} eq "" } {
++   # USE CASES:
++   #    1) Design_name not set
++
++   set errMsg "Please set the variable <design_name> to a non-empty value."
++   set nRet 1
++
++} elseif { ${cur_design} ne "" && ${list_cells} eq "" } {
++   # USE CASES:
++   #    2): Current design opened AND is empty AND names same.
++   #    3): Current design opened AND is empty AND names diff; design_name NOT in project.
++   #    4): Current design opened AND is empty AND names diff; design_name exists in project.
++
++   if { $cur_design ne $design_name } {
++      common::send_gid_msg -ssname BD::TCL -id 2001 -severity "INFO" "Changing value of <design_name> from <$design_name> to <$cur_design> since current design is empty."
++      set design_name [get_property NAME $cur_design]
++   }
++   common::send_gid_msg -ssname BD::TCL -id 2002 -severity "INFO" "Constructing design in IPI design <$cur_design>..."
++
++} elseif { ${cur_design} ne "" && $list_cells ne "" && $cur_design eq $design_name } {
++   # USE CASES:
++   #    5) Current design opened AND has components AND same names.
++
++   set errMsg "Design <$design_name> already exists in your project, please set the variable <design_name> to another value."
++   set nRet 1
++} elseif { [get_files -quiet ${design_name}.bd] ne "" } {
++   # USE CASES:
++   #    6) Current opened design, has components, but diff names, design_name exists in project.
++   #    7) No opened design, design_name exists in project.
++
++   set errMsg "Design <$design_name> already exists in your project, please set the variable <design_name> to another value."
++   set nRet 2
++
++} else {
++   # USE CASES:
++   #    8) No opened design, design_name not in project.
++   #    9) Current opened design, has components, but diff names, design_name not in project.
++
++   common::send_gid_msg -ssname BD::TCL -id 2003 -severity "INFO" "Currently there is no design <$design_name> in project, so creating one..."
++
++   create_bd_design $design_name
++
++   common::send_gid_msg -ssname BD::TCL -id 2004 -severity "INFO" "Making design <$design_name> as current_bd_design."
++   current_bd_design $design_name
++
++}
++
++common::send_gid_msg -ssname BD::TCL -id 2005 -severity "INFO" "Currently the variable <design_name> is equal to \"$design_name\"."
++
++if { $nRet != 0 } {
++   catch {common::send_gid_msg -ssname BD::TCL -id 2006 -severity "ERROR" $errMsg}
++   return $nRet
++}
++
++set bCheckIPsPassed 1
++##################################################################
++# CHECK IPs
++##################################################################
++set bCheckIPs 1
++if { $bCheckIPs == 1 } {
++   set list_check_ips "\
++xilinx.com:ip:hbm:1.0\
++xilinx.com:ip:clk_wiz:6.0\
++xilinx.com:ip:proc_sys_reset:5.0\
++xilinx.com:ip:smartconnect:1.0\
++"
++
++   set list_ips_missing ""
++   common::send_gid_msg -ssname BD::TCL -id 2011 -severity "INFO" "Checking if the following IPs exist in the project's IP catalog: $list_check_ips ."
++
++   foreach ip_vlnv $list_check_ips {
++      set ip_obj [get_ipdefs -all $ip_vlnv]
++      if { $ip_obj eq "" } {
++         lappend list_ips_missing $ip_vlnv
++      }
++   }
++
++   if { $list_ips_missing ne "" } {
++      catch {common::send_gid_msg -ssname BD::TCL -id 2012 -severity "ERROR" "The following IPs are not found in the IP Catalog:\n  $list_ips_missing\n\nResolution: Please add the repository containing the IP(s) to the project." }
++      set bCheckIPsPassed 0
++   }
++
++}
++
++if { $bCheckIPsPassed != 1 } {
++  common::send_gid_msg -ssname BD::TCL -id 2023 -severity "WARNING" "Will not continue with creation of design due to the error(s) above."
++  return 3
++}
++
++##################################################################
++# DESIGN PROCs
++##################################################################
++
++
++
++# Procedure to create entire design; Provide argument to make
++# procedure reusable. If parentCell is "", will use root.
++proc create_root_design { parentCell } {
++
++  variable script_folder
++  variable design_name
++
++  if { $parentCell eq "" } {
++     set parentCell [get_bd_cells /]
++  }
++
++  # Get object for parentCell
++  set parentObj [get_bd_cells $parentCell]
++  if { $parentObj == "" } {
++     catch {common::send_gid_msg -ssname BD::TCL -id 2090 -severity "ERROR" "Unable to find parent cell <$parentCell>!"}
++     return
++  }
++
++  # Make sure parentObj is hier blk
++  set parentType [get_property TYPE $parentObj]
++  if { $parentType ne "hier" } {
++     catch {common::send_gid_msg -ssname BD::TCL -id 2091 -severity "ERROR" "Parent <$parentObj> has TYPE = <$parentType>. Expected to be <hier>."}
++     return
++  }
++
++  # Save current instance; Restore later
++  set oldCurInst [current_bd_instance .]
++
++  # Set parent object as current
++  current_bd_instance $parentObj
++
++
++  # Create interface ports
++  set s_axi_hbm [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 s_axi_hbm ]
++  set_property -dict [ list \
++   CONFIG.ADDR_WIDTH {64} \
++   CONFIG.ARUSER_WIDTH {32} \
++   CONFIG.AWUSER_WIDTH {32} \
++   CONFIG.BUSER_WIDTH {0} \
++   CONFIG.DATA_WIDTH {512} \
++   CONFIG.FREQ_HZ {250000000} \
++   CONFIG.HAS_BRESP {1} \
++   CONFIG.HAS_BURST {0} \
++   CONFIG.HAS_CACHE {1} \
++   CONFIG.HAS_LOCK {1} \
++   CONFIG.HAS_PROT {1} \
++   CONFIG.HAS_QOS {0} \
++   CONFIG.HAS_REGION {0} \
++   CONFIG.HAS_RRESP {1} \
++   CONFIG.HAS_WSTRB {1} \
++   CONFIG.ID_WIDTH {4} \
++   CONFIG.MAX_BURST_LENGTH {256} \
++   CONFIG.NUM_READ_OUTSTANDING {32} \
++   CONFIG.NUM_READ_THREADS {1} \
++   CONFIG.NUM_WRITE_OUTSTANDING {32} \
++   CONFIG.NUM_WRITE_THREADS {1} \
++   CONFIG.PROTOCOL {AXI4} \
++   CONFIG.READ_WRITE_MODE {READ_WRITE} \
++   CONFIG.RUSER_BITS_PER_BYTE {0} \
++   CONFIG.RUSER_WIDTH {0} \
++   CONFIG.SUPPORTS_NARROW_BURST {0} \
++   CONFIG.WUSER_BITS_PER_BYTE {0} \
++   CONFIG.WUSER_WIDTH {64} \
++   ] $s_axi_hbm
++
++
++  # Create ports
++  set axi_resetn [ create_bd_port -dir I axi_resetn ]
++  set hbm_ref_clk [ create_bd_port -dir I -type clk -freq_hz 100000000 hbm_ref_clk ]
++  set axi_clk [ create_bd_port -dir I -type clk -freq_hz 250000000 axi_clk ]
++  set_property -dict [ list \
++   CONFIG.ASSOCIATED_BUSIF {s_axi_hbm} \
++   CONFIG.CLK_DOMAIN {qdma_hbm_bd_qdma_0_0_axi_aclk} \
++ ] $axi_clk
++
++  # Create instance: hbm_0, and set properties
++  set hbm_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:hbm:1.0 hbm_0 ]
++  set_property -dict [list \
++    CONFIG.USER_APB_EN {false} \
++    CONFIG.USER_AXI_INPUT_CLK1_FREQ {250} \
++    CONFIG.USER_AXI_INPUT_CLK_FREQ {250} \
++    CONFIG.USER_HBM_DENSITY {16GB} \
++    CONFIG.USER_MC0_USER_PARITY_EN {false} \
++    CONFIG.USER_SAXI_00 {false} \
++    CONFIG.USER_SAXI_01 {false} \
++    CONFIG.USER_SAXI_02 {false} \
++    CONFIG.USER_SAXI_03 {false} \
++    CONFIG.USER_SAXI_04 {false} \
++    CONFIG.USER_SAXI_05 {false} \
++    CONFIG.USER_SAXI_06 {false} \
++    CONFIG.USER_SAXI_07 {false} \
++    CONFIG.USER_SAXI_08 {false} \
++    CONFIG.USER_SAXI_09 {false} \
++    CONFIG.USER_SAXI_10 {false} \
++    CONFIG.USER_SAXI_11 {false} \
++    CONFIG.USER_SAXI_12 {false} \
++    CONFIG.USER_SAXI_13 {false} \
++    CONFIG.USER_SAXI_14 {false} \
++    CONFIG.USER_SAXI_17 {false} \
++    CONFIG.USER_SAXI_18 {false} \
++    CONFIG.USER_SAXI_19 {false} \
++    CONFIG.USER_SAXI_20 {false} \
++    CONFIG.USER_SAXI_21 {false} \
++    CONFIG.USER_SAXI_22 {false} \
++    CONFIG.USER_SAXI_23 {false} \
++    CONFIG.USER_SAXI_24 {false} \
++    CONFIG.USER_SAXI_25 {false} \
++    CONFIG.USER_SAXI_26 {false} \
++    CONFIG.USER_SAXI_27 {false} \
++    CONFIG.USER_SAXI_28 {false} \
++    CONFIG.USER_SAXI_29 {false} \
++    CONFIG.USER_SAXI_30 {false} \
++    CONFIG.USER_SAXI_31 {false} \
++  ] $hbm_0
++
++
++  # Create instance: clk_wiz_0, and set properties
++  set clk_wiz_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clk_wiz_0 ]
++  set_property -dict [list \
++    CONFIG.CLKIN1_JITTER_PS {100.0} \
++    CONFIG.CLKOUT1_JITTER {115.831} \
++    CONFIG.CLKOUT1_PHASE_ERROR {87.180} \
++    CONFIG.CLK_IN1_BOARD_INTERFACE {Custom} \
++    CONFIG.MMCM_CLKFBOUT_MULT_F {12.000} \
++    CONFIG.MMCM_CLKIN1_PERIOD {10.000} \
++    CONFIG.MMCM_CLKIN2_PERIOD {10.000} \
++    CONFIG.MMCM_DIVCLK_DIVIDE {1} \
++    CONFIG.PRIM_SOURCE {Single_ended_clock_capable_pin} \
++    CONFIG.RESET_PORT {resetn} \
++    CONFIG.RESET_TYPE {ACTIVE_LOW} \
++  ] $clk_wiz_0
++
++
++  # Create instance: proc_sys_reset_0, and set properties
++  set proc_sys_reset_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_0 ]
++
++  # Create instance: smartconnect_0, and set properties
++  set smartconnect_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:smartconnect:1.0 smartconnect_0 ]
++  set_property -dict [list \
++    CONFIG.NUM_MI {2} \
++    CONFIG.NUM_SI {1} \
++  ] $smartconnect_0
++
++
++  # Create interface connections
++  connect_bd_intf_net -intf_net S00_AXI_0_1 [get_bd_intf_ports s_axi_hbm] [get_bd_intf_pins smartconnect_0/S00_AXI]
++  connect_bd_intf_net -intf_net smartconnect_0_M00_AXI [get_bd_intf_pins smartconnect_0/M00_AXI] [get_bd_intf_pins hbm_0/SAXI_15_8HI]
++  connect_bd_intf_net -intf_net smartconnect_0_M01_AXI [get_bd_intf_pins smartconnect_0/M01_AXI] [get_bd_intf_pins hbm_0/SAXI_16_8HI]
++
++  # Create port connections
++  connect_bd_net -net aclk_0_1  [get_bd_ports axi_clk] \
++  [get_bd_pins smartconnect_0/aclk] \
++  [get_bd_pins hbm_0/AXI_15_ACLK] \
++  [get_bd_pins hbm_0/AXI_16_ACLK]
++  connect_bd_net -net clk_in1_0_1  [get_bd_ports hbm_ref_clk] \
++  [get_bd_pins clk_wiz_0/clk_in1]
++  connect_bd_net -net clk_wiz_0_clk_out1  [get_bd_pins clk_wiz_0/clk_out1] \
++  [get_bd_pins hbm_0/HBM_REF_CLK_0] \
++  [get_bd_pins hbm_0/HBM_REF_CLK_1] \
++  [get_bd_pins hbm_0/APB_0_PCLK] \
++  [get_bd_pins hbm_0/APB_1_PCLK] \
++  [get_bd_pins proc_sys_reset_0/slowest_sync_clk]
++  connect_bd_net -net clk_wiz_0_locked  [get_bd_pins clk_wiz_0/locked] \
++  [get_bd_pins proc_sys_reset_0/dcm_locked]
++  connect_bd_net -net proc_sys_reset_0_peripheral_aresetn  [get_bd_pins proc_sys_reset_0/peripheral_aresetn] \
++  [get_bd_pins hbm_0/APB_0_PRESET_N] \
++  [get_bd_pins hbm_0/APB_1_PRESET_N]
++  connect_bd_net -net qdma_0_axi_aresetn  [get_bd_ports axi_resetn] \
++  [get_bd_pins hbm_0/AXI_15_ARESET_N] \
++  [get_bd_pins hbm_0/AXI_16_ARESET_N] \
++  [get_bd_pins smartconnect_0/aresetn] \
++  [get_bd_pins clk_wiz_0/resetn] \
++  [get_bd_pins proc_sys_reset_0/ext_reset_in]
++
++  # Create address segments
++  assign_bd_address -offset 0x00000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM00] -force
++  assign_bd_address -offset 0x10000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM00_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM00] -force
++  assign_bd_address -offset 0x20000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM01] -force
++  assign_bd_address -offset 0x40000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM02] -force
++  assign_bd_address -offset 0x50000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM02_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM02] -force
++  assign_bd_address -offset 0x60000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM03] -force
++  assign_bd_address -offset 0x70000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM03_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM03] -force
++  assign_bd_address -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM04] -force
++  assign_bd_address -offset 0x90000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM04_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM04] -force
++  assign_bd_address -offset 0xA0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM05] -force
++  assign_bd_address -offset 0xB0000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM05_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM05] -force
++  assign_bd_address -offset 0xC0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM06] -force
++  assign_bd_address -offset 0xD0000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM06_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM06] -force
++  assign_bd_address -offset 0xE0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM07] -force
++  assign_bd_address -offset 0xF0000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM07_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM07] -force
++  assign_bd_address -offset 0x000100000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM08] -force
++  assign_bd_address -offset 0x000110000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM08_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM08] -force
++  assign_bd_address -offset 0x000120000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM09] -force
++  assign_bd_address -offset 0x000130000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM09_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM09] -force
++  assign_bd_address -offset 0x000140000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM10] -force
++  assign_bd_address -offset 0x000150000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM10_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM10] -force
++  assign_bd_address -offset 0x000160000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM11] -force
++  assign_bd_address -offset 0x000170000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM11_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM11] -force
++  assign_bd_address -offset 0x000180000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM12] -force
++  assign_bd_address -offset 0x000190000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM12_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM12] -force
++  assign_bd_address -offset 0x0001A0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM13] -force
++  assign_bd_address -offset 0x0001B0000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM13_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM13] -force
++  assign_bd_address -offset 0x0001C0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM14] -force
++  assign_bd_address -offset 0x0001D0000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM14_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM14] -force
++  assign_bd_address -offset 0x0001E0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM15] -force
++  assign_bd_address -offset 0x0001F0000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM15_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM15] -force
++  assign_bd_address -offset 0x000200000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM16] -force
++  assign_bd_address -offset 0x000210000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM16_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM16] -force
++  assign_bd_address -offset 0x000220000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM17] -force
++  assign_bd_address -offset 0x000230000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM17_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM17] -force
++  assign_bd_address -offset 0x000240000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM18] -force
++  assign_bd_address -offset 0x000250000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM18_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM18] -force
++  assign_bd_address -offset 0x000260000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM19] -force
++  assign_bd_address -offset 0x000270000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM19_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM19] -force
++  assign_bd_address -offset 0x000280000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM20] -force
++  assign_bd_address -offset 0x000290000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM20_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM20] -force
++  assign_bd_address -offset 0x0002A0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM21] -force
++  assign_bd_address -offset 0x0002B0000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM21_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM21] -force
++  assign_bd_address -offset 0x0002C0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM22] -force
++  assign_bd_address -offset 0x0002D0000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM22_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM22] -force
++  assign_bd_address -offset 0x0002E0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM23] -force
++  assign_bd_address -offset 0x0002F0000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM23_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM23] -force
++  assign_bd_address -offset 0x000300000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM24] -force
++  assign_bd_address -offset 0x000310000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM24_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM24] -force
++  assign_bd_address -offset 0x000320000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM25] -force
++  assign_bd_address -offset 0x000330000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM25_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM25] -force
++  assign_bd_address -offset 0x000340000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM26] -force
++  assign_bd_address -offset 0x000350000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM26_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM26] -force
++  assign_bd_address -offset 0x000360000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM27] -force
++  assign_bd_address -offset 0x000370000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM27_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM27] -force
++  assign_bd_address -offset 0x000380000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM28] -force
++  assign_bd_address -offset 0x000390000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM28_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM28] -force
++  assign_bd_address -offset 0x0003A0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM29] -force
++  assign_bd_address -offset 0x0003B0000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM29_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM29] -force
++  assign_bd_address -offset 0x0003C0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM30] -force
++  assign_bd_address -offset 0x0003D0000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM30_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM30] -force
++  assign_bd_address -offset 0x0003E0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_15_8HI/HBM_MEM31] -force
++  assign_bd_address -offset 0x0003F0000000 -range 0x10000000 -with_name SEG_hbm_0_HBM_MEM31_1 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM31] -force
++
++  # Exclude Address Segments
++  exclude_bd_addr_seg -offset 0x000420000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces s_axi_hbm] [get_bd_addr_segs hbm_0/SAXI_16_8HI/HBM_MEM01]
++
++
++  # Restore current instance
++  current_bd_instance $oldCurInst
++
++  save_bd_design
++}
++# End of create_root_design()
++
++
++##################################################################
++# MAIN FLOW
++##################################################################
++
++create_root_design ""
++
++
++common::send_gid_msg -ssname BD::TCL -id 2053 -severity "WARNING" "This Tcl script was generated from a block design that has not been validated. It is possible that design <$design_name> may result in errors during validation."
++
 diff --git a/src/open_nic_shell.sv b/src/open_nic_shell.sv
-index e2f6c3f..7d942c9 100644
+index e2f6c3f..6b6cc10 100644
 --- a/src/open_nic_shell.sv
 +++ b/src/open_nic_shell.sv
 @@ -1,6 +1,6 @@
@@ -271,33 +2967,18 @@ index e2f6c3f..7d942c9 100644
  //
  // Licensed under the Apache License, Version 2.0 (the "License");
  // you may not use this file except in compliance with the License.
-@@ -41,6 +41,23 @@ module open_nic_shell #(
-   input                          pcie_refclk_n,
-   input                          pcie_rstn,
- 
-+  output                  [16:0] c0_ddr4_adr,
-+  output                   [1:0] c0_ddr4_ba,
-+  output                   [0:0] c0_ddr4_cke,
-+  output                   [0:0] c0_ddr4_cs_n,
-+  inout                   [71:0] c0_ddr4_dq,
-+  output                         c0_ddr4_parity,
-+  output                   [1:0] c0_ddr4_bg,
-+  inout                   [17:0] c0_ddr4_dqs_c,
-+  inout                   [17:0] c0_ddr4_dqs_t,
-+  output                   [0:0] c0_ddr4_odt,
-+  output                         c0_ddr4_act_n,
-+  output                   [0:0] c0_ddr4_ck_c,
-+  output                   [0:0] c0_ddr4_ck_t,
-+  input                          c0_sys_clk_p,
-+  input                          c0_sys_clk_n,
-+  output                         c0_ddr4_reset_n,
-+
-   input    [4*NUM_CMAC_PORT-1:0] qsfp_rxp,
-   input    [4*NUM_CMAC_PORT-1:0] qsfp_rxn,
-   output   [4*NUM_CMAC_PORT-1:0] qsfp_txp,
-@@ -147,27 +164,27 @@ module open_nic_shell #(
+@@ -31,6 +31,8 @@ module open_nic_shell #(
+   output                         hbm_cattrip, // Fix the CATTRIP issue for AU280 custom flow
+ `elsif __au50__
+   output                         hbm_cattrip,
++`elsif __au55c__
++  output                         hbm_cattrip,
+ `endif
+
+   input                   [15:0] pcie_rxp,
+@@ -147,27 +149,27 @@ module open_nic_shell #(
    end
- 
+
  `ifdef __synthesis__
 -  wire         powerup_rstn;
 -  wire         pcie_user_lnk_up;
@@ -305,7 +2986,7 @@ index e2f6c3f..7d942c9 100644
 +  logic         powerup_rstn;
 +  logic         pcie_user_lnk_up;
 +  logic         pcie_phy_ready;
- 
+
    // BAR2-mapped master AXI-Lite feeding into system configuration block
 -  wire         axil_pcie_awvalid;
 -  wire  [31:0] axil_pcie_awaddr;
@@ -339,13 +3020,23 @@ index e2f6c3f..7d942c9 100644
 +  logic  [31:0] axil_pcie_rdata;
 +  logic   [1:0] axil_pcie_rresp;
 +  logic         axil_pcie_rready;
- 
+
    IBUF pcie_rstn_ibuf_inst (.I(pcie_rstn), .O(pcie_rstn_int));
- 
-@@ -187,187 +204,729 @@ module open_nic_shell #(
+
+@@ -180,6 +182,9 @@ module open_nic_shell #(
+ `elsif __au50__
+   // Same for AU50
+   OBUF hbm_cattrip_obuf_inst (.I(1'b0), .O(hbm_cattrip));
++`elsif __au55c__
++  // Same for AU55C
++  OBUF hbm_cattrip_obuf_inst (.I(1'b0), .O(hbm_cattrip));
+ `endif
+
+ `ifdef __zynq_family__
+@@ -187,187 +192,730 @@ module open_nic_shell #(
  `endif
  `endif
- 
+
 -  wire                         axil_qdma_awvalid;
 -  wire                  [31:0] axil_qdma_awaddr;
 -  wire                         axil_qdma_awready;
@@ -590,7 +3281,7 @@ index e2f6c3f..7d942c9 100644
 +  logic                  [31:0] axil_box1_rdata;
 +  logic                   [1:0] axil_box1_rresp;
 +  logic                         axil_box1_rready;
- 
+
    // QDMA subsystem interfaces to the box running at 250MHz
 -  wire     [NUM_PHYS_FUNC-1:0] axis_qdma_h2c_tvalid;
 -  wire [512*NUM_PHYS_FUNC-1:0] axis_qdma_h2c_tdata;
@@ -625,7 +3316,7 @@ index e2f6c3f..7d942c9 100644
 +  logic  [16*NUM_PHYS_FUNC-1:0] axis_qdma_c2h_tuser_src;
 +  logic  [16*NUM_PHYS_FUNC-1:0] axis_qdma_c2h_tuser_dst;
 +  logic     [NUM_PHYS_FUNC-1:0] axis_qdma_c2h_tready;
- 
+
    // Packet adapter interfaces to the box running at 250MHz
 -  wire     [NUM_CMAC_PORT-1:0] axis_adap_tx_250mhz_tvalid;
 -  wire [512*NUM_CMAC_PORT-1:0] axis_adap_tx_250mhz_tdata;
@@ -661,7 +3352,7 @@ index e2f6c3f..7d942c9 100644
 +  logic  [16*NUM_CMAC_PORT-1:0] axis_adap_rx_250mhz_tuser_src;
 +  logic  [16*NUM_CMAC_PORT-1:0] axis_adap_rx_250mhz_tuser_dst;
 +  logic     [NUM_CMAC_PORT-1:0] axis_adap_rx_250mhz_tready;
- 
+
    // Packet adapter interfaces to the box running at 322MHz
 -  wire     [NUM_CMAC_PORT-1:0] axis_adap_tx_322mhz_tvalid;
 -  wire [512*NUM_CMAC_PORT-1:0] axis_adap_tx_322mhz_tdata;
@@ -687,7 +3378,7 @@ index e2f6c3f..7d942c9 100644
 +  logic  [64*NUM_CMAC_PORT-1:0] axis_adap_rx_322mhz_tkeep;
 +  logic     [NUM_CMAC_PORT-1:0] axis_adap_rx_322mhz_tlast;
 +  logic     [NUM_CMAC_PORT-1:0] axis_adap_rx_322mhz_tuser_err;
- 
+
    // CMAC subsystem interfaces to the box running at 322MHz
 -  wire     [NUM_CMAC_PORT-1:0] axis_cmac_tx_tvalid;
 -  wire [512*NUM_CMAC_PORT-1:0] axis_cmac_tx_tdata;
@@ -1221,12 +3912,13 @@ index e2f6c3f..7d942c9 100644
 +  logic                         box_322mhz_rstn;
 +  logic                         box_322mhz_rst_done;
 +
++  logic                         hbm_ref_clk;
 +  logic                         axil_aclk;
 +  logic                         axis_aclk;
 +  logic     [NUM_CMAC_PORT-1:0] cmac_clk;
- 
+
    // Unused reset pairs must have their "reset_done" tied to 1
- 
+
    // First 4-bit for QDMA subsystem
    assign qdma_rstn           = shell_rstn[0];
    assign shell_rst_done[0]   = qdma_rst_done;
@@ -1236,13 +3928,13 @@ index e2f6c3f..7d942c9 100644
 +  assign shell_rst_done[2]   = qdma_csr_prog_done;
 +  assign shell_rst_done[3]   = 1'b1;
 +  //assign shell_rst_done[3:2] = 2'b11;
- 
+
    // For each CMAC port, use the subsequent 4-bit: bit 0 for CMAC subsystem and
    // bit 1 for the corresponding adapter
-@@ -459,6 +1018,24 @@ module open_nic_shell #(
+@@ -459,6 +1007,24 @@ module open_nic_shell #(
      .m_axil_qdma_rresp   (axil_qdma_rresp),
      .m_axil_qdma_rready  (axil_qdma_rready),
- 
+
 +    .m_axil_qdma_csr_awaddr (axil_qdma_csr_awaddr),
 +    .m_axil_qdma_csr_awvalid(axil_qdma_csr_awvalid),
 +    // Only allowed to program axil csr interface when qdma_csr_prog_done is 1'b1
@@ -1264,10 +3956,10 @@ index e2f6c3f..7d942c9 100644
      .m_axil_adap_awvalid (axil_adap_awvalid),
      .m_axil_adap_awaddr  (axil_adap_awaddr),
      .m_axil_adap_awready (axil_adap_awready),
-@@ -493,6 +1070,23 @@ module open_nic_shell #(
+@@ -493,6 +1059,23 @@ module open_nic_shell #(
      .m_axil_cmac_rresp   (axil_cmac_rresp),
      .m_axil_cmac_rready  (axil_cmac_rready),
- 
+
 +    .m_axil_rdma_awvalid (axil_rdma_awvalid),
 +    .m_axil_rdma_awaddr  (axil_rdma_awaddr),
 +    .m_axil_rdma_awready (axil_rdma_awready),
@@ -1288,10 +3980,10 @@ index e2f6c3f..7d942c9 100644
      .m_axil_box0_awvalid (axil_box0_awvalid),
      .m_axil_box0_awaddr  (axil_box0_awaddr),
      .m_axil_box0_awready (axil_box0_awready),
-@@ -578,6 +1172,46 @@ module open_nic_shell #(
+@@ -578,6 +1161,46 @@ module open_nic_shell #(
      .s_axis_c2h_tuser_dst                 (axis_qdma_c2h_tuser_dst),
      .s_axis_c2h_tready                    (axis_qdma_c2h_tready),
- 
+
 +    // QDMA DMA Engine - AXI MM interface
 +    .m_axi_awready                        (axi_qdma_mm_awready),
 +    .m_axi_wready                         (axi_qdma_mm_wready),
@@ -1335,10 +4027,10 @@ index e2f6c3f..7d942c9 100644
  `ifdef __synthesis__
      .pcie_rxp                             (pcie_rxp),
      .pcie_rxn                             (pcie_rxn),
-@@ -649,6 +1283,63 @@ module open_nic_shell #(
+@@ -649,9 +1272,67 @@ module open_nic_shell #(
      .m_axis_qdma_cpl_tready               (m_axis_qdma_cpl_sim_tready),
  `endif
- 
+
 +    .s_csr_prog_done                      (qdma_csr_prog_done),
 +    .s_axil_csr_awaddr                    (axil_qdma_csr_awaddr),
 +    .s_axil_csr_awprot                    (3'd0),
@@ -1398,11 +4090,15 @@ index e2f6c3f..7d942c9 100644
 +
      .mod_rstn                             (qdma_rstn),
      .mod_rst_done                         (qdma_rst_done),
- 
-@@ -786,6 +1477,925 @@ module open_nic_shell #(
+
++    .ref_clk_100mhz                       (hbm_ref_clk),
+     .axil_aclk                            (axil_aclk),
+     .axis_aclk                            (axis_aclk)
+   );
+@@ -786,6 +1467,809 @@ module open_nic_shell #(
    end: cmac_port
    endgenerate
- 
+
 +  // RDMA subsystem
 +  // TODO: retry buffer and hardware handshaking are not supported at the moment
 +  rdma_subsystem_wrapper rdma_subsystem_inst (
@@ -2158,177 +4854,61 @@ index e2f6c3f..7d942c9 100644
 +    .axis_arestn                           (qdma_rstn)
 +);
 +
-+  axi_clock_converter_for_mem  axi_clock_converter_for_ddr_inst (
-+    .s_axi_aclk      (axis_aclk),
-+    .s_axi_aresetn   (qdma_rstn),
-+    .s_axi_awid      (axi_dev_mem_awid),
-+    .s_axi_awaddr    (axi_dev_mem_awaddr),
-+    .s_axi_awlen     (axi_dev_mem_awlen),
-+    .s_axi_awsize    (axi_dev_mem_awsize),
-+    .s_axi_awburst   (axi_dev_mem_awburst),
-+    .s_axi_awlock    (1'b0),
-+    .s_axi_awcache   (4'b0),
-+    .s_axi_awprot    (3'b0),
-+    .s_axi_awregion  (4'b0),
-+    .s_axi_awqos     (4'b0),
-+    .s_axi_awvalid   (axi_dev_mem_awvalid),
-+    .s_axi_awready   (axi_dev_mem_awready),
-+    .s_axi_wdata     (axi_dev_mem_wdata),
-+    .s_axi_wstrb     (axi_dev_mem_wstrb),
-+    .s_axi_wlast     (axi_dev_mem_wlast),
-+    .s_axi_wvalid    (axi_dev_mem_wvalid),
-+    .s_axi_wready    (axi_dev_mem_wready),
-+    .s_axi_bid       (axi_dev_mem_bid),
-+    .s_axi_bresp     (axi_dev_mem_bresp),
-+    .s_axi_bvalid    (axi_dev_mem_bvalid),
-+    .s_axi_bready    (axi_dev_mem_bready),
-+    .s_axi_arid      (axi_dev_mem_arid),
-+    .s_axi_araddr    (axi_dev_mem_araddr),
-+    .s_axi_arlen     (axi_dev_mem_arlen),
-+    .s_axi_arsize    (axi_dev_mem_arsize),
-+    .s_axi_arburst   (axi_dev_mem_arburst),
-+    .s_axi_arlock    (1'b0),
-+    .s_axi_arcache   (4'b0),
-+    .s_axi_arprot    (3'b0),
-+    .s_axi_arregion  (4'b0),
-+    .s_axi_arqos     (4'b0),
-+    .s_axi_arvalid   (axi_dev_mem_arvalid),
-+    .s_axi_arready   (axi_dev_mem_arready),
-+    .s_axi_rid       (axi_dev_mem_rid),
-+    .s_axi_rdata     (axi_dev_mem_rdata),
-+    .s_axi_rresp     (axi_dev_mem_rresp),
-+    .s_axi_rlast     (axi_dev_mem_rlast),
-+    .s_axi_rvalid    (axi_dev_mem_rvalid),
-+    .s_axi_rready    (axi_dev_mem_rready),
++  hbm_bd_wrapper hbm_inst (
++    .s_axi_hbm_araddr                    (axi_dev_mem_araddr),
++    .s_axi_hbm_arburst                   (axi_dev_mem_arburst),
++    .s_axi_hbm_arcache                   (axi_dev_mem_arcache),
++    .s_axi_hbm_arid                      (axi_dev_mem_arid),
++    .s_axi_hbm_arlen                     (axi_dev_mem_arlen),
++    .s_axi_hbm_arlock                    (axi_dev_mem_arlock),
++    .s_axi_hbm_arprot                    (axi_dev_mem_arprot),
++    .s_axi_hbm_arqos                     (axi_dev_mem_arqos),
++    .s_axi_hbm_arready                   (axi_dev_mem_arready),
++    .s_axi_hbm_arsize                    (axi_dev_mem_arsize),
++    .s_axi_hbm_aruser                    (axi_dev_mem_aruser),
++    .s_axi_hbm_arvalid                   (axi_dev_mem_arvalid),
++    .s_axi_hbm_awaddr                    (axi_dev_mem_awaddr),
++    .s_axi_hbm_awburst                   (axi_dev_mem_awburst),
++    .s_axi_hbm_awcache                   (axi_dev_mem_awcache),
++    .s_axi_hbm_awid                      (axi_dev_mem_awid),
++    .s_axi_hbm_awlen                     (axi_dev_mem_awlen),
++    .s_axi_hbm_awlock                    (axi_dev_mem_awlock),
++    .s_axi_hbm_awprot                    (axi_dev_mem_awprot),
++    .s_axi_hbm_awqos                     (axi_dev_mem_awqos),
++    .s_axi_hbm_awready                   (axi_dev_mem_awready),
++    .s_axi_hbm_awsize                    (axi_dev_mem_awsize),
++    .s_axi_hbm_awuser                    (axi_dev_mem_awuser),
++    .s_axi_hbm_awvalid                   (axi_dev_mem_awvalid),
++    .s_axi_hbm_bid                       (axi_dev_mem_bid),
++    .s_axi_hbm_bready                    (axi_dev_mem_bready),
++    .s_axi_hbm_bresp                     (axi_dev_mem_bresp),
++    .s_axi_hbm_bvalid                    (axi_dev_mem_bvalid),
++    .s_axi_hbm_rdata                     (axi_dev_mem_rdata),
++    .s_axi_hbm_rid                       (axi_dev_mem_rid),
++    .s_axi_hbm_rlast                     (axi_dev_mem_rlast),
++    .s_axi_hbm_rready                    (axi_dev_mem_rready),
++    .s_axi_hbm_rresp                     (axi_dev_mem_rresp),
++    .s_axi_hbm_rvalid                    (axi_dev_mem_rvalid),
++    .s_axi_hbm_wdata                     (axi_dev_mem_wdata),
++    .s_axi_hbm_wlast                     (axi_dev_mem_wlast),
++    .s_axi_hbm_wready                    (axi_dev_mem_wready),
++    .s_axi_hbm_wstrb                     (axi_dev_mem_wstrb),
++    .s_axi_hbm_wuser                     (axi_dev_mem_wuser),
++    .s_axi_hbm_wvalid                    (axi_dev_mem_wvalid),
 +
-+    .m_axi_aclk      (c0_ddr4_ui_clk),
-+    .m_axi_aresetn   (~c0_ddr4_ui_clk_sync_rst),
-+    .m_axi_awid      (axi_from_clk_converter_to_ddr4_awid),
-+    .m_axi_awaddr    (axi_from_clk_converter_to_ddr4_awaddr),
-+    .m_axi_awlen     (axi_from_clk_converter_to_ddr4_awlen),
-+    .m_axi_awsize    (axi_from_clk_converter_to_ddr4_awsize),
-+    .m_axi_awburst   (axi_from_clk_converter_to_ddr4_awburst),
-+    .m_axi_awlock    (axi_from_clk_converter_to_ddr4_awlock),
-+    .m_axi_awcache   (axi_from_clk_converter_to_ddr4_awcache),
-+    .m_axi_awprot    (axi_from_clk_converter_to_ddr4_awprot),
-+    .m_axi_awregion  (axi_from_clk_converter_to_ddr4_awregion),
-+    .m_axi_awqos     (axi_from_clk_converter_to_ddr4_awqos),
-+    .m_axi_awvalid   (axi_from_clk_converter_to_ddr4_awvalid),
-+    .m_axi_awready   (axi_from_clk_converter_to_ddr4_awready),
-+    .m_axi_wdata     (axi_from_clk_converter_to_ddr4_wdata),
-+    .m_axi_wstrb     (axi_from_clk_converter_to_ddr4_wstrb),
-+    .m_axi_wlast     (axi_from_clk_converter_to_ddr4_wlast),
-+    .m_axi_wvalid    (axi_from_clk_converter_to_ddr4_wvalid),
-+    .m_axi_wready    (axi_from_clk_converter_to_ddr4_wready),
-+    .m_axi_bid       (axi_from_clk_converter_to_ddr4_bid),
-+    .m_axi_bresp     (axi_from_clk_converter_to_ddr4_bresp),
-+    .m_axi_bvalid    (axi_from_clk_converter_to_ddr4_bvalid),
-+    .m_axi_bready    (axi_from_clk_converter_to_ddr4_bready),
-+    .m_axi_arid      (axi_from_clk_converter_to_ddr4_arid),
-+    .m_axi_araddr    (axi_from_clk_converter_to_ddr4_araddr),
-+    .m_axi_arlen     (axi_from_clk_converter_to_ddr4_arlen),
-+    .m_axi_arsize    (axi_from_clk_converter_to_ddr4_arsize),
-+    .m_axi_arburst   (axi_from_clk_converter_to_ddr4_arburst),
-+    .m_axi_arlock    (axi_from_clk_converter_to_ddr4_arlock),
-+    .m_axi_arcache   (axi_from_clk_converter_to_ddr4_arcache),
-+    .m_axi_arprot    (axi_from_clk_converter_to_ddr4_arprot),
-+    .m_axi_arregion  (axi_from_clk_converter_to_ddr4_arregion),
-+    .m_axi_arqos     (axi_from_clk_converter_to_ddr4_arqos),
-+    .m_axi_arvalid   (axi_from_clk_converter_to_ddr4_arvalid),
-+    .m_axi_arready   (axi_from_clk_converter_to_ddr4_arready),
-+    .m_axi_rid       (axi_from_clk_converter_to_ddr4_rid),
-+    .m_axi_rdata     (axi_from_clk_converter_to_ddr4_rdata),
-+    .m_axi_rresp     (axi_from_clk_converter_to_ddr4_rresp),
-+    .m_axi_rlast     (axi_from_clk_converter_to_ddr4_rlast),
-+    .m_axi_rvalid    (axi_from_clk_converter_to_ddr4_rvalid),
-+    .m_axi_rready    (axi_from_clk_converter_to_ddr4_rready)
-+  );
-+
-+  dev_mem_ddr4_controller  ddr4_inst (
-+    .dbg_clk(),
-+    .dbg_bus(),
-+
-+    .sys_rst(~pcie_rstn_int),
-+    .c0_sys_clk_p(c0_sys_clk_p),
-+    .c0_sys_clk_n(c0_sys_clk_n),
-+
-+    .c0_init_calib_complete(c0_init_calib_complete),
-+
-+    .c0_ddr4_ui_clk(c0_ddr4_ui_clk),
-+    .c0_ddr4_ui_clk_sync_rst(c0_ddr4_ui_clk_sync_rst),
-+
-+    .c0_ddr4_aresetn(pcie_rstn_int),
-+    .c0_ddr4_adr(c0_ddr4_adr),
-+    .c0_ddr4_ba(c0_ddr4_ba),
-+    .c0_ddr4_cke(c0_ddr4_cke),
-+    .c0_ddr4_cs_n(c0_ddr4_cs_n),
-+    .c0_ddr4_dq(c0_ddr4_dq),
-+    .c0_ddr4_dqs_c(c0_ddr4_dqs_c),
-+    .c0_ddr4_dqs_t(c0_ddr4_dqs_t),
-+    .c0_ddr4_bg(c0_ddr4_bg),
-+    .c0_ddr4_parity(c0_ddr4_parity),
-+    .c0_ddr4_odt(c0_ddr4_odt),
-+    .c0_ddr4_reset_n(c0_ddr4_reset_n),
-+    .c0_ddr4_act_n(c0_ddr4_act_n),
-+    .c0_ddr4_ck_c(c0_ddr4_ck_c),
-+    .c0_ddr4_ck_t(c0_ddr4_ck_t),
-+
-+    .c0_ddr4_s_axi_ctrl_wdata(32'b0),
-+    .c0_ddr4_s_axi_ctrl_bready(1'b0),
-+    .c0_ddr4_s_axi_ctrl_arvalid(1'b0),
-+    .c0_ddr4_s_axi_ctrl_araddr(32'b0),
-+    .c0_ddr4_s_axi_ctrl_rready(1'b0),
-+    .c0_ddr4_s_axi_ctrl_wvalid(1'b0),
-+    .c0_ddr4_s_axi_ctrl_awvalid(1'b0),
-+    .c0_ddr4_s_axi_ctrl_awaddr(32'b0),
-+
-+    .c0_ddr4_s_axi_awid(axi_from_clk_converter_to_ddr4_awid),
-+    .c0_ddr4_s_axi_awaddr(axi_from_clk_converter_to_ddr4_awaddr),
-+    .c0_ddr4_s_axi_awlen(axi_from_clk_converter_to_ddr4_awlen),
-+    .c0_ddr4_s_axi_awsize(axi_from_clk_converter_to_ddr4_awsize),
-+    .c0_ddr4_s_axi_awburst(axi_from_clk_converter_to_ddr4_awburst),
-+    .c0_ddr4_s_axi_awlock(1'b0),
-+    .c0_ddr4_s_axi_awcache(4'b0),
-+    .c0_ddr4_s_axi_awprot(3'b0),
-+    .c0_ddr4_s_axi_awqos(4'b0),
-+    .c0_ddr4_s_axi_awvalid(axi_from_clk_converter_to_ddr4_awvalid),
-+    .c0_ddr4_s_axi_awready(axi_from_clk_converter_to_ddr4_awready),
-+    .c0_ddr4_s_axi_wdata(axi_from_clk_converter_to_ddr4_wdata),
-+    .c0_ddr4_s_axi_wstrb(axi_from_clk_converter_to_ddr4_wstrb),
-+    .c0_ddr4_s_axi_wlast(axi_from_clk_converter_to_ddr4_wlast),
-+    .c0_ddr4_s_axi_wvalid(axi_from_clk_converter_to_ddr4_wvalid),
-+    .c0_ddr4_s_axi_wready(axi_from_clk_converter_to_ddr4_wready),
-+    .c0_ddr4_s_axi_bready(axi_from_clk_converter_to_ddr4_bready),
-+    .c0_ddr4_s_axi_bid(axi_from_clk_converter_to_ddr4_bid),
-+    .c0_ddr4_s_axi_bresp(axi_from_clk_converter_to_ddr4_bresp),
-+    .c0_ddr4_s_axi_bvalid(axi_from_clk_converter_to_ddr4_bvalid),
-+    .c0_ddr4_s_axi_arid(axi_from_clk_converter_to_ddr4_arid),
-+    .c0_ddr4_s_axi_araddr(axi_from_clk_converter_to_ddr4_araddr),
-+    .c0_ddr4_s_axi_arlen(axi_from_clk_converter_to_ddr4_arlen),
-+    .c0_ddr4_s_axi_arsize(axi_from_clk_converter_to_ddr4_arsize),
-+    .c0_ddr4_s_axi_arburst(axi_from_clk_converter_to_ddr4_arburst),
-+    .c0_ddr4_s_axi_arlock(1'b0),
-+    .c0_ddr4_s_axi_arcache(4'b0),
-+    .c0_ddr4_s_axi_arprot(3'b0),
-+    .c0_ddr4_s_axi_arqos(4'b0),
-+    .c0_ddr4_s_axi_arvalid(axi_from_clk_converter_to_ddr4_arvalid),
-+    .c0_ddr4_s_axi_arready(axi_from_clk_converter_to_ddr4_arready),
-+    .c0_ddr4_s_axi_rready(axi_from_clk_converter_to_ddr4_rready),
-+    .c0_ddr4_s_axi_rlast(axi_from_clk_converter_to_ddr4_rlast),
-+    .c0_ddr4_s_axi_rvalid(axi_from_clk_converter_to_ddr4_rvalid),
-+    .c0_ddr4_s_axi_rresp(axi_from_clk_converter_to_ddr4_rresp),
-+    .c0_ddr4_s_axi_rid(axi_from_clk_converter_to_ddr4_rid),
-+    .c0_ddr4_s_axi_rdata(axi_from_clk_converter_to_ddr4_rdata)
++    .axi_clk                             (axis_aclk),
++    .axi_resetn                          (powerup_rstn),
++    .hbm_ref_clk                         (hbm_ref_clk)
 +  );
 +
 +  // User logic boxes
    box_250mhz #(
      .MIN_PKT_LEN   (MIN_PKT_LEN),
      .MAX_PKT_LEN   (MAX_PKT_LEN),
-@@ -846,14 +2456,104 @@ module open_nic_shell #(
+@@ -846,14 +2330,104 @@ module open_nic_shell #(
      .s_axis_adap_rx_250mhz_tuser_dst  (axis_adap_rx_250mhz_tuser_dst),
      .s_axis_adap_rx_250mhz_tready     (axis_adap_rx_250mhz_tready),
- 
+
 -    .mod_rstn                         (user_250mhz_rstn),
 -    .mod_rst_done                     (user_250mhz_rst_done),
 -
@@ -2436,12 +5016,12 @@ index e2f6c3f..7d942c9 100644
 +    .axil_aclk    (axil_aclk),
 +    .axis_aclk    (axis_aclk)
    );
- 
+
    box_322mhz #(
-@@ -914,4 +2614,25 @@ module open_nic_shell #(
+@@ -914,4 +2488,25 @@ module open_nic_shell #(
      .cmac_clk                        (cmac_clk)
    );
- 
+
 -endmodule: open_nic_shell
 +  assign axi_rdma_send_write_payload_awqos = 16'd0;
 +  assign axi_rdma_send_write_payload_arqos = 16'd0;
@@ -2489,13 +5069,13 @@ index 7ce55e9..2543c1a 100644
      .s_axil_rvalid  (s_axil_rvalid),
      .s_axil_rdata   (s_axil_rdata),
 diff --git a/src/qdma_subsystem/qdma_subsystem.sv b/src/qdma_subsystem/qdma_subsystem.sv
-index e46dcb9..dc24cc6 100644
+index e46dcb9..207ed0a 100644
 --- a/src/qdma_subsystem/qdma_subsystem.sv
 +++ b/src/qdma_subsystem/qdma_subsystem.sv
 @@ -59,6 +59,46 @@ module qdma_subsystem #(
    input   [16*NUM_PHYS_FUNC-1:0] s_axis_c2h_tuser_dst,
    output     [NUM_PHYS_FUNC-1:0] s_axis_c2h_tready,
- 
+
 +  // QDMA DMA Engine - AXI MM interface
 +  input                          m_axi_awready,
 +  input                          m_axi_wready,
@@ -2539,10 +5119,10 @@ index e46dcb9..dc24cc6 100644
  `ifdef __synthesis__
    input                   [15:0] pcie_rxp,
    input                   [15:0] pcie_rxn,
-@@ -135,6 +175,65 @@ module qdma_subsystem #(
+@@ -135,9 +175,78 @@ module qdma_subsystem #(
    input                          m_axis_qdma_cpl_tready,
  `endif
- 
+
 +  // QDMA control/status register interface
 +  output                         s_csr_prog_done,
 +  input                   [31:0] s_axil_csr_awaddr,
@@ -2604,11 +5184,24 @@ index e46dcb9..dc24cc6 100644
 +
    input                          mod_rstn,
    output                         mod_rst_done,
- 
-@@ -172,6 +271,47 @@ module qdma_subsystem #(
+
++`ifdef __au55n__
++  output                        ref_clk_100mhz,
++`elsif __au55c__
++  output                        ref_clk_100mhz,
++`elsif __au50__
++  output                        ref_clk_100mhz,
++`elsif __au280__
++  output                        ref_clk_100mhz,
++`endif
++
+ `ifdef __synthesis__
+   output                         axil_aclk,
+   output                         axis_aclk
+@@ -172,6 +281,47 @@ module qdma_subsystem #(
    wire   [5:0] axis_qdma_c2h_mty;
    wire         axis_qdma_c2h_tready;
- 
+
 +  /*
 +  wire         axi_qdma_mm_awready;
 +  wire         axi_qdma_mm_wready;
@@ -2653,10 +5246,10 @@ index e46dcb9..dc24cc6 100644
    wire         axis_qdma_cpl_tvalid;
    wire [511:0] axis_qdma_cpl_tdata;
    wire   [1:0] axis_qdma_cpl_size;
-@@ -214,6 +354,20 @@ module qdma_subsystem #(
+@@ -214,6 +364,20 @@ module qdma_subsystem #(
    wire         h2c_byp_in_st_no_dma;
    wire         h2c_byp_in_st_rdy;
- 
+
 +  wire  [63:0] h2c_byp_in_mm_radr;
 +  wire  [63:0] h2c_byp_in_mm_wadr;
 +  wire  [15:0] h2c_byp_in_mm_len;
@@ -2674,10 +5267,10 @@ index e46dcb9..dc24cc6 100644
    wire         c2h_byp_out_vld;
    wire [255:0] c2h_byp_out_dsc;
    wire         c2h_byp_out_st_mm;
-@@ -236,6 +390,20 @@ module qdma_subsystem #(
+@@ -236,6 +400,20 @@ module qdma_subsystem #(
    wire   [6:0] c2h_byp_in_st_csh_pfch_tag;
    wire         c2h_byp_in_st_csh_rdy;
- 
+
 +  wire  [63:0] c2h_byp_in_mm_radr;
 +  wire  [63:0] c2h_byp_in_mm_wadr;
 +  wire  [15:0] c2h_byp_in_mm_len;
@@ -2693,12 +5286,12 @@ index e46dcb9..dc24cc6 100644
 +  wire         c2h_byp_in_mm_rdy;
 +
    wire         axil_aresetn;
- 
+
    // Reset is clocked by the 125MHz AXI-Lite clock
-@@ -276,6 +444,19 @@ module qdma_subsystem #(
+@@ -276,6 +454,19 @@ module qdma_subsystem #(
    assign h2c_byp_in_st_cidx         = 0;
    assign h2c_byp_in_st_no_dma       = 1'b0;
- 
+
 +  assign h2c_byp_in_mm_radr         = 0;
 +  assign h2c_byp_in_mm_wadr         = 0;
 +  assign h2c_byp_in_mm_len          = 0;
@@ -2715,10 +5308,10 @@ index e46dcb9..dc24cc6 100644
    assign c2h_byp_out_rdy            = 1'b1;
    assign c2h_byp_in_st_csh_vld      = 1'b0;
    assign c2h_byp_in_st_csh_addr     = 0;
-@@ -285,6 +466,19 @@ module qdma_subsystem #(
+@@ -285,6 +476,19 @@ module qdma_subsystem #(
    assign c2h_byp_in_st_csh_func     = 0;
    assign c2h_byp_in_st_csh_pfch_tag = 0;
- 
+
 +  assign c2h_byp_in_mm_radr         = 0;
 +  assign c2h_byp_in_mm_wadr         = 0;
 +  assign c2h_byp_in_mm_len          = 0;
@@ -2735,10 +5328,10 @@ index e46dcb9..dc24cc6 100644
    qdma_subsystem_qdma_wrapper qdma_wrapper_inst (
      .pcie_rxp                        (pcie_rxp),
      .pcie_rxn                        (pcie_rxn),
-@@ -308,6 +502,45 @@ module qdma_subsystem #(
+@@ -308,6 +512,45 @@ module qdma_subsystem #(
      .m_axil_rresp                    (m_axil_pcie_rresp),
      .m_axil_rready                   (m_axil_pcie_rready),
- 
+
 +    .m_axi_awready                   (m_axi_awready),
 +    .m_axi_wready                    (m_axi_wready),
 +    .m_axi_bid                       (m_axi_bid),
@@ -2781,10 +5374,10 @@ index e46dcb9..dc24cc6 100644
      .m_axis_h2c_tvalid               (axis_qdma_h2c_tvalid),
      .m_axis_h2c_tdata                (axis_qdma_h2c_tdata),
      .m_axis_h2c_tcrc                 (axis_qdma_h2c_tcrc),
-@@ -375,6 +608,20 @@ module qdma_subsystem #(
+@@ -375,6 +618,20 @@ module qdma_subsystem #(
      .h2c_byp_in_st_no_dma            (h2c_byp_in_st_no_dma),
      .h2c_byp_in_st_rdy               (h2c_byp_in_st_rdy),
- 
+
 +    .h2c_byp_in_mm_radr              (h2c_byp_in_mm_radr),
 +    .h2c_byp_in_mm_wadr              (h2c_byp_in_mm_wadr),
 +    .h2c_byp_in_mm_len               (h2c_byp_in_mm_len),
@@ -2802,10 +5395,10 @@ index e46dcb9..dc24cc6 100644
      .c2h_byp_out_vld                 (c2h_byp_out_vld),
      .c2h_byp_out_dsc                 (c2h_byp_out_dsc),
      .c2h_byp_out_st_mm               (c2h_byp_out_st_mm),
-@@ -397,6 +644,77 @@ module qdma_subsystem #(
+@@ -397,6 +654,77 @@ module qdma_subsystem #(
      .c2h_byp_in_st_csh_pfch_tag      (c2h_byp_in_st_csh_pfch_tag),
      .c2h_byp_in_st_csh_rdy           (c2h_byp_in_st_csh_rdy),
- 
+
 +    .c2h_byp_in_mm_radr              (c2h_byp_in_mm_radr),
 +    .c2h_byp_in_mm_wadr              (c2h_byp_in_mm_wadr),
 +    .c2h_byp_in_mm_len               (c2h_byp_in_mm_len),
@@ -2880,7 +5473,25 @@ index e46dcb9..dc24cc6 100644
      .pcie_refclk                     (pcie_refclk),
      .pcie_refclk_gt                  (pcie_refclk_gt),
      .pcie_rstn                       (pcie_rstn),
-@@ -801,7 +1119,26 @@ module qdma_subsystem #(
+@@ -407,6 +735,17 @@ module qdma_subsystem #(
+
+     .axil_aclk                       (axil_aclk),
+     .axis_aclk                       (axis_aclk),
++
++  `ifdef __au55n__
++    .ref_clk_100mhz                  (ref_clk_100mhz),
++  `elsif __au55c__
++    .ref_clk_100mhz                  (ref_clk_100mhz),
++  `elsif __au50__
++    .ref_clk_100mhz                  (ref_clk_100mhz),
++  `elsif __au280__
++    .ref_clk_100mhz                  (ref_clk_100mhz),
++  `endif
++
+     .aresetn                         (powerup_rstn)
+   );
+ `else // !`ifdef __synthesis__
+@@ -801,7 +1140,26 @@ module qdma_subsystem #(
          .axil_aresetn          (axil_aresetn)
        );
      end
@@ -2906,7 +5517,7 @@ index e46dcb9..dc24cc6 100644
 +    end
 +
    endgenerate
- 
+
  endmodule: qdma_subsystem
 diff --git a/src/qdma_subsystem/qdma_subsystem_c2h.sv b/src/qdma_subsystem/qdma_subsystem_c2h.sv
 index 50e9082..b230c82 100644
@@ -2926,7 +5537,7 @@ index 50e9082..b230c82 100644
    assign m_axis_qdma_cpl_tdata[26:16]         = cpl_fifo_dout[42:32];
 -  assign m_axis_qdma_cpl_tdata[15:0]          = 0;
 +  assign m_axis_qdma_cpl_tdata[15:0]          = 0;*/
- 
+
    assign m_axis_qdma_cpl_ctrl_no_wrb_marker   = 1'b0;
    assign m_axis_qdma_cpl_ctrl_col_idx         = 0;
 diff --git a/src/qdma_subsystem/qdma_subsystem_h2c.sv b/src/qdma_subsystem/qdma_subsystem_h2c.sv
@@ -2938,19 +5549,19 @@ index 6a7ee26..38cbe65 100644
      .s_axis_tkeep  ({64{1'b1}}),
      .s_axis_tlast  (s_axis_qdma_h2c_tlast),
 -    .s_axis_tuser  ({s_axis_qdma_h2c_tuser_mdata[15:0],
-+	.s_axis_tuser  ({s_axis_qdma_h2c_tuser_mdata[31:16], // patch
++  .s_axis_tuser  ({s_axis_qdma_h2c_tuser_mdata[31:16], // patch
 +//    .s_axis_tuser  ({s_axis_qdma_h2c_tuser_mdata[15:0],
                       s_axis_qdma_h2c_tuser_mty,
                       s_axis_qdma_h2c_tuser_qid}),
      .s_axis_tid    (0),
 diff --git a/src/qdma_subsystem/qdma_subsystem_qdma_wrapper.v b/src/qdma_subsystem/qdma_subsystem_qdma_wrapper.v
-index cfd0dca..0417dad 100644
+index cfd0dca..fab0d76 100644
 --- a/src/qdma_subsystem/qdma_subsystem_qdma_wrapper.v
 +++ b/src/qdma_subsystem/qdma_subsystem_qdma_wrapper.v
 @@ -42,6 +42,45 @@ module qdma_subsystem_qdma_wrapper (
    input    [1:0] m_axil_rresp,
    output         m_axil_rready,
- 
+
 +  input          m_axi_awready,
 +  input          m_axi_wready,
 +  input  [3:0]   m_axi_bid,
@@ -2996,7 +5607,7 @@ index cfd0dca..0417dad 100644
 @@ -109,6 +148,20 @@ module qdma_subsystem_qdma_wrapper (
    input          h2c_byp_in_st_no_dma,
    output         h2c_byp_in_st_rdy,
- 
+
 +  input  [63:0]  h2c_byp_in_mm_radr,
 +  input  [63:0]  h2c_byp_in_mm_wadr,
 +  input  [15:0]  h2c_byp_in_mm_len,
@@ -3017,7 +5628,7 @@ index cfd0dca..0417dad 100644
 @@ -131,6 +184,79 @@ module qdma_subsystem_qdma_wrapper (
    input    [6:0] c2h_byp_in_st_csh_pfch_tag,
    output         c2h_byp_in_st_csh_rdy,
- 
+
 +  input   [63:0] c2h_byp_in_mm_radr,
 +  input   [63:0] c2h_byp_in_mm_wadr,
 +  input   [15:0] c2h_byp_in_mm_len,
@@ -3094,10 +5705,30 @@ index cfd0dca..0417dad 100644
    input          pcie_refclk,
    input          pcie_refclk_gt,
    input          pcie_rstn,
-@@ -150,6 +276,27 @@ module qdma_subsystem_qdma_wrapper (
- 
+@@ -141,6 +267,19 @@ module qdma_subsystem_qdma_wrapper (
+
+   output         axis_aclk,
+   output         axil_aclk,
++
++  // For AU55N, AU55C, AU50, and AU280, we generate 100MHz reference clock which is needed when HBM IP is instantiated
++  // in user-defined logic.
++  `ifdef __au55n__
++    output         ref_clk_100mhz,
++  `elsif __au55c__
++    output         ref_clk_100mhz,
++  `elsif __au50__
++    output         ref_clk_100mhz,
++  `elsif __au280__
++    output         ref_clk_100mhz,
++  `endif
++
+   output         aresetn
+ );
+
+@@ -150,6 +289,27 @@ module qdma_subsystem_qdma_wrapper (
+
    reg   [1:0] aresetn_sync = 2'b11;
- 
+
 +  (* mark_debug = "true" *) wire         qdma_csr_prog_done;
 +  (* mark_debug = "true" *) wire  [31:0] qdma_axil_csr_awaddr;
 +  (* mark_debug = "true" *) wire   [2:0] qdma_axil_csr_awprot;
@@ -3122,10 +5753,24 @@ index cfd0dca..0417dad 100644
    wire        qdma_axil_awvalid;
    wire [31:0] qdma_axil_awaddr;
    wire  [2:0] qdma_axil_awprot;
-@@ -260,6 +407,66 @@ module qdma_subsystem_qdma_wrapper (
+@@ -198,11 +358,11 @@ module qdma_subsystem_qdma_wrapper (
+
+   assign axis_aclk = aclk_250mhz;
+
+-  // Generate 125MHz 'axil_aclk'
++  // Generate 125MHz 'axil_aclk' and 100MHz 'ref_clk_100mhz'.
+   qdma_subsystem_clk_div clk_div_inst (
+     .clk_in1  (axis_aclk),
+     .clk_out1 (axil_aclk),
+-    .locked   ()
++    .clk_out2 (ref_clk_100mhz)
+   );
+
+   // Generate reset w.r.t. the 125MHz clock
+@@ -260,6 +420,66 @@ module qdma_subsystem_qdma_wrapper (
      .m_axi_aresetn (aresetn)
    );
- 
+
 +  qdma_subsystem_axi_csr_cdc axi_csr_cdc_inst (
 +    .s_axi_awvalid (s_axil_csr_awvalid),
 +    .s_axi_awaddr  (s_axil_csr_awaddr),
@@ -3189,10 +5834,10 @@ index cfd0dca..0417dad 100644
    assign usr_irq_in_vld    = 1'b0;
    assign usr_irq_in_vec    = 0;
    assign usr_irq_in_fnc    = 0;
-@@ -335,6 +542,20 @@ module qdma_subsystem_qdma_wrapper (
+@@ -335,6 +555,20 @@ module qdma_subsystem_qdma_wrapper (
      .h2c_byp_in_st_no_dma                 (h2c_byp_in_st_no_dma),
      .h2c_byp_in_st_rdy                    (h2c_byp_in_st_rdy),
- 
+
 +    .h2c_byp_in_mm_radr                   (h2c_byp_in_mm_radr),
 +    .h2c_byp_in_mm_wadr                   (h2c_byp_in_mm_wadr),
 +    .h2c_byp_in_mm_len                    (h2c_byp_in_mm_len),
@@ -3210,10 +5855,10 @@ index cfd0dca..0417dad 100644
      .c2h_byp_out_vld                      (c2h_byp_out_vld),
      .c2h_byp_out_dsc                      (c2h_byp_out_dsc),
      .c2h_byp_out_st_mm                    (c2h_byp_out_st_mm),
-@@ -357,12 +578,31 @@ module qdma_subsystem_qdma_wrapper (
+@@ -357,12 +591,31 @@ module qdma_subsystem_qdma_wrapper (
      .c2h_byp_in_st_csh_pfch_tag           (c2h_byp_in_st_csh_pfch_tag),
      .c2h_byp_in_st_csh_rdy                (c2h_byp_in_st_csh_rdy),
- 
+
 +    .c2h_byp_in_mm_radr                   (c2h_byp_in_mm_radr),
 +    .c2h_byp_in_mm_wadr                   (c2h_byp_in_mm_wadr),
 +    .c2h_byp_in_mm_len                    (c2h_byp_in_mm_len),
@@ -3233,7 +5878,7 @@ index cfd0dca..0417dad 100644
      .usr_irq_in_fnc                       (usr_irq_in_fnc),
      .usr_irq_out_ack                      (usr_irq_out_ack),
      .usr_irq_out_fail                     (usr_irq_out_fail),
- 
+
 +    .st_rx_msg_rdy                        (1'b1),
 +    .st_rx_msg_valid                      (),
 +    .st_rx_msg_last                       (),
@@ -3242,10 +5887,10 @@ index cfd0dca..0417dad 100644
      .tm_dsc_sts_vld                       (tm_dsc_sts_vld),
      .tm_dsc_sts_port_id                   (tm_dsc_sts_port_id),
      .tm_dsc_sts_qen                       (tm_dsc_sts_qen),
-@@ -384,6 +624,86 @@ module qdma_subsystem_qdma_wrapper (
+@@ -384,6 +637,86 @@ module qdma_subsystem_qdma_wrapper (
      .dsc_crdt_in_fence                    (dsc_crdt_in_fence),
      .dsc_crdt_in_rdy                      (dsc_crdt_in_rdy),
- 
+
 +    .m_axi_awready                        (m_axi_awready),
 +    .m_axi_wready                         (m_axi_wready),
 +    .m_axi_bid                            (m_axi_bid),
@@ -3329,10 +5974,10 @@ index cfd0dca..0417dad 100644
      .m_axis_h2c_tvalid                    (m_axis_h2c_tvalid),
      .m_axis_h2c_tdata                     (m_axis_h2c_tdata),
      .m_axis_h2c_tcrc                      (m_axis_h2c_tcrc),
-@@ -424,6 +744,65 @@ module qdma_subsystem_qdma_wrapper (
+@@ -424,6 +757,65 @@ module qdma_subsystem_qdma_wrapper (
      .s_axis_c2h_cmpt_ctrl_no_wrb_marker   (s_axis_cpl_ctrl_no_wrb_marker),
      .s_axis_c2h_cmpt_tready               (s_axis_cpl_tready),
- 
+
 +    // Control status register interface
 +    .csr_prog_done                        (qdma_csr_prog_done),
 +    .s_axil_csr_awaddr                    (qdma_axil_csr_awaddr),
@@ -3397,7 +6042,7 @@ index cfd0dca..0417dad 100644
      .axis_c2h_status_cmp                  (),     // output wire axis_c2h_status_cmp
 diff --git a/src/qdma_subsystem/vivado_ip/axi_mm_bram.tcl b/src/qdma_subsystem/vivado_ip/axi_mm_bram.tcl
 new file mode 100755
-index 0000000..1fa4940
+index 0000000..50220a1
 --- /dev/null
 +++ b/src/qdma_subsystem/vivado_ip/axi_mm_bram.tcl
 @@ -0,0 +1,30 @@
@@ -3440,7 +6085,7 @@ index 07b1095..2e1c63e 100644
  # *************************************************************************
  set qdma qdma_no_sriov
  create_ip -name qdma -vendor xilinx.com -library ip -module_name $qdma -dir ${ip_build_dir}
--set_property -dict { 
+-set_property -dict {
 +set_property -dict {
      CONFIG.mode_selection {Advanced}
      CONFIG.pl_link_cap_max_link_width {X16}
@@ -3453,7 +6098,7 @@ index 9a87ceb..206b760 100644
  # *************************************************************************
  set qdma qdma_no_sriov
  create_ip -name qdma -vendor xilinx.com -library ip -module_name $qdma -dir ${ip_build_dir}
--set_property -dict { 
+-set_property -dict {
 +set_property -dict {
      CONFIG.mode_selection {Advanced}
 -    CONFIG.pl_link_cap_max_link_width {X16}
@@ -3518,6 +6163,53 @@ index 5bb9b5c..4b7e1f7 100644
      CONFIG.SYS_RST_N_BOARD_INTERFACE {pcie_perstn}
      CONFIG.PCIE_BOARD_INTERFACE {pci_express_x16}
      CONFIG.xlnx_ref_board {AU280}
+diff --git a/src/qdma_subsystem/vivado_ip/qdma_no_sriov_au55c.tcl b/src/qdma_subsystem/vivado_ip/qdma_no_sriov_au55c.tcl
+new file mode 100644
+index 0000000..ead6edb
+--- /dev/null
++++ b/src/qdma_subsystem/vivado_ip/qdma_no_sriov_au55c.tcl
+@@ -0,0 +1,41 @@
++# *************************************************************************
++#
++# Copyright 2020 Xilinx, Inc.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#
++# *************************************************************************
++set qdma qdma_no_sriov
++create_ip -name qdma -vendor xilinx.com -library ip -module_name $qdma -dir ${ip_build_dir}
++set_property -dict {
++    CONFIG.mode_selection {Advanced}
++    CONFIG.en_gt_selection {true}
++    CONFIG.csr_axilite_slave {true}
++    CONFIG.dsc_byp_mode {Descriptor_bypass_and_internal}
++    CONFIG.axibar_highaddr_0 {0x000000FFFFFFFFFF}
++    CONFIG.dma_reset_source_sel {Phy_Ready}
++    CONFIG.pf0_bar2_scale_qdma {Megabytes}
++    CONFIG.pf1_bar2_scale_qdma {Megabytes}
++    CONFIG.pf2_bar2_scale_qdma {Megabytes}
++    CONFIG.pf3_bar2_scale_qdma {Megabytes}
++    CONFIG.en_bridge_slv {true}
++    CONFIG.dma_intf_sel_qdma {AXI_MM_and_AXI_Stream_with_Completion}
++    CONFIG.en_axi_mm_qdma {true}
++    CONFIG.axibar_notranslate {false}
++    CONFIG.vdm_en {1}
++    CONFIG.xlnx_ref_board {AU55C}
++} [get_ips $qdma]
++
++set_property CONFIG.tl_pf_enable_reg $num_phys_func [get_ips $qdma]
++set_property CONFIG.num_queues $num_queue [get_ips $qdma]
++
 diff --git a/src/qdma_subsystem/vivado_ip/qdma_subsystem_axi_crossbar.tcl b/src/qdma_subsystem/vivado_ip/qdma_subsystem_axi_crossbar.tcl
 index 20082af..6a88fca 100644
 --- a/src/qdma_subsystem/vivado_ip/qdma_subsystem_axi_crossbar.tcl
@@ -3526,7 +6218,7 @@ index 20082af..6a88fca 100644
  }
  set_property "CONFIG.M0${num_phys_func}_A00_BASE_ADDR" {0x0000000000004000} [get_ips $axi_crossbar]
  set_property "CONFIG.M0${num_phys_func}_A00_ADDR_WIDTH" {12} [get_ips $axi_crossbar]
--set_property -dict { 
+-set_property -dict {
 +set_property -dict {
      CONFIG.PROTOCOL {AXI4LITE}
      CONFIG.CONNECTIVITY_MODE {SASD}
@@ -3579,11 +6271,81 @@ index 0922cba..511ceec 100644
  # *************************************************************************
  set ecc qdma_subsystem_c2h_ecc
  create_ip -name ecc -vendor xilinx.com -library ip -module_name $ecc -dir ${ip_build_dir}
--set_property -dict { 
+-set_property -dict {
 +set_property -dict {
      CONFIG.C_USE_CLK_ENABLE {true}
      CONFIG.C_REG_OUTPUT {true}
      CONFIG.C_REG_INPUT {false}
+diff --git a/src/qdma_subsystem/vivado_ip/qdma_subsystem_clk_div.tcl b/src/qdma_subsystem/vivado_ip/qdma_subsystem_clk_div.tcl
+index ee5a370..925a3b2 100644
+--- a/src/qdma_subsystem/vivado_ip/qdma_subsystem_clk_div.tcl
++++ b/src/qdma_subsystem/vivado_ip/qdma_subsystem_clk_div.tcl
+@@ -18,30 +18,39 @@
+ set clk_wiz qdma_subsystem_clk_div
+ create_ip -name clk_wiz -vendor xilinx.com -library ip -module_name $clk_wiz -dir ${ip_build_dir}
+ set_property -dict {
+-  CONFIG.PRIMITIVE {Auto}
+-  CONFIG.USE_PHASE_ALIGNMENT {true}
+-  CONFIG.PRIM_IN_FREQ {250}
+-  CONFIG.SECONDARY_SOURCE {Single_ended_clock_capable_pin}
+-  CONFIG.CLKIN1_JITTER_PS {40.0}
+-  CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {125}
+-  CONFIG.CLKOUT1_DRIVES {Buffer}
+-  CONFIG.CLKOUT2_DRIVES {Buffer}
+-  CONFIG.CLKOUT3_DRIVES {Buffer}
+-  CONFIG.CLKOUT4_DRIVES {Buffer}
+-  CONFIG.CLKOUT5_DRIVES {Buffer}
+-  CONFIG.CLKOUT6_DRIVES {Buffer}
+-  CONFIG.CLKOUT7_DRIVES {Buffer}
+-  CONFIG.FEEDBACK_SOURCE {FDBK_AUTO}
+-  CONFIG.USE_LOCKED {true}
+-  CONFIG.USE_RESET {false}
+-  CONFIG.MMCM_DIVCLK_DIVIDE {2}
+-  CONFIG.MMCM_BANDWIDTH {OPTIMIZED}
+-  CONFIG.MMCM_CLKFBOUT_MULT_F {9.625}
+-  CONFIG.MMCM_CLKIN1_PERIOD {4.000}
+-  CONFIG.MMCM_CLKIN2_PERIOD {10.0}
+-  CONFIG.MMCM_COMPENSATION {AUTO}
+-  CONFIG.MMCM_CLKOUT0_DIVIDE_F {9.625}
+-  CONFIG.AUTO_PRIMITIVE {MMCM}
+-  CONFIG.CLKOUT1_JITTER {106.624}
+-  CONFIG.CLKOUT1_PHASE_ERROR {85.285}
++    CONFIG.PRIMITIVE {Auto}
++    CONFIG.USE_FREQ_SYNTH {true}
++    CONFIG.USE_PHASE_ALIGNMENT {true}
++    CONFIG.PRIM_IN_FREQ {250.000}
++    CONFIG.JITTER_OPTIONS {PS}
++    CONFIG.CLKOUT2_USED {true}
++    CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {125.000}
++    CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {100.000}
++    CONFIG.SECONDARY_SOURCE {Single_ended_clock_capable_pin}
++    CONFIG.CLKIN1_JITTER_PS {40.000}
++    CONFIG.CLKOUT1_DRIVES {Buffer}
++    CONFIG.CLKOUT2_DRIVES {Buffer}
++    CONFIG.CLKOUT3_DRIVES {Buffer}
++    CONFIG.CLKOUT4_DRIVES {Buffer}
++    CONFIG.CLKOUT5_DRIVES {Buffer}
++    CONFIG.CLKOUT6_DRIVES {Buffer}
++    CONFIG.CLKOUT7_DRIVES {Buffer}
++    CONFIG.FEEDBACK_SOURCE {FDBK_AUTO}
++    CONFIG.USE_LOCKED {false}
++    CONFIG.USE_RESET {false}
++    CONFIG.MMCM_DIVCLK_DIVIDE {1}
++    CONFIG.MMCM_BANDWIDTH {OPTIMIZED}
++    CONFIG.MMCM_CLKFBOUT_MULT_F {4.000}
++    CONFIG.MMCM_CLKIN1_PERIOD {4.000}
++    CONFIG.MMCM_CLKIN2_PERIOD {10.0}
++    CONFIG.MMCM_COMPENSATION {AUTO}
++    CONFIG.MMCM_REF_JITTER2 {0.010}
++    CONFIG.MMCM_CLKOUT0_DIVIDE_F {8.000}
++    CONFIG.MMCM_CLKOUT1_DIVIDE {10}
++    CONFIG.NUM_OUT_CLKS {2}
++    CONFIG.CLKOUT1_JITTER {102.531}
++    CONFIG.CLKOUT1_PHASE_ERROR {85.928}
++    CONFIG.CLKOUT2_JITTER {107.111}
++    CONFIG.CLKOUT2_PHASE_ERROR {85.928}
++    CONFIG.AUTO_PRIMITIVE {MMCM}
+ } [get_ips $clk_wiz]
 diff --git a/src/qdma_subsystem/vivado_ip/vivado_ip.tcl b/src/qdma_subsystem/vivado_ip/vivado_ip.tcl
 index 1159969..3f0c1b7 100644
 --- a/src/qdma_subsystem/vivado_ip/vivado_ip.tcl
@@ -4984,7 +7746,7 @@ index 0000000..a927ab4
 +endmodule : rdma_subsystem_wrapper
 diff --git a/src/rdma_subsystem/vivado_ip/rdma_core.tcl b/src/rdma_subsystem/vivado_ip/rdma_core.tcl
 new file mode 100644
-index 0000000..64d5145
+index 0000000..7b9abfd
 --- /dev/null
 +++ b/src/rdma_subsystem/vivado_ip/rdma_core.tcl
 @@ -0,0 +1,28 @@
@@ -5050,7 +7812,7 @@ index d4a14e9..da833f0 100644
 @@ -54,6 +54,23 @@ module system_config #(
    input                   [1:0] m_axil_qdma_rresp,
    output                        m_axil_qdma_rready,
- 
+
 +  output                        m_axil_qdma_csr_awvalid,
 +  output                 [31:0] m_axil_qdma_csr_awaddr,
 +  input                         m_axil_qdma_csr_awready,
@@ -5074,7 +7836,7 @@ index d4a14e9..da833f0 100644
 @@ -88,6 +105,23 @@ module system_config #(
    input   [2*NUM_CMAC_PORT-1:0] m_axil_cmac_rresp,
    output    [NUM_CMAC_PORT-1:0] m_axil_cmac_rready,
- 
+
 +  output                        m_axil_rdma_awvalid,
 +  output                 [31:0] m_axil_rdma_awaddr,
 +  input                         m_axil_rdma_awready,
@@ -5098,7 +7860,7 @@ index d4a14e9..da833f0 100644
 @@ -226,6 +260,23 @@ module system_config #(
      .m_axil_qdma_rresp   (m_axil_qdma_rresp),
      .m_axil_qdma_rready  (m_axil_qdma_rready),
- 
+
 +    .m_axil_qdma_csr_awvalid (m_axil_qdma_csr_awvalid),
 +    .m_axil_qdma_csr_awaddr  (m_axil_qdma_csr_awaddr),
 +    .m_axil_qdma_csr_awready (m_axil_qdma_csr_awready),
@@ -5123,7 +7885,7 @@ index d4a14e9..da833f0 100644
      .m_axil_smon_rdata   (axil_smon_rdata),
      .m_axil_smon_rresp   (axil_smon_rresp),
      .m_axil_smon_rready  (axil_smon_rready),
--			   
+-
 +
 +    .m_axil_rdma_awvalid (m_axil_rdma_awvalid),
 +    .m_axil_rdma_awaddr  (m_axil_rdma_awaddr),
@@ -5146,28 +7908,28 @@ index d4a14e9..da833f0 100644
      .m_axil_box0_awaddr  (m_axil_box0_awaddr),
      .m_axil_box0_awready (m_axil_box0_awready),
 @@ -346,26 +414,29 @@ module system_config #(
- 
+
     system_management_wiz
     system_management_wiz_inst (
--     .s_axi_aclk      (aclk),                    
--     .s_axi_aresetn   (aresetn),                    
-- 
--     .s_axi_awaddr    (axil_smon_awaddr),                    
--     .s_axi_awvalid   (axil_smon_awvalid),                    
--     .s_axi_awready   (axil_smon_awready),                    
--     .s_axi_wdata     (axil_smon_wdata),                    
--     .s_axi_wstrb     (4'hF),                    
--     .s_axi_wvalid    (axil_smon_wvalid),                    
--     .s_axi_wready    (axil_smon_wready),                    
--     .s_axi_bresp     (axil_smon_bresp),                    
--     .s_axi_bvalid    (axil_smon_bvalid),                    
--     .s_axi_bready    (axil_smon_bready),                    
--     .s_axi_araddr    (axil_smon_araddr),                    
--     .s_axi_arvalid   (axil_smon_arvalid),                    
--     .s_axi_arready   (axil_smon_arready),                    
--     .s_axi_rdata     (axil_smon_rdata),                    
--     .s_axi_rresp     (axil_smon_rresp),                    
--     .s_axi_rvalid    (axil_smon_rvalid),                    
+-     .s_axi_aclk      (aclk),
+-     .s_axi_aresetn   (aresetn),
+-
+-     .s_axi_awaddr    (axil_smon_awaddr),
+-     .s_axi_awvalid   (axil_smon_awvalid),
+-     .s_axi_awready   (axil_smon_awready),
+-     .s_axi_wdata     (axil_smon_wdata),
+-     .s_axi_wstrb     (4'hF),
+-     .s_axi_wvalid    (axil_smon_wvalid),
+-     .s_axi_wready    (axil_smon_wready),
+-     .s_axi_bresp     (axil_smon_bresp),
+-     .s_axi_bvalid    (axil_smon_bvalid),
+-     .s_axi_bready    (axil_smon_bready),
+-     .s_axi_araddr    (axil_smon_araddr),
+-     .s_axi_arvalid   (axil_smon_arvalid),
+-     .s_axi_arready   (axil_smon_arready),
+-     .s_axi_rdata     (axil_smon_rdata),
+-     .s_axi_rresp     (axil_smon_rresp),
+-     .s_axi_rvalid    (axil_smon_rvalid),
 -     .s_axi_rready    (axil_smon_rready)
 +     .s_axi_aclk      (aclk),
 +     .s_axi_aresetn   (aresetn),
@@ -5193,7 +7955,7 @@ index d4a14e9..da833f0 100644
 +     .vp              (1'b0),
 +     .vn              (1'b0)
    );
- 
+
  endmodule: system_config
 diff --git a/src/system_config/system_config_address_map.sv b/src/system_config/system_config_address_map.sv
 index 11ae7a5..171712d 100644
@@ -5213,7 +7975,7 @@ index 11ae7a5..171712d 100644
 @@ -95,6 +99,23 @@ module system_config_address_map #(
    input                   [1:0] m_axil_qdma_rresp,
    output                        m_axil_qdma_rready,
- 
+
 +  output                        m_axil_qdma_csr_awvalid,
 +  output                 [31:0] m_axil_qdma_csr_awaddr,
 +  input                         m_axil_qdma_csr_awready,
@@ -5237,7 +7999,7 @@ index 11ae7a5..171712d 100644
 @@ -129,6 +150,23 @@ module system_config_address_map #(
    input   [2*NUM_CMAC_PORT-1:0] m_axil_cmac_rresp,
    output    [NUM_CMAC_PORT-1:0] m_axil_cmac_rready,
- 
+
 +  output                        m_axil_rdma_awvalid,
 +  output                 [31:0] m_axil_rdma_awaddr,
 +  input                         m_axil_rdma_awready,
@@ -5261,10 +8023,10 @@ index 11ae7a5..171712d 100644
 @@ -184,7 +222,7 @@ module system_config_address_map #(
    input                         aresetn
  );
- 
+
 -  localparam C_NUM_SLAVES  = 9;
 +  localparam C_NUM_SLAVES  = 11;
- 
+
    localparam C_SCFG_INDEX  = 0;
    localparam C_QDMA_INDEX  = 1;
 @@ -193,8 +231,10 @@ module system_config_address_map #(
@@ -5277,7 +8039,7 @@ index 11ae7a5..171712d 100644
 +  localparam C_RDMA_INDEX  = 8;
 +  localparam C_BOX1_INDEX  = 9;
 +  localparam C_BOX0_INDEX  = 10;
- 
+
    localparam C_SCFG_BASE_ADDR  = 32'h0;
    localparam C_QDMA_BASE_ADDR  = 32'h01000;
 @@ -203,6 +243,8 @@ module system_config_address_map #(
@@ -5288,7 +8050,7 @@ index 11ae7a5..171712d 100644
 +  localparam C_RDMA_BASE_ADDR  = 32'h40000;  // 18 bits
    localparam C_BOX1_BASE_ADDR  = 32'h200000; // 20 bits
    localparam C_BOX0_BASE_ADDR  = 32'h100000; // 20 bits
- 
+
 @@ -224,6 +266,10 @@ module system_config_address_map #(
    wire                [31:0] axil_box0_araddr;
    wire                [31:0] axil_smon_awaddr;
@@ -5297,7 +8059,7 @@ index 11ae7a5..171712d 100644
 +  wire                [31:0] axil_qcsr_araddr;
 +  wire                [31:0] axil_rdma_awaddr;
 +  wire                [31:0] axil_rdma_araddr;
- 
+
    wire  [1*C_NUM_SLAVES-1:0] axil_awvalid;
    wire [32*C_NUM_SLAVES-1:0] axil_awaddr;
 @@ -247,6 +293,8 @@ module system_config_address_map #(
@@ -5324,7 +8086,7 @@ index 11ae7a5..171712d 100644
 @@ -296,6 +346,23 @@ module system_config_address_map #(
    assign axil_rresp[`getvec(2, C_QDMA_INDEX)]  = m_axil_qdma_rresp;
    assign m_axil_qdma_rready                    = axil_rready[C_QDMA_INDEX];
- 
+
 +  assign m_axil_qdma_csr_awvalid               = axil_awvalid[C_QCSR_INDEX];
 +  assign m_axil_qdma_csr_awaddr                = axil_qcsr_awaddr;
 +  assign axil_awready[C_QCSR_INDEX]            = m_axil_qdma_csr_awready;
@@ -5348,7 +8110,7 @@ index 11ae7a5..171712d 100644
 @@ -504,6 +571,23 @@ module system_config_address_map #(
    assign axil_rresp[`getvec(2, C_SMON_INDEX)]  = m_axil_smon_rresp;
    assign m_axil_smon_rready                    = axil_rready[C_SMON_INDEX];
- 
+
 +  assign m_axil_rdma_awvalid                   = axil_awvalid[C_RDMA_INDEX];
 +  assign m_axil_rdma_awaddr                    = axil_rdma_awaddr;
 +  assign axil_awready[C_RDMA_INDEX]            = m_axil_rdma_awready;
@@ -5392,7 +8154,7 @@ index 36e7774..d41510f 100644
      .s_axil_rvalid  (s_axil_rvalid),
      .s_axil_rdata   (s_axil_rdata),
 @@ -201,11 +201,15 @@ module system_config_register #(
- 
+
    // Shell reset register (write-only)
    //
 -  // 31:3  - reserved
@@ -5407,7 +8169,7 @@ index 36e7774..d41510f 100644
 +  // 3:2   - reserved
 +  // 1     - reset for the RDMA subsystem
    // 0     - reset for the QDMA subsystem
--  // 
+-  //
    // Writing 1 to a bit of this register initiates a submodule-level reset in
    // the shell logic, which lasts until the corresponding submodule is out of
    // reset.  Mapping between bits and submodules are as follows.
@@ -5419,7 +8181,7 @@ index 603d9c9..0b02c76 100644
  # *************************************************************************
  set axi_crossbar system_config_axi_crossbar
  create_ip -name axi_crossbar -vendor xilinx.com -library ip -module_name $axi_crossbar -dir ${ip_build_dir}
--set_property -dict { 
+-set_property -dict {
 +set_property -dict {
      CONFIG.ADDR_RANGES {3}
 -    CONFIG.NUM_MI {9}
@@ -5459,23 +8221,23 @@ index 8e92afe..efe4669 100644
  set_property -dict {
      CONFIG.INTERFACE_SELECTION {Enable_AXI}
      CONFIG.ENABLE_RESET {false}
--    CONFIG.OT_ALARM {false} 
--    CONFIG.USER_TEMP_ALARM {false} 
--    CONFIG.VCCINT_ALARM {false} 
--    CONFIG.VCCAUX_ALARM {false} 
--    CONFIG.ENABLE_VBRAM_ALARM {false} 
--    CONFIG.CHANNEL_ENABLE_VP_VN {true} 
--    CONFIG.AVERAGE_ENABLE_VBRAM {true} 
--    CONFIG.AVERAGE_ENABLE_TEMPERATURE {true} 
--    CONFIG.AVERAGE_ENABLE_VCCINT {true} 
--    CONFIG.AVERAGE_ENABLE_VCCAUX {true} 
--    CONFIG.AVERAGE_ENABLE_TEMPERATURE_SLAVE0_SSIT {true} 
--    CONFIG.AVERAGE_ENABLE_TEMPERATURE_SLAVE1_SSIT {true} 
--    CONFIG.CHANNEL_ENABLE_VUSER0_SLAVE0_SSIT {true} 
--    CONFIG.AVERAGE_ENABLE_VUSER0_SLAVE0_SSIT {true} 
--    CONFIG.CHANNEL_ENABLE_VUSER0_SLAVE1_SSIT {true} 
--    CONFIG.AVERAGE_ENABLE_VUSER0_SLAVE1_SSIT {true} 
--    CONFIG.Enable_Slave0 {true} 
+-    CONFIG.OT_ALARM {false}
+-    CONFIG.USER_TEMP_ALARM {false}
+-    CONFIG.VCCINT_ALARM {false}
+-    CONFIG.VCCAUX_ALARM {false}
+-    CONFIG.ENABLE_VBRAM_ALARM {false}
+-    CONFIG.CHANNEL_ENABLE_VP_VN {true}
+-    CONFIG.AVERAGE_ENABLE_VBRAM {true}
+-    CONFIG.AVERAGE_ENABLE_TEMPERATURE {true}
+-    CONFIG.AVERAGE_ENABLE_VCCINT {true}
+-    CONFIG.AVERAGE_ENABLE_VCCAUX {true}
+-    CONFIG.AVERAGE_ENABLE_TEMPERATURE_SLAVE0_SSIT {true}
+-    CONFIG.AVERAGE_ENABLE_TEMPERATURE_SLAVE1_SSIT {true}
+-    CONFIG.CHANNEL_ENABLE_VUSER0_SLAVE0_SSIT {true}
+-    CONFIG.AVERAGE_ENABLE_VUSER0_SLAVE0_SSIT {true}
+-    CONFIG.CHANNEL_ENABLE_VUSER0_SLAVE1_SSIT {true}
+-    CONFIG.AVERAGE_ENABLE_VUSER0_SLAVE1_SSIT {true}
+-    CONFIG.Enable_Slave0 {true}
 +    CONFIG.OT_ALARM {false}
 +    CONFIG.USER_TEMP_ALARM {false}
 +    CONFIG.VCCINT_ALARM {false}
@@ -7685,7 +10447,7 @@ index aa33d14..4750d0b
 --- a/src/utility/axi_stream_packet_buffer.sv
 +++ b/src/utility/axi_stream_packet_buffer.sv
 @@ -128,25 +128,13 @@ module axi_stream_packet_buffer #(
- 
+
    // The `drop_busy` signal synchronizes with the packet stream `axis_*`.  When
    // asserted, the corresponding beat is not written into the RAM.
 -  assign drop_busy = drop || drop_in_prog;
@@ -7702,7 +10464,7 @@ index aa33d14..4750d0b
 -    end
 -  end
 +  assign drop_busy = drop || dropped;
- 
+
    always @(posedge s_aclk) begin
      if (~s_aresetn) begin
        dropped <= 1'b0;
@@ -7755,7 +10517,7 @@ index 0000000..e2139be
 \ No newline at end of file
 diff --git a/src/utility/vivado_ip/dev_mem_3to1_axi_crossbar.tcl b/src/utility/vivado_ip/dev_mem_3to1_axi_crossbar.tcl
 new file mode 100755
-index 0000000..8b7c230
+index 0000000..cd11cb6
 --- /dev/null
 +++ b/src/utility/vivado_ip/dev_mem_3to1_axi_crossbar.tcl
 @@ -0,0 +1,42 @@
@@ -7804,7 +10566,7 @@ index 0000000..8b7c230
 \ No newline at end of file
 diff --git a/src/utility/vivado_ip/dev_mem_axi_crossbar.tcl b/src/utility/vivado_ip/dev_mem_axi_crossbar.tcl
 new file mode 100644
-index 0000000..1b7f72e
+index 0000000..87ec612
 --- /dev/null
 +++ b/src/utility/vivado_ip/dev_mem_axi_crossbar.tcl
 @@ -0,0 +1,42 @@
@@ -7853,7 +10615,7 @@ index 0000000..1b7f72e
 \ No newline at end of file
 diff --git a/src/utility/vivado_ip/sys_mem_5to2_axi_crossbar.tcl b/src/utility/vivado_ip/sys_mem_5to2_axi_crossbar.tcl
 new file mode 100755
-index 0000000..289b977
+index 0000000..672b459
 --- /dev/null
 +++ b/src/utility/vivado_ip/sys_mem_5to2_axi_crossbar.tcl
 @@ -0,0 +1,49 @@
@@ -7909,7 +10671,7 @@ index 0000000..289b977
 \ No newline at end of file
 diff --git a/src/utility/vivado_ip/sys_mem_axi_crossbar.tcl b/src/utility/vivado_ip/sys_mem_axi_crossbar.tcl
 new file mode 100644
-index 0000000..c306d8f
+index 0000000..61c3d41
 --- /dev/null
 +++ b/src/utility/vivado_ip/sys_mem_axi_crossbar.tcl
 @@ -0,0 +1,42 @@
