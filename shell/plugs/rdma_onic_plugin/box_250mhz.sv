@@ -286,7 +286,7 @@ rdma_onic_plugin rdma_onic_plugin_inst (
   .axil_aclk  (axil_aclk),
   .axil_rstn  (axil_rstn),
   .axis_aclk  (axis_aclk),
-  .axis_rstn  (axis_rstn)
+  .axis_rstn  (box_rstn)
 );
 
 assign m_axis_qdma_c2h_tuser_src = 16'd0;
